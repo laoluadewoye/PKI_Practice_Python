@@ -28,15 +28,20 @@ if __name__ == "__main__":
             '\t   Example: python Main.py Default_Configs/default_auto.yaml\n'
         )
 
-        # Check if there is a proper argument for the manual settings
-        assert 'manual' in args[2], (
+        # Check if there is a proper argument for the manual settings or if it's just one argument
+        only_auto: bool = len(args) == 2
+        if only_auto:
+            manual_exists: bool = True
+        else:
+            manual_exists: bool = 'manual' in args[2]
+        assert manual_exists is True, (
             'Invalid configuration filepath provided.\n'
             '\t   Please provide a proper manual configuration file by '
             'passing the filepath of your file as an command-line argument.\n'
             '\t   Example: python Main.py Default_Configs/default_auto.yaml Default_Configs/default_manual.yaml\n'
         )
 
-        # Warn if there are more than two arguments
+        # Warn if there are more than the two arguments that have been checked
         if len(args) > 3:
             print('Warning: More than two command-line argument provided.\n'
                   '\t Please provide a configuration file by '
@@ -44,20 +49,23 @@ if __name__ == "__main__":
                   '\t   Example: python Main.py Default_Configs/default_auto.yaml '
                   'Default_Configs/default_manual.yaml\n')
 
-        # Pass argument to ingestion utilities
-        if 'auto' in args[1]:
-            env_settings: dict = parse_config_auto(args[1])
+        # Pass auto argument to ingestion utilities
+        env_auto_settings: dict | None = parse_config_auto(args[1])
+
+        # Pass manual argument to ingestion utilities
+        if len(args) > 2:
+            env_manual_settings: dict | None = parse_config_auto(args[2])
         else:
-            raise AssertionError
+            env_manual_settings: dict | None = None
 
         # Replace this with a better settings check
-        assert env_settings is not None, (
+        assert env_auto_settings is not None, (
             'Unparseable configuration file provided.\n'
             '\t   Please ensure that your configuration file exists or is properly created.\n'
             '\t   Use the default configuration files provided in the Default_Configs folder as a guide.\n'
         )
 
-        print(env_settings)
+        print(env_auto_settings)
 
     except AssertionError as e:
         print(f'\nException: {e}')

@@ -105,7 +105,7 @@ def parse_config_auto(filepath: str) -> dict or None:
         dict: A dictionary containing the parsed configuration data.
     """
 
-    settings = None
+    settings: dict | None = None
 
     # Check file type
     assert any(ext in filepath for ext in ['.yaml', '.yml', '.json', '.xml', '.toml']), (

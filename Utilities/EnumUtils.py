@@ -18,7 +18,7 @@ class SUPPORTED_HASH_ALGS(StrEnum):
     BLAKE2S = auto()
 
     @classmethod
-    def has_alg(cls, alg):
+    def has_alg(cls, alg: str) -> bool:
         if alg in (item.value for item in cls):
             return True
         else:
@@ -34,7 +34,7 @@ class SUPPORTED_ENCRYPT_ALGS(StrEnum):
     ECC = auto()
 
     @classmethod
-    def has_alg(cls, alg):
+    def has_alg(cls, alg: str) -> bool:
         if alg in (item.value for item in cls):
             return True
         else:
