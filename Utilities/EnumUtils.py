@@ -39,3 +39,23 @@ class SUPPORTED_ENCRYPT_ALGS(StrEnum):
             return True
         else:
             return False
+
+
+class SUPPORTED_ECC_CURVES(StrEnum):
+    """
+    This class contains all supported curves for eliptic curve cryptography.
+    It is used in the config file to determine which ecc curves are available to use.
+    """
+    SECP256R1 = auto()
+    SECP384R1 = auto()
+    SECP521R1 = auto()
+    SECP224R1 = auto()
+    SECP192R1 = auto()
+    SECP256K1 = auto()
+
+    @classmethod
+    def has_curve(cls, curve: str) -> bool:
+        if curve in (item.value for item in cls):
+            return True
+        else:
+            return False

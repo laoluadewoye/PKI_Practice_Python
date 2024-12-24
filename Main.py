@@ -54,7 +54,7 @@ if __name__ == "__main__":
 
         # Pass manual argument to ingestion utilities
         if len(args) > 2:
-            env_manual_settings: dict | None = parse_config_auto(args[2])
+            env_manual_settings: dict | None = parse_config_manual(args[2])
         else:
             env_manual_settings: dict | None = None
 
@@ -66,6 +66,7 @@ if __name__ == "__main__":
         )
 
         print(env_auto_settings)
+        print(env_manual_settings)
 
     except AssertionError as e:
         print(f'\nException: {e}')

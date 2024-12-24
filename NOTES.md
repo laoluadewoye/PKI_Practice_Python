@@ -1,3 +1,13 @@
+# Table of Contents
+
+1) ### [Goals](#Goals)
+2) ### [Utilities Structure](#Utilities-Structure)
+3) ### [Defining a Holder](#Defining-a-Holder)
+4) ### [Final Class Designs](#Final-Class-Designs)
+5) ### [File Design](#File-Design)
+6) ### [Process](#Process)
+7) ### [Requirements List](#Requirements-List)
+
 # Goals
 
 * Play with default class functions
@@ -86,7 +96,7 @@ The Certificate Authority should be able to keep a database of certificates
 
 A holder can be anything that holds a certificate. This includes-
 
-1) Accounts
+1) Account
    1) User
       1) Guest
       2) Personal
@@ -99,23 +109,74 @@ A holder can be anything that holds a certificate. This includes-
       5) Cloud Admin
       6) Database Admin 
       7) Auditor
-2) Operating Systems
+2) Operating System
    1) Microsoft
       1) Windows
-         1) Windows XP
-         2) Windows Vista
-         3) Windows 7
-         4) Windows 8
-         5) Windows 10
-         6) Windows 11
+         1) Windows 2000
+            1) Professional
+            2) Server
+            3) Advanced Server
+            4) Datacenter Server
+         2) Windows XP
+            1) Home
+            2) Professional
+         3) Windows Vista
+            1) Starter
+            2) Home Basic
+            3) Home Premium
+            4) Business
+            5) Enterprise
+            6) Ultimate
+         4) Windows 7
+            1) Starter
+            2) Home Basic
+            3) Home Premium
+            4) Business
+            5) Enterprise
+            6) Ultimate
+         5) Windows 8
+            1) Home
+            2) Pro
+            3) Enterprise
+         6) Windows 10
+            1) Home
+            2) Pro
+            3) Educational
+            4) Enterprise
+         7) Windows 11
+            1) Home
+            2) Pro
+            3) Educational
+            4) Enterprise
       2) Windows Server
-         1) Windows Server 2000
-         2) Windows Server 2003
-         3) Windows Server 2008
-         4) Windows Server 2012
-         5) Windows Server 2016
-         6) Windows Server 2019
-         7) Windows Server 2022
+         1) Windows Server 2003
+            1) Web
+            2) Standard
+            3) Enterprise
+            4) Datacenter
+         2) Windows Server 2008
+            1) Web
+            2) Standard
+            3) Enterprise
+            4) Datacenter
+            5) Itanium
+            6) Foundation
+            7) HPC
+         3) Windows Server 2012
+            1) Foundation
+            2) Essentials
+            3) Standard
+            4) Datacenter
+         4) Windows Server 2016
+            1) Standard
+            2) Datacenter
+         5) Windows Server 2019
+            1) Standard
+            2) Datacenter
+         6) Windows Server 2022
+            1) Standard
+            2) Datacenter
+            3) Datacenter Azure
    2) Unix
       1) Linux
          1) Debian
@@ -186,8 +247,8 @@ A holder can be anything that holds a certificate. This includes-
       10) NX-OS (Nexus NOS)
       11) OpenWrt
 3) Hardware
-   1) Endpoint Devices
-      1) Desktops
+   1) Endpoint
+      1) Desktop
          1) Hewlett-Packard
          2) Acer
          3) Dell
@@ -197,7 +258,7 @@ A holder can be anything that holds a certificate. This includes-
          7) Fujitsu
          8) NEC
          9) Apple
-      2) Laptops
+      2) Laptop
          1) Samsung
          2) Razer
          3) Microsoft
@@ -208,7 +269,7 @@ A holder can be anything that holds a certificate. This includes-
          8) Lenovo
          9) Hewlett-Packard
          10) Apple
-      3) Phones and Tablets
+      3) Mobile
          1) Samsung
          2) Apple
          3) Huawei
@@ -217,7 +278,7 @@ A holder can be anything that holds a certificate. This includes-
          6) Microsoft
          7) Toshiba
          8) Dell
-      4) Servers
+      4) Server
          1) Dell
          2) Hewlett-Packard
          3) Supermicro
@@ -227,7 +288,7 @@ A holder can be anything that holds a certificate. This includes-
          7) IBM
          8) Fukitsu
          9) Cisco
-      5) IoT Devices
+      5) IoT
          1) Advantech
          2) Raspberry Pi
          3) Arduino
@@ -238,7 +299,7 @@ A holder can be anything that holds a certificate. This includes-
          8) Kontron
          9) Arbor
          10) Axiomtek
-   2) Networking Devices
+   2) Network
       1) Router
          1) Cisco
          2) Peplink
@@ -259,7 +320,7 @@ A holder can be anything that holds a certificate. This includes-
          4) Zyxel
          5) TP-Link
          6) EnGenius
-   3) Network Appliances
+   3) Appliance
       1) Firewall
          1) Bitdefender
          2) Cisco
@@ -275,7 +336,7 @@ A holder can be anything that holds a certificate. This includes-
          4) Juniper
          5) Trellix
          6) Palo Alto
-   4) Peripheral Devices
+   4) Peripheral
       1) USB Key
       2) Smart Card
       3) External Storage
@@ -286,7 +347,7 @@ A holder can be anything that holds a certificate. This includes-
 
 Short-hand example: Dell.Windows_10.Personal
 
-Long-hand example: Endpoint_Devices_Desktops_Dell.Microsoft_Windows_Windows_10.User_Personal
+Long-hand example: Endpoint_Desktop_Dell.Microsoft_Windows_Windows_10.User_Personal
 
 Exceptions include when the OS or Device itself is the Holder, but they still need a unique identifier.
 
@@ -310,7 +371,7 @@ A holder's device can also be an authority, the status should be attached to the
 
 Short-hand example: Dell.Windows_10.Personal.Not_Auth
 
-Long-hand example: Endpoint_Devices_Desktops_Dell.Microsoft_Windows_Windows_10.User_Personal.Status_Not_Auth
+Long-hand example: Endpoint_Desktop_Dell.Microsoft_Windows_Windows_10.User_Personal.Not_Auth
 
 ## Holder Actions
 
@@ -413,14 +474,14 @@ A holder can perform the following actions-
 * long_type_name (str) - Holder's Long Type Name
 
 * holder_info (dataclass) - Holder's Information
-  * holder_common_name (str) - Holder's Common Domain Name
-  * holder_country (str) - Holder's Country
-  * holder_state (str) - Holder's State/Region
-  * holder_local (str) - Holder's City/Town/Locality
-  * holder_org (str) - Holder's Organization
-  * holder_org_unit (str) - Holder's Organizational Unit
-  * holder_email (str) - Holder's Email
-  * holder_url (str) - Holder's Internet Address
+  * common_name (str) - Holder's Common Domain Name
+  * country (str) - Holder's Country
+  * state (str) - Holder's State/Region
+  * local (str) - Holder's City/Town/Locality
+  * org (str) - Holder's Organization
+  * org_unit (str) - Holder's Organizational Unit
+  * email (str) - Holder's Email
+  * url (str) - Holder's Internet Address
 * holder_hash (str) - Holder's Hash from Information
 
 * privkey (str) - Holder's Private Key

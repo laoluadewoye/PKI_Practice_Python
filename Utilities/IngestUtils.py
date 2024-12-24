@@ -3,7 +3,7 @@ import json
 import xmltodict
 import tomllib
 import re
-from .EnumUtils import SUPPORTED_HASH_ALGS, SUPPORTED_ENCRYPT_ALGS
+from .EnumUtils import *
 
 
 def adjust_types(settings: dict) -> dict or None:
@@ -22,8 +22,13 @@ def adjust_types(settings: dict) -> dict or None:
         settings['uid_hash'] = settings['uid_hash'].lower().replace('-', '_')
         settings['sig_hash'] = settings['sig_hash'].lower().replace('-', '_')
         settings['encrypt_alg']['alg'] = settings['encrypt_alg']['alg'].lower()
-        settings['encrypt_alg']['params']['pub_exp'] = int(settings['encrypt_alg']['params']['pub_exp'])
-        settings['encrypt_alg']['params']['key_size'] = int(settings['encrypt_alg']['params']['key_size'])
+
+        if settings['encrypt_alg']['alg'] == 'rsa':
+            settings['encrypt_alg']['params']['pub_exp'] = int(settings['encrypt_alg']['params']['pub_exp'])
+            settings['encrypt_alg']['params']['key_size'] = int(settings['encrypt_alg']['params']['key_size'])
+        if settings['encrypt_alg']['alg'] == 'ecc':
+            settings['encrypt_alg']['params']['curve'] = settings['encrypt_alg']['params']['curve'].lower()
+
         settings['revoc_probs'] = list(map(float, settings['revoc_probs']))
     except (KeyError, TypeError, ValueError) as e:
         return None
@@ -90,6 +95,10 @@ def validate_settings(settings: dict) -> bool:
 
     if not SUPPORTED_ENCRYPT_ALGS.has_alg(settings['encrypt_alg']['alg']):
         return False
+
+    if settings['encrypt_alg']['alg'] == 'ecc':
+        if not SUPPORTED_ECC_CURVES.has_curve(settings['encrypt_alg']['params']['curve']):
+            return False
 
     return True
 
@@ -162,4 +171,32 @@ def parse_config_manual(filepath: str) -> dict or None:
         dict: A dictionary containing the parsed configuration data.
     """
 
-    return None
+    settings: dict | None = None
+
+    # Check file type
+    assert any(ext in filepath for ext in ['.yaml', '.yml', '.json', '.xml', '.toml']), (
+        'Invalid configuration file provided.\n'
+        '\t   Please provide a configuration file that is a YAML, JSON, XML, or TOML file.\n'
+        '\t   Look in the Default_Configs folder for examples.\n'
+    )
+
+    # File type tree
+    try:
+        if filepath.endswith('.yaml') or filepath.endswith('.yml'):
+            with open(filepath, 'r') as file:
+                settings = yaml.load(file, Loader=yaml.Loader)
+        elif filepath.endswith('.json'):
+            with open(filepath, 'r') as file:
+                settings = json.load(file)
+        elif filepath.endswith('.xml'):
+            with open(filepath, 'r') as file:
+                settings = xmltodict.parse(file.read())
+                settings = settings['config']
+        elif filepath.endswith('.toml'):
+            with open(filepath, 'rb') as file:
+                settings = tomllib.load(file)
+    except Exception as e:
+        print(f'Ingestion libraries experienced an error: "{str(e).title()}"')
+        return settings
+
+    return settings

@@ -15,18 +15,21 @@ level_count = 4
 count_by_level = [1, 2, 4, 8]
 
 # This parameter states what hashing algorithm will be used to create the user's personal hash.
-# Supported algorithms are: SHA224, SHA256, SHA384, SHA512, SHA3-224, SHA3-256, SHA3-384, SHA3-512, BLAKE2b, BLAKE2s.
+# Supported algorithms are: SHA224, SHA256, SHA384, SHA512, SHA3_224, SHA3_256, SHA3_384, SHA3_512, BLAKE2b, BLAKE2s.
 # Please write your chosen hash using lowercase letters.
 uid_hash = "sha256"
 
 # This parameter states what hashing algorithm will be used to sign certificates.
-# Supported algorithms are: SHA224, SHA256, SHA384, SHA512, SHA3-224, SHA3-256, SHA3-384, SHA3-512, BLAKE2b, BLAKE2s.
+# Supported algorithms are: SHA224, SHA256, SHA384, SHA512, SHA3_224, SHA3_256, SHA3_384, SHA3_512, BLAKE2b, BLAKE2s.
 # Please write your chosen hash using lowercase letters.
 sig_hash = "sha256"
 
 # These parameters state what asymmetric encryption algorithm (and parameters) will be used.
 # Supported algorithms are: RSA, ECC.
-# Please write your chosen hash using lowercase letters.
+# For RSA, pass a public exponent and key size as params.
+# For ECC, pass a valid curve as a param. Valid curves include SECP256R1, SECP384R1, SECP521R1, SECP224R1, SECP192R1,
+#     and SECP256K1.
+# Please write your chosen encryption (and parameters) using lowercase letters.
 encrypt_alg.alg = "rsa"
 encrypt_alg.params.pub_exp = 65537
 encrypt_alg.params.key_size = 2048
