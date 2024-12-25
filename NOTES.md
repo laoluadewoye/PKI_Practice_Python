@@ -270,7 +270,7 @@ A holder can be anything that holds a certificate. This includes-
          8) Lenovo
          9) Hewlett-Packard
          10) Apple
-      3) Mobile
+      3) Phone
          1) Samsung
          2) Apple
          3) Huawei
@@ -339,8 +339,22 @@ A holder can be anything that holds a certificate. This includes-
          6) Palo Alto
    4) Peripheral
       1) USB Key
+         1) Samsung
+         2) SanDisk
+         3) Corsiar
+         4) Kingston
+         5) PNY
       2) Smart Card
+         1) Thales
+         2) NXP Semiconductors
+         3) CardLogix
+         4) Infineon
       3) External Storage
+         1) Seagate
+         2) Western Digital
+         3) SanDisk
+         4) Transcend
+         5) LaCie
 
 ## Holder Identifier
 

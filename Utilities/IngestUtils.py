@@ -1,3 +1,7 @@
+"""
+This file contains functions for parsing configuration files and validating their input.
+"""
+
 import yaml
 import json
 import xmltodict
@@ -103,23 +107,23 @@ def validate_settings_auto(settings: dict) -> bool:
             return False
 
     # Checking if parameters for hashing and encryption are valid
-    if not SUPPORTED_HASH_ALGS.has_alg(settings['uid_hash']):
+    if not has_value(SUPPORTED_HASH_ALGS, settings['uid_hash']):
         print(f'"{settings["uid_hash"]}" is not a valid input for uid_hash. Please fix this in the autoconfiguration ' 
               'file.')
         return False
 
-    if not SUPPORTED_HASH_ALGS.has_alg(settings['sig_hash']):
+    if not has_value(SUPPORTED_HASH_ALGS, settings['sig_hash']):
         print(f'"{settings["sig_hash"]}" is not a valid input for sig_hash. Please fix this in the autoconfiguration '
               'file.')
         return False
 
-    if not SUPPORTED_ENCRYPT_ALGS.has_alg(settings['encrypt_alg']['alg']):
+    if not has_value(SUPPORTED_ENCRYPT_ALGS, settings['encrypt_alg']['alg']):
         print(f'"{settings["encrypt_alg"]["alg"]}" is not a valid input for encrypt_alg.alg. Please fix this in the '
               'autoconfiguration file.')
         return False
 
     if settings['encrypt_alg']['alg'] == 'ecc':
-        if not SUPPORTED_ECC_CURVES.has_curve(settings['encrypt_alg']['params']['curve']):
+        if not has_value(SUPPORTED_ECC_CURVES, settings['encrypt_alg']['params']['curve']):
             print(f'"{settings["encrypt_alg"]["params"]["curve"]}" is not a valid input for '
                   'encrypt_alg.params.curve. Please fix this in the autoconfiguration file.')
             return False

@@ -1,8 +1,14 @@
 import sys
-from Utilities import *
+from Utilities import parse_config_auto, parse_config_manual
 
 
 def start_program(args: list) -> None:
+    """
+    Starts the program using the command-line arguments.
+
+    Args:
+        args (list): A list of command-line arguments.
+    """
     # Check if there is a proper argument for the auto generation
     assert 'auto' in args[1], (
         'Invalid configuration filepath provided.\n'
@@ -47,9 +53,6 @@ def start_program(args: list) -> None:
         '\t   Please ensure that your configuration file exists or is properly created.\n'
         '\t   Use the default configuration files provided in the Default_Configs folder as a guide.\n'
     )
-
-    print(EnumUtils.COMMON_WINDOWS.versions())
-    print(EnumUtils.COMMON_WINDOWS.versions(verbose=True))
 
 
 if __name__ == "__main__":
