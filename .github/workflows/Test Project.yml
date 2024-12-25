@@ -1,7 +1,7 @@
-name: code-tester
+name: test-project
 on: push
 jobs:
-  code-tester-job:
+  test-project-job:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
