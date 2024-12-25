@@ -28,6 +28,7 @@
 * Play with using dataclasses for messages
 * Play with AsciiDoc
 * Play with TLA+?
+* Play with git pushes and signed commits
 
 # Utilities Structure
 
