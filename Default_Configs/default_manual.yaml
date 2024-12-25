@@ -34,7 +34,7 @@ default_root_ca: {
         cert_valid_dur: "none",
         cache_dur: "none",
         cooldown_dur: "none",
-        timeout_dur: "none",
+        timeout_dur: "none"
     },
 
     # This sets the hardware, software, and account information for the holder. Without this, the information will be
@@ -77,7 +77,7 @@ default_root_ca: {
 #     'os_category: "unix"' in the holder_type_info field.
 # The next 14 holder configurations do variations of this.
 
-# Level two
+# Level Two
 second_lvl_ca_one: {
     location: {
         level: 2,
@@ -96,8 +96,8 @@ second_lvl_ca_one: {
     holder_type_info: {
         os_category: "Unix",
         os_subcategory: "Linux",
-        os_dist: "Ubuntu Server",
-    },
+        os_dist: "Ubuntu Server"
+    }
 }
 
 second_lvl_ca_two: {
@@ -118,11 +118,11 @@ second_lvl_ca_two: {
     holder_type_info: {
         os_category: "Unix",
         os_subcategory: "Linux",
-        os_dist: "Ubuntu Server",
+        os_dist: "Ubuntu Server"
     },
 }
 
-# Level three
+# Level Three
 third_lvl_ca_one: {
     location: {
         level: 3,
@@ -151,7 +151,7 @@ third_lvl_ca_two: {
     },
     env_overrides: {
         uid_hash: sha512,
-        sig_hash: sha512,
+        sig_hash: sha512
     },
     holder_info: {
         common_name: "CloudCert Inc West Africa CA",
@@ -172,7 +172,7 @@ third_lvl_ca_three: {
     },
     env_overrides: {
         uid_hash: sha512,
-        sig_hash: sha512,
+        sig_hash: sha512
     },
     holder_info: {
         common_name: "EuroPass International Norway CA",
@@ -193,7 +193,7 @@ third_lvl_ca_four: {
     },
     env_overrides: {
         uid_hash: sha512,
-        sig_hash: sha512,
+        sig_hash: sha512
     },
     holder_info: {
         common_name: "Lone Star Networking Houston CA",
@@ -207,7 +207,7 @@ third_lvl_ca_four: {
     }
 }
 
-# Level four
+# Level Four
 fourth_level_one: {
     location: {
         level: 4,
@@ -222,7 +222,7 @@ fourth_level_one: {
         os_dist: "OpenWrt",
         os_subdist: "OpenWrt",
         account_type: "Admin",
-        account_subtype: "Network Admin",
+        account_subtype: "Network Admin"
     }
 }
 
@@ -240,7 +240,7 @@ fourth_level_two: {
         os_dist: "Windows 10",
         os_subdist: "Home",
         account_type: "User",
-        account_subtype: "Personal",
+        account_subtype: "Personal"
     }
 }
 
@@ -253,7 +253,7 @@ fourth_level_three: {
         hardware_type: "Peripheral",
         hardware_subtype: "Smart Card",
         account_type: "User",
-        account_subtype: "Enterprise",
+        account_subtype: "Enterprise"
     }
 }
 
@@ -265,7 +265,7 @@ fourth_level_four: {
     holder_type_info: {
         hardware_type: "Endpoint",
         hardware_subtype: "Mobile",
-        account_type: "User",
+        account_type: "User"
     }
 }
 
@@ -279,7 +279,7 @@ fourth_level_five: {
         hardware_subtype: "UTM",
         hardware_brand: "Barracuda",
         account_type: "Admin",
-        account_subtype: "Network Admin",
+        account_subtype: "Network Admin"
     }
 }
 
@@ -293,7 +293,7 @@ fourth_level_six: {
         hardware_subtype: "Desktop",
         os_category: "Unix",
         os_subcategory: "Solaris",
-        account_subtype: "Cloud Admin",
+        account_subtype: "Cloud Admin"
     }
 }
 
@@ -311,7 +311,7 @@ fourth_level_seven: {
         os_dist: "Alpine",
         os_subdist: "Alpine",
         account_type: "User",
-        account_subtype: "Guest",
+        account_subtype: "Guest"
     }
 }
 
@@ -321,6 +321,6 @@ fourth_level_eight: {
         holder: 8
     },
     holder_type_info: {
-        os_subcategory: "Mac OS X",
+        os_subcategory: "Mac OS X"
     }
 }
