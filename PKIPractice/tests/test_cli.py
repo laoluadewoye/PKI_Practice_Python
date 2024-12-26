@@ -19,6 +19,10 @@ class TestCLI(unittest.TestCase):
         elif current_dir == 'tests':
             self.pyfile = '../RunConfig.py'
             self.dc_dir = '../../'
+        else:
+            self.pyfile = 'PKIPractice/RunConfig.py'
+            self.dc_dir = './'
+
     
     def test_help(self):
         result = subprocess.run(['python', self.pyfile, '-h'], capture_output=True)

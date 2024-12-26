@@ -18,6 +18,8 @@ class TestIngestion(unittest.TestCase):
             self.dc_dir = '../'
         elif current_dir == 'tests':
             self.dc_dir = '../../'
+        else:
+            self.dc_dir = './'
             
     def test_key_count_auto(self) -> None:
         """
