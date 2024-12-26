@@ -18,5 +18,20 @@ jobs:
           cache: pip
       - name: Install Dependencies
         run: pip install -r requirements.txt
-      - name: Run Tests
-        run: pytest PKIPractice/tests
+      - name: Run Tests and Save Results
+        run: pytest PKIPractice/tests --junitxml=results.xml
+      - name: Upload Test Results as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: results.xml
+  update-pypi-if-ready:
+    needs: test-project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Retrieve Test Results as Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: test-results
+      - name: Process Test Results
+        run: cat results.xml
