@@ -3,7 +3,7 @@ import unittest
 # Append the parent directory to the sys.path
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Personal Modules must be imported after the system path is modified.
 from ..Utilities import parse_config_auto, parse_config_manual
@@ -18,15 +18,20 @@ class TestIngestion(unittest.TestCase):
             return 0 if not isinstance(test_dict, dict) else len(test_dict) + sum(
                 total_keys(val) for val in test_dict.values())
 
-        config_json: dict = parse_config_auto('../Default_Configs/default_auto.json')
-        config_yaml: dict = parse_config_auto('../Default_Configs/default_auto.yaml')
-        config_xml: dict = parse_config_auto('../Default_Configs/default_auto.xml')
-        config_toml: dict = parse_config_auto('../Default_Configs/default_auto.toml')
+        config_json: dict = parse_config_auto('Default_Configs/default_auto.json')
+        config_yaml: dict = parse_config_auto('Default_Configs/default_auto.yaml')
+        config_xml: dict = parse_config_auto('Default_Configs/default_auto.xml')
+        config_toml: dict = parse_config_auto('Default_Configs/default_auto.toml')
 
         count_yaml: int = total_keys(config_yaml)
         count_json: int = total_keys(config_json)
         count_xml: int = total_keys(config_xml)
         count_toml: int = total_keys(config_toml)
+
+        self.assertNotEqual(count_yaml, 0)
+        self.assertNotEqual(count_json, 0)
+        self.assertNotEqual(count_xml, 0)
+        self.assertNotEqual(count_toml, 0)
 
         self.assertEqual(count_yaml, count_json)
         self.assertEqual(count_yaml, count_xml)
@@ -40,15 +45,20 @@ class TestIngestion(unittest.TestCase):
             return 0 if not isinstance(test_dict, dict) else len(test_dict) + sum(
                 total_keys(val) for val in test_dict.values())
 
-        config_json: dict = parse_config_manual('../Default_Configs/default_manual.json')
-        config_yaml: dict = parse_config_manual('../Default_Configs/default_manual.yaml')
-        config_xml: dict = parse_config_manual('../Default_Configs/default_manual.xml')
-        config_toml: dict = parse_config_manual('../Default_Configs/default_manual.toml')
+        config_json: dict = parse_config_manual('Default_Configs/default_manual.json')
+        config_yaml: dict = parse_config_manual('Default_Configs/default_manual.yaml')
+        config_xml: dict = parse_config_manual('Default_Configs/default_manual.xml')
+        config_toml: dict = parse_config_manual('Default_Configs/default_manual.toml')
 
         count_yaml: int = total_keys(config_yaml)
         count_json: int = total_keys(config_json)
         count_xml: int = total_keys(config_xml)
         count_toml: int = total_keys(config_toml)
+
+        self.assertNotEqual(count_yaml, 0)
+        self.assertNotEqual(count_json, 0)
+        self.assertNotEqual(count_xml, 0)
+        self.assertNotEqual(count_toml, 0)
 
         self.assertEqual(count_yaml, count_json)
         self.assertEqual(count_yaml, count_xml)
@@ -58,10 +68,10 @@ class TestIngestion(unittest.TestCase):
         """
         Checks if the key types in the auto config files are consistent across all formats.
         """
-        config_json: dict = parse_config_auto('../Default_Configs/default_auto.json')
-        config_yaml: dict = parse_config_auto('../Default_Configs/default_auto.yaml')
-        config_xml: dict = parse_config_auto('../Default_Configs/default_auto.xml')
-        config_toml: dict = parse_config_auto('../Default_Configs/default_auto.toml')
+        config_json: dict = parse_config_auto('Default_Configs/default_auto.json')
+        config_yaml: dict = parse_config_auto('Default_Configs/default_auto.yaml')
+        config_xml: dict = parse_config_auto('Default_Configs/default_auto.xml')
+        config_toml: dict = parse_config_auto('Default_Configs/default_auto.toml')
 
         self.assertEqual(config_yaml, config_json)
         self.assertEqual(config_yaml, config_xml)
@@ -71,10 +81,10 @@ class TestIngestion(unittest.TestCase):
         """
         Checks if the key types in the manual config files are consistent across all formats.
         """
-        config_json: dict = parse_config_manual('../Default_Configs/default_manual.json')
-        config_yaml: dict = parse_config_manual('../Default_Configs/default_manual.yaml')
-        config_xml: dict = parse_config_manual('../Default_Configs/default_manual.xml')
-        config_toml: dict = parse_config_manual('../Default_Configs/default_manual.toml')
+        config_json: dict = parse_config_manual('Default_Configs/default_manual.json')
+        config_yaml: dict = parse_config_manual('Default_Configs/default_manual.yaml')
+        config_xml: dict = parse_config_manual('Default_Configs/default_manual.xml')
+        config_toml: dict = parse_config_manual('Default_Configs/default_manual.toml')
 
         self.assertEqual(config_yaml, config_json)
         self.assertEqual(config_yaml, config_xml)
