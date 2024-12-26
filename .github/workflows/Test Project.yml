@@ -33,5 +33,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: test-results
-      - name: Process Test Results
-        run: cat results.xml
+      - name: Get Error Count
+        run: ERRORS=$(awk -F'errors="' '{print $2}' results.xml | awk -F'"' '{print $1}')
+      - name: Get Failure Count
+        run: FAILURES=$(awk -F'failures="' '{print $2}' results.xml | awk -F'"' '{print $1}')
+      - name: Echo Results
+        run: |
+          echo "Errors: $ERRORS"
+          echo "Failures: $FAILURES"
