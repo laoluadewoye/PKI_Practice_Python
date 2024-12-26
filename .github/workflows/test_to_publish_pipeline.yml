@@ -43,7 +43,6 @@ jobs:
           name: distribution-packages
           path: dist/
   publish-to-pypi:
-    if: startsWith(github.ref, 'refs/tags/')
     needs: build-project
     runs-on: ubuntu-latest
     environment:
