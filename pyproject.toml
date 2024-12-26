@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "PyPkiPractice"
-version = "1.0.1"
+version = "1.2.2"
 authors = [
     {name = "Laolu Adewoye", email = "laoluadewoye@gmail.com"}
 ]
@@ -37,6 +37,11 @@ dependencies = [
     "xmltodict==0.14.2",
     "pytest==8.3.4",
     "cryptography==44.0.0"
+]
+optional-dependencies = [
+    "wheel==0.45.1",
+    "build==1.2.2.post1",
+    "twine==6.0.1"
 ]
 
 [project.urls]
