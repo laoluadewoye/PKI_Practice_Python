@@ -1,4 +1,4 @@
-name: test-to-publish-pipeline
+name: test-to-testpublish-pipeline
 on:
   schedule:
     - cron: '0 12 * * *'
@@ -8,7 +8,7 @@ on:
 jobs:
   test-project:
     runs-on: ubuntu-latest
-    environment: Deployment
+    environment: Test Deployment
     steps:
       - name: Check Out Repository Code
         uses: actions/checkout@v4
@@ -24,7 +24,7 @@ jobs:
   build-project:
     needs: test-project
     runs-on: ubuntu-latest
-    environment: Deployment
+    environment: Test Deployment
     steps:
       - name: Check Out Repository Code
         uses: actions/checkout@v4
@@ -46,8 +46,8 @@ jobs:
     needs: build-project
     runs-on: ubuntu-latest
     environment:
-      name: Deployment
-      url: https://pypi.org/p/PyPkiPractice
+      name: Test Deployment
+      url: https://test.pypi.org/p/PyPkiPractice
     permissions:
       id-token: write
     steps:
@@ -58,3 +58,5 @@ jobs:
           path: dist/
       - name: Publish to PyPi
         uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
