@@ -1,4 +1,5 @@
 import sys
+from os.path import curdir, abspath, basename
 from .IngestUtils import parse_config_auto, parse_config_manual
 
 
@@ -94,8 +95,56 @@ def basic_check() -> None:
                 '\n'
                 '   For more details, please check the README file.\n'
             )
+
+        # Check if there is a default flag
+        elif sys.argv[1] == '-d' or sys.argv[1] == '--default':
+            print(
+                '   Default flag detected.\n'
+                '   Welcome to PKI Practice!\n'
+                '   This is not really meant for much, I just wanted to practice PKI architecture.\n'
+                '   However, that does not mean that it should not be fun to play with.\n'
+                '\n'
+                '   In terms of command-line usage, you need to provide only to files.\n'
+                '   The first is a configuration file for the auto generation of the environment.\n'
+                '   The second is a configuration file for the manual configuration of the environment.\n'
+                '   The second file is optional to run the program, but the first can be run without the second.\n'
+                '\n'
+                '   Structure: python Main.py [-h | --help] [<autoconfig filepath>] [<manualconfig filepath>]\n'
+                '   Example without second: python Main.py Default_Configs/default_auto.yaml\n'
+                '   Example with second: python Main.py Default_Configs/default_auto.yaml '
+                'Default_Configs/default_manual.yaml\n'
+                '\n'
+                '   For more details, please check the README file.\n'
+                '\n'
+                '   For now though, here is a default run of the program using the default yaml files.\n'
+            )
+            current_dir = basename(abspath(curdir))
+            if current_dir == 'Utilities':
+                start_program([
+                    sys.argv[0],
+                    '../../Default_Configs/default_auto.yaml',
+                    '../../Default_Configs/default_manual.yaml'
+                ])
+            elif current_dir == 'PKIPractice':
+                start_program([
+                    sys.argv[0],
+                    '../Default_Configs/default_auto.yaml',
+                    '../Default_Configs/default_manual.yaml'
+                ])
+            elif current_dir in ['PKI Practice', 'PKI_Practice']:
+                start_program([
+                    sys.argv[0],
+                    'Default_Configs/default_auto.yaml',
+                    'Default_Configs/default_manual.yaml'
+                ])
+            else:
+                print(
+                    '   Something went wrong with the default run of the program.\n'
+                    '   A common folder was not detected.\n'
+                )
         else:
             start_program(sys.argv)
 
+    # Ultimate error escape
     except AssertionError as e:
         print(f'\nException: {e}')

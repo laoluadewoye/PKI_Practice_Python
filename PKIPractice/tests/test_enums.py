@@ -3,8 +3,8 @@ import inspect
 
 # Append the parent directory to the sys.path
 import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from os.path import curdir, abspath, basename, join, dirname
+sys.path.append(abspath(join(dirname(__file__), '..')))
 
 # Personal Modules must be imported after the system path is modified.
 from ..Utilities import EnumUtils
