@@ -16,5 +16,7 @@ jobs:
         with:
           python-version: 3.12
           cache: pip
-      - run: pip install -r requirements.txt
-      - run: pytest Tests
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+      - name: Run Tests
+        run: pytest PKIPractice/Tests

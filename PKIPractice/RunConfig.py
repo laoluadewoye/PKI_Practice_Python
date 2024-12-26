@@ -1,5 +1,5 @@
 import sys
-from Utilities import parse_config_auto, parse_config_manual
+from .Utilities import parse_config_auto, parse_config_manual
 
 
 def start_program(args: list) -> None:
@@ -47,15 +47,24 @@ def start_program(args: list) -> None:
     else:
         env_manual_settings: dict | None = None
 
-    # Replace this with a better settings check
+    # Check the return values for both
     assert env_auto_settings is not None, (
-        'Unparseable configuration file provided.\n'
-        '\t   Please ensure that your configuration file exists or is properly created.\n'
+        'Unparseable autoconfiguration file provided.\n'
+        '\t   Please ensure that your configuration file exists or are properly created.\n'
         '\t   Use the default configuration files provided in the Default_Configs folder as a guide.\n'
     )
 
+    if len(args) > 2:
+        assert env_manual_settings is not None, (
+            'Unparseable manual configuration file provided.\n'
+            '\t   Please ensure that your configuration file exists or are properly created.\n'
+            '\t   Use the default configuration files provided in the Default_Configs folder as a guide.\n'
+        )
 
-if __name__ == "__main__":
+    print('Was able to print both.')
+
+
+def basic_check() -> None:
     try:
         # Check if there are more than one argument
         assert len(sys.argv) > 1, (
@@ -90,3 +99,7 @@ if __name__ == "__main__":
 
     except AssertionError as e:
         print(f'\nException: {e}')
+
+
+if __name__ == "__main__":
+    basic_check()

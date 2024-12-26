@@ -3,10 +3,10 @@ import unittest
 # Append the parent directory to the sys.path
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
 # Personal Modules must be imported after the system path is modified.
-from Utilities import parse_config_auto, parse_config_manual
+from ..Utilities import parse_config_auto, parse_config_manual
 
 
 class TestIngestion(unittest.TestCase):
