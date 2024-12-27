@@ -6,7 +6,7 @@ WORKDIR /usr/local/app/PKI_Practice
 
 # Copy content and expose a port
 COPY . .
-EXPOSE 8000
+EXPOSE 5000
 
 # Alphine Dependencies
 RUN apk add --no-cache gcc musl-dev libffi-dev
@@ -15,7 +15,7 @@ RUN apk add --no-cache gcc musl-dev libffi-dev
 RUN pip install --no-cache-dir PyPkiPractice
 
 # Create the user
-RUN useradd app
+RUN adduser -D -g '' app
 RUN chown -R app:app /usr/local/app
 USER app
 
