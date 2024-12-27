@@ -79,3 +79,5 @@ jobs:
           tags: |
             laoluade/pypkipractice:latest
             laoluade/pypkipractice:${{ github.ref_name }}
+          context: .
+          file: ./Dockerfile

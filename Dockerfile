@@ -2,17 +2,17 @@
 FROM python:3.12-alpine
 
 # Work Directory
-WORKDIR /usr/local/app/PKI_Practice
+WORKDIR /usr/local/app/
 
 # Copy content and expose a port
 COPY . .
 EXPOSE 5000
 
-# Alphine Dependencies
+# Alpine Dependencies
 RUN apk add --no-cache gcc musl-dev libffi-dev
 
 # Install PyPi Package
-RUN pip install --no-cache-dir PyPkiPractice
+RUN pip install --no-cache-dir .
 
 # Create the user
 RUN adduser -D -g '' app
