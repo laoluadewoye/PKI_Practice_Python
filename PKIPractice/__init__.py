@@ -1,4 +1,1 @@
-__all__ = ['Utilities', 'CLIUtils']
-
-from . import Utilities
-from .Utilities import CLIUtils
+from .Utilities.CLIUtils import basic_check
