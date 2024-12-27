@@ -2,79 +2,79 @@
 This file contains enums used in the program along with functions to retrieve information.
 """
 
-from enum import Enum, StrEnum, auto
+from enum import Enum
 
 
-class SUPPORTED_HASH_ALGS(StrEnum):
+class SUPPORTED_HASH_ALGS(Enum):
     """
     This class contains all supported hash algorithms.
     It is used in both the autoconfiguration and manual configuration to set hashing algorithms.
     """
-    SHA224 = auto()
-    SHA256 = auto()
-    SHA384 = auto()
-    SHA512 = auto()
-    SHA3_224 = auto()
-    SHA3_256 = auto()
-    SHA3_384 = auto()
-    SHA3_512 = auto()
-    BLAKE2B = auto()
-    BLAKE2S = auto()
+    SHA224 = 'sha224'
+    SHA256 = 'sha256'
+    SHA384 = 'sha384'
+    SHA512 = 'sha512'
+    SHA3_224 = 'sha3_224'
+    SHA3_256 = 'sha3_256'
+    SHA3_384 = 'sha3_384'
+    SHA3_512 = 'sha3_512'
+    BLAKE2B = 'blake2b'
+    BLAKE2S = 'blake2s'
 
 
-class SUPPORTED_ENCRYPT_ALGS(StrEnum):
+class SUPPORTED_ENCRYPT_ALGS(Enum):
     """
     This class contains all supported encryption algorithms.
     It is used in both the autoconfiguration and manual configuration to set encryption algorithms.
     """
-    RSA = auto()
-    ECC = auto()
+    RSA = 'rsa'
+    ECC = 'ecc'
 
 
-class SUPPORTED_ECC_CURVES(StrEnum):
+class SUPPORTED_ECC_CURVES(Enum):
     """
     This class contains all supported curves for eliptic curve cryptography.
     It is used in both the autoconfiguration and manual configuration to set the curve for ECC.
     """
-    SECP256R1 = auto()
-    SECP384R1 = auto()
-    SECP521R1 = auto()
-    SECP224R1 = auto()
-    SECP192R1 = auto()
-    SECP256K1 = auto()
+    SECP256R1 = 'secp256r1'
+    SECP384R1 = 'secp384r1'
+    SECP521R1 = 'secp521r1'
+    SECP224R1 = 'secp224r1'
+    SECP192R1 = 'secp192r1'
+    SECP256K1 = 'secp256k1'
 
 
-class COMMON_USERS(StrEnum):
+class COMMON_USERS(Enum):
     """
     This class contains all supported user types by default.
     It is used in the manual configuration file to specify user types.
     """
-    GUEST = auto()
-    PERSONAL = auto()
-    ENTERPRISE = auto()
+    GUEST = 'guest'
+    PERSONAL = 'personal'
+    ENTERPRISE = 'enterprise'
 
 
-class COMMON_ADMINS(StrEnum):
+class COMMON_ADMINS(Enum):
     """
     This class contains all supported admin types by default.
     It is used in the manual configuration file to specify admin types.
     """
-    DOMAIN_ADMIN = auto()
-    SCHEMA_ADMIN = auto()
-    SERVER_ADMIN = auto()
-    NETWORK_ADMIN = auto()
-    CLOUD_ADMIN = auto()
-    DATABASE_ADMIN = auto()
-    AUDITOR = auto()
+    DOMAIN_ADMIN = 'domain_admin'
+    SCHEMA_ADMIN = 'schema_admin'
+    SERVER_ADMIN = 'server_admin'
+    NETWORK_ADMIN = 'network_admin'
+    CLOUD_ADMIN = 'cloud_admin'
+    DATABASE_ADMIN = 'database_admin'
+    AUDITOR = 'auditor'
 
 
-class COMMON_ACCOUNTS(StrEnum):
+class COMMON_ACCOUNTS(Enum):
     """
     This class contains all supported account types by default.
     It is used in the manual configuration file to specify account types.
     """
-    USER = auto()
-    ADMIN = auto()
+    USER = 'user'
+    ADMIN = 'admin'
 
 
 class COMMON_WINDOWS(Enum):
@@ -104,13 +104,13 @@ class COMMON_WINDOWS_SERVER(Enum):
     WINDOWS_SERVER_2022 = ('Standard', 'Datacenter', 'Datacenter Azure')
 
 
-class COMMON_MICROSOFT(StrEnum):
+class COMMON_MICROSOFT(Enum):
     """
     This class contains all supported Microsoft products by default.
     It is used in the manual configuration file to specify Microsoft products.
     """
-    WINDOWS = auto()
-    WINDOWS_SERVER = auto()
+    WINDOWS = 'windows'
+    WINDOWS_SERVER = 'windows_server'
 
 
 class COMMON_LINUX(Enum):
@@ -129,48 +129,48 @@ class COMMON_LINUX(Enum):
     UBUNTU_SERVER = 'Ubuntu Server'
 
 
-class COMMON_BSD(StrEnum):
+class COMMON_BSD(Enum):
     """
     This class contains all supported BSD distributions by default.
     It is used in the manual configuration file to specify BSD distributions.
     """
-    FREE_BSD = auto()
-    OPEN_BSD = auto()
-    NET_BSD = auto()
+    FREE_BSD = 'free_bsd'
+    OPEN_BSD = 'open_bsd'
+    NET_BSD = 'net_bsd'
 
 
-class COMMON_MAC_OS_X(StrEnum):
+class COMMON_MAC_OS_X(Enum):
     """
     This class contains all supported Mac OS X versions by default.
     It is used in the manual configuration file to specify Mac OS X versions.
     """
-    LEOPARD = auto()
-    SNOW_LEOPARD = auto()
-    LION = auto()
-    MOUNTAIN_LION = auto()
-    MAVERICKS = auto()
-    YOSEMITE = auto()
-    EL_CAPITAN = auto()
-    SIERRA = auto()
-    HIGH_SIERRA = auto()
-    MOJAVE = auto()
-    CATALINA = auto()
-    BIG_SUR = auto()
-    MONTEREY = auto()
-    VENTURA = auto()
-    SONOMA = auto()
-    SEQUOIA = auto()
+    LEOPARD = 'leopard'
+    SNOW_LEOPARD = 'snow_leopard'
+    LION = 'lion'
+    MOUNTAIN_LION = 'mountain_lion'
+    MAVERICKS = 'mavericks'
+    YOSEMITE = 'yosemite'
+    EL_CAPITAN = 'el_capitan'
+    SIERRA = 'sierra'
+    HIGH_SIERRA = 'high_sierra'
+    MOJAVE = 'mojave'
+    CATALINA = 'catalina'
+    BIG_SUR = 'big_sur'
+    MONTEREY = 'monterey'
+    VENTURA = 'ventura'
+    SONOMA = 'sonoma'
+    SEQUOIA = 'sequoia'
 
 
-class COMMON_UNIX(StrEnum):
+class COMMON_UNIX(Enum):
     """
     This class contains all supported Unix flavors by default.
     It is used in the manual configuration file to specify Unix flavors.
     """
-    LINUX = auto()
-    BSD = auto()
-    SOLARIS = auto()
-    MAC_OS_X = auto()
+    LINUX = 'linux'
+    BSD = 'bsd'
+    SOLARIS = 'solaris'
+    MAC_OS_X = 'mac_os_x'
 
 
 class COMMON_MOBILE(Enum):
@@ -182,7 +182,7 @@ class COMMON_MOBILE(Enum):
     ANDROID = ('Nougat', 'Oreo', 'Pie', '10', '11', '12', '13', '14', '15', '16')
 
 
-class COMMON_ROUTING(StrEnum):
+class COMMON_ROUTING(Enum):
     """
     This class contains all supported routing platforms by default.
     It is used in the manual configuration file to specify routing platforms.
@@ -200,15 +200,15 @@ class COMMON_ROUTING(StrEnum):
     OPENWRT = 'OpenWrt'
 
 
-class COMMON_OS(StrEnum):
+class COMMON_OS(Enum):
     """
     This class contains all supported operating system types by default.
     It is used in the manual configuration file to specify operating system types.
     """
-    MICROSOFT = auto()
-    UNIX = auto()
-    MOBILE = auto()
-    ROUTING = auto()
+    MICROSOFT = 'microsoft'
+    UNIX = 'unix'
+    MOBILE = 'mobile'
+    ROUTING = 'routing'
 
 
 class COMMON_ENDPOINT(Enum):
@@ -255,15 +255,15 @@ class COMMON_PERIPHERALS(Enum):
     EXTERNAL_STORAGE = ('Seagate', 'Western Digital', 'SanDisk', 'Transcend', 'LaCie')
 
 
-class COMMON_HARDWARE(StrEnum):
+class COMMON_HARDWARE(Enum):
     """
     This class contains all supported hardware types by default.
     It is used in the manual configuration file to specify hardware types.
     """
-    ENDPOINT = auto()
-    NETWORK = auto()
-    APPLIANCE = auto()
-    PERIPHERAL = auto()
+    ENDPOINT = 'endpoint'
+    NETWORK = 'network'
+    APPLIANCE = 'appliance'
+    PERIPHERAL = 'peripheral'
 
 
 def has_value(enum_class, value: str) -> bool:

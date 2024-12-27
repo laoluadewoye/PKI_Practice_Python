@@ -2,10 +2,16 @@
 This file contains functions for parsing configuration files and validating their input.
 """
 
+import sys
+
+# toml imports for pre-and-post-Python 3.10
+import toml as oldtoml
+if sys.version_info[1] > 10:
+    import tomllib as newtoml
+
 import yaml
 import json
 import xmltodict
-import tomllib
 import re
 from .EnumUtils import *
 
@@ -164,8 +170,12 @@ def parse_config_auto(filepath: str) -> dict or None:
                 settings = xmltodict.parse(file.read())
                 settings = settings['config']
         elif filepath.endswith('.toml'):
-            with open(filepath, 'rb') as file:
-                settings = tomllib.load(file)
+            if sys.version_info[1] < 11:
+                with open(filepath, 'r') as file:
+                    settings = oldtoml.load(file)
+            else:
+                with open(filepath, 'rb') as file:
+                    settings = newtoml.load(file)
     except Exception as e:
         print(f'Ingestion libraries experienced an error: "{str(e).title()}"')
         return settings
@@ -216,9 +226,11 @@ def search_for_typecast_manual(settings: dict) -> dict or None:
         return settings
     except (KeyError, TypeError, ValueError) as e:
         print(e)
-        print(f'Look for where "{re.search(r"'(.*?)'", str(e)).group(1)}" '
-              'is used in the manual configuration file, as that is likely the problem.')
-        return None
+        match = re.search(r"'(.*?)'", str(e))
+        if match:
+            problematic_key = match.group(1)
+            print(f'Look for where "{problematic_key}" is used in the manual configuration file, '
+                  'as that is likely the problem.')
 
 
 def parse_config_manual(filepath: str) -> dict or None:
@@ -254,8 +266,12 @@ def parse_config_manual(filepath: str) -> dict or None:
                 settings = xmltodict.parse(file.read())
                 settings = settings['config']
         elif filepath.endswith('.toml'):
-            with open(filepath, 'rb') as file:
-                settings = tomllib.load(file)
+            if sys.version_info[1] < 11:
+                with open(filepath, 'r') as file:
+                    settings = oldtoml.load(file)
+            else:
+                with open(filepath, 'rb') as file:
+                    settings = newtoml.load(file)
     except Exception as e:
         print(f'Ingestion libraries experienced an error: "{str(e).title()}"')
         return settings
