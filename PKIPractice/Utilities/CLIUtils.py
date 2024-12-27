@@ -131,7 +131,7 @@ def basic_check() -> None:
                     '../Default_Configs/default_auto.yaml',
                     '../Default_Configs/default_manual.yaml'
                 ])
-            elif current_dir in ['PKI Practice', 'PKI_Practice']:
+            elif current_dir in ['PKI Practice', 'PKI_Practice', 'app']:
                 start_program([
                     sys.argv[0],
                     'Default_Configs/default_auto.yaml',
