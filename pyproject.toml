@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "PyPkiPractice"
-version = "1.2.10"
+version = "1.2.10.1"
 authors = [
     {name = "Laolu Adewoye", email = "laoluadewoye@gmail.com"}
 ]
@@ -46,5 +46,5 @@ Repository = "https://github.com/laoluadewoye/PKI_Practice_Python"
 where = ["."]
 include = ["PkiPractice"]
 
-[project.scripts]
-run-pki-practice = "./PKIPractice/Utilities/CLIUtils:basic_check"
+[tool.setuptools.entry-points.console_scripts]
+run-pki-practice = "PKIPractice.CLIUtils:basic_check"
