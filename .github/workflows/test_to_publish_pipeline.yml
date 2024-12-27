@@ -62,6 +62,10 @@ jobs:
     needs: publish-to-pypi
     runs-on: ubuntu-latest
     steps:
+      - name: Echo Secrets
+        run: |
+          echo ${{ secrets.DOCKERHUB_TOKEN }}
+          echo ${{ secrets.DOCKERHUB_USERNAME }}
       - name: Log into Docker Hub
         uses: docker/login-action@v3
         with:
