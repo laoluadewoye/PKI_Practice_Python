@@ -20,5 +20,5 @@ RUN chown -R app:app /usr/local/app
 USER app
 
 # Set the entry point and default command
-ENTRYPOINT ["python", "-m", "run-pki-practice"]
+ENTRYPOINT ["run-pki-practice"]
 CMD ["--default"]

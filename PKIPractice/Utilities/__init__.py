@@ -7,8 +7,7 @@ Utilities:
     EnumUtils: Utilities for working with enums.
 """
 
-__all__ = ["parse_config_auto", "parse_config_manual", "EnumUtils", "basic_check"]
+__all__ = ["parse_config_auto", "parse_config_manual", "EnumUtils", "CLIUtils"]
 
 from .IngestUtils import parse_config_auto, parse_config_manual
-from . import EnumUtils
-from .CLIUtils import basic_check
+from . import EnumUtils, CLIUtils
