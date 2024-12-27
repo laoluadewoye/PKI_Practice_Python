@@ -77,5 +77,5 @@ jobs:
         with:
           push: true
           tags: |
-            laoluadewoye/pypkipractice:latest
-            laoluadewoye/pypkipractice:${{ github.ref_name }}
+            laoluade/pypkipractice:latest
+            laoluade/pypkipractice:${{ github.ref_name }}
