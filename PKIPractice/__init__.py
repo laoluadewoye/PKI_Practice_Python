@@ -1,3 +1,4 @@
-__all__ = ['CLIUtils']
+__all__ = ['Utilities', 'CLIUtils']
 
+from . import Utilities
 from .Utilities import CLIUtils
