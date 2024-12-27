@@ -67,5 +67,12 @@ jobs:
     runs-on: ubuntu-latest
     environment: Test Deployment
     steps:
-      - name: Print New Tag
-        run: echo ${{ github.ref_name }}
+      - name: Decide on New Tags
+        run: |
+          if [[ ${{ github.event_name }} == "push" && "${{ github.ref_type }}" == "tag" ]]; then
+            echo "tags=laoluade/pypkipractice:latest,laoluade/pypkipractice:${{ github.ref_name }}" >> $GITHUB_ENV
+          else
+            echo "tags=laoluade/pypkipractice:latest" >> $GITHUB_ENV
+          fi
+      - name: Print New Tags
+        run: echo ${{ env.tags }}
