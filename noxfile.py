@@ -1,7 +1,16 @@
 import nox
 
 
-@nox.session(python=[f'3.{i}' for i in range(5, 15)])
-def test(session):
+@nox.session(python=[f'3.{i}' for i in range(5, 8)])
+def test_3_5_7(session):
+    # Pip 23+ doesn't support Python 3.7 and earlier
+    session.install("pip<23.0")
+
+    session.install("-r", "requirements.txt")
+    session.run("pytest", "PKIPractice/tests")
+
+
+@nox.session(python=[f'3.{i}' for i in range(8, 15)])
+def test_3_8_14(session):
     session.install("-r", "requirements.txt")
     session.run("pytest", "PKIPractice/tests")

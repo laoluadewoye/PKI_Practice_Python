@@ -12,7 +12,7 @@ configuration file in one of the supported formats, it would create a simulation
 Authorities and End-Certificate devices where communication between end devices are encrypted, signed, and supported by
 a Public Key Infrastructure. The supported formats are YAML, JSON, TOML, and XML.
 
-This program is developed in Python 3.12, but has support for Python 3.9-3.13. I am slowly working my way down to
+This program is developed in Python 3.12, but has support for Python 3.8-3.14. I am slowly working my way down to
 see how far I can push support for the program. Currently, the only drawback is that any interpreter that is earlier
 than Python 3.10 is unable to use YAML files for configuration, and will have to use one of the other three supported
 formats. The code will let you know that.
