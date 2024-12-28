@@ -3,20 +3,47 @@ This file contains functions for parsing configuration files and validating thei
 """
 
 import sys
+from typing import Union
 
-# toml imports for pre-and-post-Python 3.10
-import toml as oldtoml
-if sys.version_info[1] > 10:
-    import tomllib as newtoml
+# Specifying tomli library version
+if sys.version_info[1] >= 11:
+    import tomllib
+else:
+    import tomli
 
+from xml.etree import ElementTree
 import yaml
 import json
-import xmltodict
 import re
 from .EnumUtils import *
 
 
-def adjust_types_auto(settings: dict) -> dict or None:
+def parse_child_tags(xml_string: str) -> dict:
+    """
+    Parses the child tags of an XML string.
+
+    Args:
+        xml_string (str): The XML string to be parsed.
+
+    Returns:
+        dict: A dictionary containing the parsed child tags.
+    """
+
+    root = ElementTree.fromstring(xml_string)
+    result = {}
+    for child in root:
+        if len(child) == 0 and child.tag not in result:  # New tag not come across inside parent tag
+            result[child.tag] = child.text
+        elif len(child) == 0 and isinstance(result[child.tag], str):  # Has come across a tag for the second time
+            result[child.tag] = [result[child.tag], child.text]
+        elif len(child) == 0 and isinstance(result[child.tag], list):  # Has come across a tag more than twice
+            result[child.tag].append(child.text)
+        else:  # Found a new parent tag
+            result[child.tag] = parse_child_tags(ElementTree.tostring(child))
+    return result
+
+
+def adjust_types_auto(settings: dict) -> Union[dict, None]:
     """
     Adjusts the data types and format of the settings dictionary.
 
@@ -137,7 +164,7 @@ def validate_settings_auto(settings: dict) -> bool:
     return True
 
 
-def parse_config_auto(filepath: str) -> dict or None:
+def parse_config_auto(filepath: str) -> Union[dict, None]:
     """
     Parses an autoconfiguration file given its file path.
 
@@ -167,15 +194,14 @@ def parse_config_auto(filepath: str) -> dict or None:
                 settings = json.load(file)
         elif filepath.endswith('.xml'):
             with open(filepath, 'r') as file:
-                settings = xmltodict.parse(file.read())
-                settings = settings['config']
+                settings = parse_child_tags(file.read())
         elif filepath.endswith('.toml'):
-            if sys.version_info[1] < 11:
-                with open(filepath, 'r') as file:
-                    settings = oldtoml.load(file)
+            if sys.version_info[1] >= 11:
+                with open(filepath, 'rb') as file:
+                    settings = tomllib.load(file)
             else:
                 with open(filepath, 'rb') as file:
-                    settings = newtoml.load(file)
+                    settings = tomli.load(file)
     except Exception as e:
         print(f'Ingestion libraries experienced an error: "{str(e).title()}"')
         return settings
@@ -198,7 +224,7 @@ def parse_config_auto(filepath: str) -> dict or None:
     return settings
 
 
-def search_for_typecast_manual(settings: dict) -> dict or None:
+def search_for_typecast_manual(settings: dict) -> Union[dict, None]:
     """
     Adjusts the data types and format of the settings dictionary.
 
@@ -233,7 +259,7 @@ def search_for_typecast_manual(settings: dict) -> dict or None:
                   'as that is likely the problem.')
 
 
-def parse_config_manual(filepath: str) -> dict or None:
+def parse_config_manual(filepath: str) -> Union[dict, None]:
     """
     Parses a manual configuration file given its file path.
 
@@ -263,15 +289,14 @@ def parse_config_manual(filepath: str) -> dict or None:
                 settings = json.load(file)
         elif filepath.endswith('.xml'):
             with open(filepath, 'r') as file:
-                settings = xmltodict.parse(file.read())
-                settings = settings['config']
+                settings = parse_child_tags(file.read())
         elif filepath.endswith('.toml'):
-            if sys.version_info[1] < 11:
-                with open(filepath, 'r') as file:
-                    settings = oldtoml.load(file)
+            if sys.version_info[1] >= 11:
+                with open(filepath, 'rb') as file:
+                    settings = tomllib.load(file)
             else:
                 with open(filepath, 'rb') as file:
-                    settings = newtoml.load(file)
+                    settings = tomli.load(file)
     except Exception as e:
         print(f'Ingestion libraries experienced an error: "{str(e).title()}"')
         return settings

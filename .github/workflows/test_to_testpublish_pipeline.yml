@@ -8,6 +8,16 @@ on:
     branches:
       - main
 jobs:
+  test-project-nox:
+    runs-on: ubuntu-latest
+    environment: Test Deployment
+    steps:
+      - name: Check Out Repository Code
+        uses: actions/checkout@v4
+      - name: Setup Nox
+        uses: fjwillemsen/setup-nox2@v3
+      - name: Run Nox
+        run: nox
   test-project:
     runs-on: ubuntu-latest
     environment: Test Deployment

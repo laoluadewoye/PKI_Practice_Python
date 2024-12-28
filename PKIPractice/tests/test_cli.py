@@ -25,22 +25,26 @@ class TestCLI(unittest.TestCase):
 
     def test_help(self):
         result = subprocess.run(['python', self.pyfile, '-h'], capture_output=True)
+        print(result)
 
         self.assertEqual(result.returncode, 0)
         self.assertEqual(result.stderr, b'')
 
         result = subprocess.run(['python', self.pyfile, '--help'], capture_output=True)
+        print(result)
 
         self.assertEqual(result.returncode, 0)
         self.assertEqual(result.stderr, b'')
 
     def test_default(self):
         result = subprocess.run(['python', self.pyfile, '-d'], capture_output=True)
+        print(result)
 
         self.assertEqual(result.returncode, 0)
         self.assertEqual(result.stderr, b'')
 
         result = subprocess.run(['python', self.pyfile, '--default'], capture_output=True)
+        print(result)
 
         self.assertEqual(result.returncode, 0)
         self.assertEqual(result.stderr, b'')
@@ -81,5 +85,13 @@ class TestCLI(unittest.TestCase):
             result = subprocess.run(args, capture_output=True)
             print(result)
 
-            self.assertEqual(result.returncode, 0, f'Failed with args: {args}. Full file path: {abspath(self.pyfile)}')
-            self.assertEqual(result.stderr, b'', f'Failed with args: {args}. Full file path: {abspath(self.pyfile)}')
+            self.assertEqual(
+                result.returncode,
+                0,
+                f'Failed with args: {args}. Full file path: {abspath(self.pyfile)}'
+            )
+            self.assertEqual(
+                result.stderr,
+                b'',
+                f'Failed with args: {args}. Full file path: {abspath(self.pyfile)}'
+            )

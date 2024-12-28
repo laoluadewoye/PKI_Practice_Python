@@ -3,6 +3,7 @@ This file contains enums used in the program along with functions to retrieve in
 """
 
 from enum import Enum
+from typing import Union
 
 
 class SUPPORTED_HASH_ALGS(Enum):
@@ -280,7 +281,7 @@ def has_value(enum_class, value: str) -> bool:
     return value in (item.value for item in enum_class)
 
 
-def get_all_items(enum_class, verbose: bool = False) -> dict | list:
+def get_all_items(enum_class, verbose: bool = False) -> Union[dict, list]:
     """
     Return the versions of an enum class.
     If verbose is True, return the versions as a dictionary with names and values.

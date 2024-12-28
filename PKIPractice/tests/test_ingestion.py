@@ -10,7 +10,7 @@ from ..Utilities import parse_config_auto, parse_config_manual
 
 
 class TestIngestion(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         current_dir = basename(abspath(curdir))
         if current_dir in ['PKI_Practice', 'PKI Practice']:
             self.dc_dir = './'

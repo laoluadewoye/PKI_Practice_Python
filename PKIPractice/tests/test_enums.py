@@ -1,9 +1,10 @@
 import unittest
 import inspect
+from typing import Union
 
 # Append the parent directory to the sys.path
 import sys
-from os.path import curdir, abspath, basename, join, dirname
+from os.path import abspath, join, dirname
 sys.path.append(abspath(join(dirname(__file__), '..')))
 
 # Personal Modules must be imported after the system path is modified.
@@ -11,8 +12,8 @@ from ..Utilities import EnumUtils
 
 
 class TestEnums(unittest.TestCase):
-    def test_enum_retrieval(self):
-        def get_classes_from_module(module):
+    def test_enum_retrieval(self) -> None:
+        def get_classes_from_module(module) -> list:
             return [cls for name, cls in inspect.getmembers(module, inspect.isclass) if
                     cls.__module__ == module.__name__]
 
@@ -21,8 +22,8 @@ class TestEnums(unittest.TestCase):
             self.assertIsNotNone(EnumUtils.get_all_items(enum))
             self.assertIsNotNone(EnumUtils.get_all_items(enum, True))
 
-    def test_enum_default_values(self):
-        def get_classes_from_module(module):
+    def test_enum_default_values(self) -> None:
+        def get_classes_from_module(module) -> list:
             return [cls for name, cls in inspect.getmembers(module, inspect.isclass) if
                     cls.__module__ == module.__name__]
 
@@ -32,8 +33,8 @@ class TestEnums(unittest.TestCase):
             for name, value in info.items():
                 self.assertEqual(value, enum[name].value)
 
-    def test_enum_value_type(self):
-        def get_classes_from_module(module):
+    def test_enum_value_type(self) -> None:
+        def get_classes_from_module(module) -> list:
             return [cls for name, cls in inspect.getmembers(module, inspect.isclass) if
                     cls.__module__ == module.__name__]
 
@@ -41,7 +42,7 @@ class TestEnums(unittest.TestCase):
         for enum in enums:
             info = EnumUtils.get_all_items(enum, True)
             for name, value in info.items():
-                self.assertIsInstance(value, tuple | str)
+                self.assertIsInstance(value, Union[tuple, str])
 
                 if isinstance(value, tuple):
                     for v in value:
