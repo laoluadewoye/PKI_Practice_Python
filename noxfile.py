@@ -1,8 +1,8 @@
 import nox
 
 
-@nox.session(python=[f'3.{i}' for i in range(6, 8)])
-def test_3_6_7(session):
+@nox.session(python=['3.7'])
+def test_3_7(session):
     # Pip 23+ doesn't support Python 3.7 and earlier
     session.install("pip<23.0")
 
