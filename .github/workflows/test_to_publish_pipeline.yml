@@ -8,23 +8,26 @@ on:
     branches:
       - main
 jobs:
-  test-project:
+  test-project-nox:
     runs-on: ubuntu-latest
     environment: Deployment
     steps:
       - name: Check Out Repository Code
         uses: actions/checkout@v4
-      - name: Setup Python
+      - name: Setup Python 3.13
         uses: actions/setup-python@v5
         with:
-          python-version: 3.12
-          cache: pip
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
-      - name: Run Tests
-        run: pytest PKIPractice/tests
+          python-version: 3.13
+      - name: Setup Python 3.14 Alpha 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.14.0-alpha.3
+      - name: Setup Nox
+        uses: fjwillemsen/setup-nox2@v3.0.0
+      - name: Run Nox
+        run: nox
   build-project:
-    needs: test-project
+    needs: test-project-nox
     runs-on: ubuntu-latest
     environment: Deployment
     steps:
