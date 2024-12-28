@@ -14,10 +14,6 @@ jobs:
     steps:
       - name: Check Out Repository Code
         uses: actions/checkout@v4
-      - name: Setup Python 3.5.10
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.5.10
       - name: Setup Python 3.6.15
         uses: actions/setup-python@v5
         with:
