@@ -30,23 +30,26 @@ class TestIngestion(unittest.TestCase):
                 total_keys(val) for val in test_dict.values())
 
         config_json: dict = parse_config_auto(f'{self.dc_dir}Default_Configs/default_auto.json')
-        config_yaml: dict = parse_config_auto(f'{self.dc_dir}Default_Configs/default_auto.yaml')
         config_xml: dict = parse_config_auto(f'{self.dc_dir}Default_Configs/default_auto.xml')
         config_toml: dict = parse_config_auto(f'{self.dc_dir}Default_Configs/default_auto.toml')
 
-        count_yaml: int = total_keys(config_yaml)
         count_json: int = total_keys(config_json)
         count_xml: int = total_keys(config_xml)
         count_toml: int = total_keys(config_toml)
 
-        self.assertNotEqual(count_yaml, 0)
         self.assertNotEqual(count_json, 0)
         self.assertNotEqual(count_xml, 0)
         self.assertNotEqual(count_toml, 0)
 
-        self.assertEqual(count_yaml, count_json)
-        self.assertEqual(count_yaml, count_xml)
-        self.assertEqual(count_yaml, count_toml)
+        self.assertEqual(count_json, count_xml)
+        self.assertEqual(count_json, count_toml)
+
+        # Accommodating for earlier versions before Python 3.10
+        if sys.version_info[1] > 9:
+            config_yaml: dict = parse_config_auto(f'{self.dc_dir}Default_Configs/default_auto.yaml')
+            count_yaml: int = total_keys(config_yaml)
+            self.assertNotEqual(count_yaml, 0)
+            self.assertEqual(count_json, count_yaml)
 
     def test_key_count_manual(self) -> None:
         """
@@ -57,49 +60,58 @@ class TestIngestion(unittest.TestCase):
                 total_keys(val) for val in test_dict.values())
 
         config_json: dict = parse_config_manual(f'{self.dc_dir}Default_Configs/default_manual.json')
-        config_yaml: dict = parse_config_manual(f'{self.dc_dir}Default_Configs/default_manual.yaml')
         config_xml: dict = parse_config_manual(f'{self.dc_dir}Default_Configs/default_manual.xml')
         config_toml: dict = parse_config_manual(f'{self.dc_dir}Default_Configs/default_manual.toml')
 
-        count_yaml: int = total_keys(config_yaml)
         count_json: int = total_keys(config_json)
         count_xml: int = total_keys(config_xml)
         count_toml: int = total_keys(config_toml)
 
-        self.assertNotEqual(count_yaml, 0)
         self.assertNotEqual(count_json, 0)
         self.assertNotEqual(count_xml, 0)
         self.assertNotEqual(count_toml, 0)
 
-        self.assertEqual(count_yaml, count_json)
-        self.assertEqual(count_yaml, count_xml)
-        self.assertEqual(count_yaml, count_toml)
+        self.assertEqual(count_json, count_xml)
+        self.assertEqual(count_json, count_toml)
+
+        # Accommodating for earlier versions before Python 3.10
+        if sys.version_info[1] > 9:
+            config_yaml: dict = parse_config_manual(f'{self.dc_dir}Default_Configs/default_manual.yaml')
+            count_yaml: int = total_keys(config_yaml)
+            self.assertNotEqual(count_yaml, 0)
+            self.assertEqual(count_json, count_yaml)
 
     def test_key_types_auto(self) -> None:
         """
         Checks if the key types in the auto config files are consistent across all formats.
         """
         config_json: dict = parse_config_auto(f'{self.dc_dir}Default_Configs/default_auto.json')
-        config_yaml: dict = parse_config_auto(f'{self.dc_dir}Default_Configs/default_auto.yaml')
         config_xml: dict = parse_config_auto(f'{self.dc_dir}Default_Configs/default_auto.xml')
         config_toml: dict = parse_config_auto(f'{self.dc_dir}Default_Configs/default_auto.toml')
 
-        self.assertEqual(config_yaml, config_json)
-        self.assertEqual(config_yaml, config_xml)
-        self.assertEqual(config_yaml, config_toml)
+        self.assertEqual(config_json, config_xml)
+        self.assertEqual(config_json, config_toml)
+
+        # Accommodating for earlier versions before Python 3.10
+        if sys.version_info[1] > 9:
+            config_yaml: dict = parse_config_auto(f'{self.dc_dir}Default_Configs/default_auto.yaml')
+            self.assertEqual(config_json, config_yaml)
 
     def test_key_types_manual(self) -> None:
         """
         Checks if the key types in the manual config files are consistent across all formats.
         """
         config_json: dict = parse_config_manual(f'{self.dc_dir}Default_Configs/default_manual.json')
-        config_yaml: dict = parse_config_manual(f'{self.dc_dir}Default_Configs/default_manual.yaml')
         config_xml: dict = parse_config_manual(f'{self.dc_dir}Default_Configs/default_manual.xml')
         config_toml: dict = parse_config_manual(f'{self.dc_dir}Default_Configs/default_manual.toml')
 
-        self.assertEqual(config_yaml, config_json)
-        self.assertEqual(config_yaml, config_xml)
-        self.assertEqual(config_yaml, config_toml)
+        self.assertEqual(config_json, config_xml)
+        self.assertEqual(config_json, config_toml)
+
+        # Accommodating for earlier versions before Python 3.10
+        if sys.version_info[1] > 9:
+            config_yaml: dict = parse_config_manual(f'{self.dc_dir}Default_Configs/default_manual.yaml')
+            self.assertEqual(config_json, config_yaml)
 
 
 if __name__ == '__main__':

@@ -11,8 +11,11 @@ if sys.version_info[1] >= 11:
 else:
     import tomli
 
+# Specifying yaml library version
+if sys.version_info[1] > 9:
+    import yaml
+
 from xml.etree import ElementTree
-import yaml
 import json
 import re
 from .EnumUtils import *
@@ -187,6 +190,12 @@ def parse_config_auto(filepath: str) -> Union[dict, None]:
     # File type tree
     try:
         if filepath.endswith('.yaml') or filepath.endswith('.yml'):
+            assert sys.version_info[1] > 9, (
+                'Using YAML files for configuration requires Python 3.10 or higher.\n'
+                '\t   Please update your Python version or use a different file format for configuration.\n'
+                '\t   Other supported examples are JSON, XML, or TOML.\n'
+                '\t   Look in the Default_Configs folder for examples.\n'
+            )
             with open(filepath, 'r') as file:
                 settings = yaml.load(file, Loader=yaml.Loader)
         elif filepath.endswith('.json'):
@@ -282,6 +291,12 @@ def parse_config_manual(filepath: str) -> Union[dict, None]:
     # File type tree
     try:
         if filepath.endswith('.yaml') or filepath.endswith('.yml'):
+            assert sys.version_info[1] > 9, (
+                'Using YAML files for configuration requires Python 3.10 or higher.\n'
+                '\t   Please update your Python version or use a different file format for configuration.\n'
+                '\t   Other supported examples are JSON, XML, or TOML.\n'
+                '\t   Look in the Default_Configs folder for examples.\n'
+            )
             with open(filepath, 'r') as file:
                 settings = yaml.load(file, Loader=yaml.Loader)
         elif filepath.endswith('.json'):

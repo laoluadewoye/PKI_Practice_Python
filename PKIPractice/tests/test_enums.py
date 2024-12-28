@@ -42,7 +42,8 @@ class TestEnums(unittest.TestCase):
         for enum in enums:
             info = EnumUtils.get_all_items(enum, True)
             for name, value in info.items():
-                self.assertIsInstance(value, Union[tuple, str])
+                is_tuple_or_string = isinstance(value, tuple) or isinstance(value, str)
+                self.assertTrue(is_tuple_or_string)
 
                 if isinstance(value, tuple):
                     for v in value:
