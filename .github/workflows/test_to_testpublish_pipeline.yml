@@ -15,7 +15,7 @@ jobs:
       - name: Check Out Repository Code
         uses: actions/checkout@v4
       - name: Setup Nox
-        uses: fjwillemsen/setup-nox2@v3
+        uses: fjwillemsen/setup-nox2@v3.0.0
       - name: Run Nox
         run: nox
   test-project:
