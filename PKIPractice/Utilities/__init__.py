@@ -7,6 +7,6 @@ Utilities:
     EnumUtils: Utilities for working with enums.
 """
 
-__all__ = ["IngestUtils", "EnumUtils", "CLIUtils"]
+__all__ = ["IngestUtils", "EnumUtils", "CLIUtils", "DataClassUtils"]
 
-from . import EnumUtils, CLIUtils, IngestUtils
+from . import EnumUtils, CLIUtils, IngestUtils, DataClassUtils

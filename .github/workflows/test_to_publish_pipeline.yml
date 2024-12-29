@@ -10,7 +10,7 @@ on:
 jobs:
   test-project-nox:
     runs-on: ubuntu-latest
-    environment: Deployment
+    environment: Test Deployment
     steps:
       - name: Check Out Repository Code
         uses: actions/checkout@v4
@@ -91,3 +91,17 @@ jobs:
           annotations: ${{ steps.meta.outputs.annotations }}
           provenance: true
           sbom: true
+  update-dockerhub-readme:
+    needs: publish-to-docker
+    runs-on: ubuntu-latest
+    environment: Deployment
+    steps:
+      - name: Check Out Repository Code
+        uses: actions/checkout@v4
+      - name: Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: laoluadewoye/PKI_Practice_Python
+          short-description: ${{ github.event.repository.description }}
