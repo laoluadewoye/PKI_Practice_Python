@@ -91,7 +91,7 @@ jobs:
           annotations: ${{ steps.meta.outputs.annotations }}
           provenance: true
           sbom: true
-  update-dockerhub-readme:
+  update-docker-repo-info:
     needs: publish-to-docker
     runs-on: ubuntu-latest
     environment: Deployment
@@ -103,5 +103,5 @@ jobs:
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          repository: laoluadewoye/PKI_Practice_Python
-          short-description: ${{ github.event.repository.description }}
+          repository: ${{ vars.DOCKERHUB_USERNAME }}/pypkipractice
+          short-description: PKI simulation for learning digital certificates and public-key encryption.
