@@ -1,7 +1,7 @@
 name: test-to-testpublish-pipeline
 on:
   schedule:
-    - cron: '0 12 * * *'
+    - cron: '0 17 * * *'
   push:
     tags:
       - '*'
@@ -26,23 +26,23 @@ jobs:
         uses: fjwillemsen/setup-nox2@v3.0.0
       - name: Run Nox
         run: nox
-  test-project:
+  tagging-test:
+    needs: test-project-nox
     runs-on: ubuntu-latest
     environment: Test Deployment
     steps:
-      - name: Check Out Repository Code
-        uses: actions/checkout@v4
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.12
-          cache: pip
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
-      - name: Run Tests
-        run: pytest PKIPractice/tests
+      - name: Decide on New Tags
+        run: |
+          if [[ ${{ github.event_name }} == "push" && "${{ github.ref_type }}" == "tag" ]]; then
+            echo "tags=laoluade/pypkipractice:latest,laoluade/pypkipractice:${{ github.ref_name }}" >> $GITHUB_ENV
+          else
+            echo "tags=laoluade/pypkipractice:latest" >> $GITHUB_ENV
+          fi
+      - name: Print New Tags
+        run: echo ${{ env.tags }}
   build-project:
-    needs: test-project
+    if: github.event_name == 'push' && github.ref_type == 'tag'
+    needs: test-project-nox
     runs-on: ubuntu-latest
     environment: Test Deployment
     steps:
@@ -80,17 +80,3 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
-  tagging-test:
-    needs: build-project
-    runs-on: ubuntu-latest
-    environment: Test Deployment
-    steps:
-      - name: Decide on New Tags
-        run: |
-          if [[ ${{ github.event_name }} == "push" && "${{ github.ref_type }}" == "tag" ]]; then
-            echo "tags=laoluade/pypkipractice:latest,laoluade/pypkipractice:${{ github.ref_name }}" >> $GITHUB_ENV
-          else
-            echo "tags=laoluade/pypkipractice:latest" >> $GITHUB_ENV
-          fi
-      - name: Print New Tags
-        run: echo ${{ env.tags }}
