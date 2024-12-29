@@ -6,7 +6,7 @@ from os.path import curdir, abspath, basename, join, dirname
 sys.path.append(abspath(join(dirname(__file__), '..')))
 
 # Personal Modules must be imported after the system path is modified.
-from ..Utilities import parse_config_auto, parse_config_manual
+from ..Utilities.IngestUtils import parse_config_auto, parse_config_manual
 
 
 class TestIngestion(unittest.TestCase):

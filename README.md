@@ -16,8 +16,8 @@ This program is developed in Python 3.12, but has support for Python 3.8-3.14. C
 interpreter that is earlier than Python 3.10 is unable to use YAML files for configuration, and will have to use one of 
 the other three supported formats. The code will let you know that.
 
-Use the NOTES.md file to get a deeper idea about what this project is about, and the HOLDERS.md file to understand how
-to create the configuration files yourself. 
+Use the NOTES.md file to get a deeper idea about what this project is about, and the CONFIG_GUIDE.md file to understand 
+how to create the configuration files yourself. 
 
 Below are basic instructions on how to install the project and use it, whether that be from the command line, a Python 
 IDE, or a Docker container. As you can see, I put alot of work into making this easy for future me and anyone else. 

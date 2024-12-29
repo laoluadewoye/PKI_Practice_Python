@@ -1,1 +1,0 @@
-This is going to contain all the possible default configurations for a guide for making auto and manual files.

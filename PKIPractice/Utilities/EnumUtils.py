@@ -76,6 +76,7 @@ class COMMON_ACCOUNTS(Enum):
     """
     USER = 'user'
     ADMIN = 'admin'
+    SYSTEM = 'system'
 
 
 class COMMON_WINDOWS(Enum):
