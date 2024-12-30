@@ -279,7 +279,21 @@ def has_value(enum_class, value: str) -> bool:
     Returns:
         bool: True if the value exists in the enum class, False otherwise.
     """
-    return value in (item.value for item in enum_class)
+    if enum_class.__name__ != 'COMMON_ROUTING':
+        for item in enum_class:
+            if isinstance(item.value, tuple):
+                for v in item.value:
+                    if value == v.lower().replace(' ', '_').replace('-', '_'):
+                        return True
+            else:
+                if value == item.value.lower().replace(' ', '_').replace('-', '_'):
+                    return True
+    else:
+        for item in enum_class:
+            if value == item.name.lower():
+                return True
+
+    return False
 
 
 def get_all_items(enum_class, verbose: bool = False) -> Union[dict, list]:
@@ -300,3 +314,8 @@ def get_all_items(enum_class, verbose: bool = False) -> Union[dict, list]:
         return {item.name: item.value for item in enum_class}
     else:
         return [item.name for item in enum_class]
+
+
+if __name__ == '__main__':
+    value = 'fboss'
+    print(has_value(COMMON_ROUTING, value))

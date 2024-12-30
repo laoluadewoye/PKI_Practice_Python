@@ -1,5 +1,7 @@
 import unittest
 import subprocess
+import random
+import string
 
 # Relative pathing from project root
 import sys
@@ -16,48 +18,58 @@ else:
 
 
 class TestCLI(unittest.TestCase):
-    def setUp(self):
-        current_dir = basename(abspath(curdir))
-        if current_dir in ['PKI_Practice', 'PKI Practice']:
+    def setUp(self) -> None:
+        """
+        Set up the test environment.
+        """
+        script_dir = dirname(abspath(__file__))
+
+        if script_dir in ['PKI_Practice', 'PKI Practice', 'app']:
             self.pyfile = 'PKIPractice/RunConfig.py'
             self.dc_dir = './'
-        elif current_dir == 'PKIPractice':
+        elif script_dir == 'PKIPractice':
             self.pyfile = 'RunConfig.py'
             self.dc_dir = '../'
-        elif current_dir == 'tests':
+        else:
             self.pyfile = '../RunConfig.py'
             self.dc_dir = '../../'
-        else:
-            self.pyfile = 'PKIPractice/RunConfig.py'
-            self.dc_dir = './'
 
-    def test_help(self):
+    def test_help(self) -> None:
+        """
+        Test the help flag.
+        """
         result = subprocess.run(['python', self.pyfile, '-h'], capture_output=True)
         print(result)
 
-        self.assertEqual(result.returncode, 0)
-        self.assertEqual(result.stderr, b'')
+        self.assertEqual(0, result.returncode)
+        self.assertEqual(b'', result.stderr)
 
         result = subprocess.run(['python', self.pyfile, '--help'], capture_output=True)
         print(result)
 
-        self.assertEqual(result.returncode, 0)
-        self.assertEqual(result.stderr, b'')
+        self.assertEqual(0, result.returncode)
+        self.assertEqual(b'', result.stderr)
 
-    def test_default(self):
+    def test_default(self) -> None:
+        """
+        Test the default flag.
+        """
         result = subprocess.run(['python', self.pyfile, '-d'], capture_output=True)
         print(result)
 
-        self.assertEqual(result.returncode, 0)
-        self.assertEqual(result.stderr, b'')
+        self.assertEqual(0, result.returncode)
+        self.assertEqual(b'', result.stderr)
 
         result = subprocess.run(['python', self.pyfile, '--default'], capture_output=True)
         print(result)
 
-        self.assertEqual(result.returncode, 0)
-        self.assertEqual(result.stderr, b'')
+        self.assertEqual(0, result.returncode)
+        self.assertEqual(b'', result.stderr)
 
-    def test_args(self):
+    def test_args(self) -> None:
+        """
+        Test the arguments using files from Default_Configs folder.
+        """
         arg_combos = [
             ['python', self.pyfile, f'{self.dc_dir}Default_Configs/default_auto.yaml'],
             ['python', self.pyfile, f'{self.dc_dir}Default_Configs/default_auto.json'],
@@ -94,12 +106,61 @@ class TestCLI(unittest.TestCase):
             print(result)
 
             self.assertEqual(
-                result.returncode,
                 0,
+                result.returncode,
                 f'Failed with args: {args}. Full file path: {abspath(self.pyfile)}'
             )
             self.assertEqual(
-                result.stderr,
                 b'',
+                result.stderr,
                 f'Failed with args: {args}. Full file path: {abspath(self.pyfile)}'
             )
+
+    def test_fail(self) -> None:
+        """
+        Fuzz Test to check argument error detection.
+        """
+        def generate_random_string(min_length: int = 1, max_length: int = 20) -> str:
+            """Generate a random string of random length."""
+            length = random.randint(min_length, max_length)  # Random length between min_length and max_length
+            return ''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=length))
+
+        def generate_random_string_list(
+                min_items: int = 1, max_items: int = 3, min_length: int = 1, max_length: int = 20) -> list[str]:
+            """Generate a list of random strings with random length and random number of items."""
+            num_items = random.randint(min_items, max_items)  # Random number of items in the list
+            return [generate_random_string(min_length, max_length) for _ in range(num_items)]
+
+        # Fuzzing loop
+        for i in range(100):
+            args = ['python', self.pyfile] + generate_random_string_list()
+            result = subprocess.run(args, capture_output=True)
+            print(result)
+
+            safely_quit = result.returncode == 0
+            detected_error = 'Exception' in result.stdout.decode('utf-8') or 'Warning' in result.stdout.decode('utf-8')
+
+            self.assertTrue(safely_quit, f'Failed with args: {args}. Full file path: {abspath(self.pyfile)}')
+            self.assertTrue(detected_error, f'Failed with args: {args}. Full file path: {abspath(self.pyfile)}')
+
+    def test_warning(self) -> None:
+        """
+        Test to check if warning raised about too many argument.
+        """
+        args = [
+            'python',
+            self.pyfile,
+            f'{self.dc_dir}Default_Configs/default_auto.yaml',
+            f'{self.dc_dir}Default_Configs/default_manual.yaml',
+            'one too many arguments'
+        ]
+        result = subprocess.run(args, capture_output=True)
+        print(result)
+
+        safely_quit = result.returncode == 0
+        detected_too_many_args = 'Warning' in result.stdout.decode('utf-8')
+
+        self.assertTrue(safely_quit, f'Failed with args: {args}. Full file path: {abspath(self.pyfile)}')
+        self.assertTrue(
+            detected_too_many_args, f'Failed with args: {args}. Full file path: {abspath(self.pyfile)}'
+        )
