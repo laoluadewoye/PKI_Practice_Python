@@ -5,7 +5,7 @@ import string
 
 # Relative pathing from project root
 import sys
-from os.path import abspath, dirname, join
+from os.path import abspath, dirname, join, basename, curdir
 
 script_dir = dirname(abspath(__file__))
 
@@ -22,17 +22,19 @@ class TestCLI(unittest.TestCase):
         """
         Set up the test environment.
         """
-        script_dir = dirname(abspath(__file__))
-
-        if script_dir in ['PKI_Practice', 'PKI Practice', 'app']:
-            self.pyfile = 'PKIPractice/RunConfig.py'
+        current_dir = basename(abspath(curdir))
+        if current_dir in ['PKI_Practice', 'PKI Practice', 'app']:
             self.dc_dir = './'
-        elif script_dir == 'PKIPractice':
-            self.pyfile = 'RunConfig.py'
+            self.pyfile = './PKIPractice/RunConfig.py'
+        elif current_dir == 'PKIPractice':
             self.dc_dir = '../'
-        else:
-            self.pyfile = '../RunConfig.py'
+            self.pyfile = './RunConfig.py'
+        elif current_dir == 'tests':
             self.dc_dir = '../../'
+            self.pyfile = '../RunConfig.py'
+        else:
+            self.dc_dir = './'
+            self.pyfile = './PKIPractice/RunConfig.py'
 
     def test_help(self) -> None:
         """
