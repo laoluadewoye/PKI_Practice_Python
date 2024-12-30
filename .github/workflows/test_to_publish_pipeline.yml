@@ -104,4 +104,4 @@ jobs:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: ${{ vars.DOCKERHUB_USERNAME }}/pypkipractice
-          short-description: PKI simulation for learning digital certificates and public-key encryption.
+          short-description: PKI simulation I created to practice digital certificates and public-key encryption.

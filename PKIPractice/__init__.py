@@ -1,5 +1,5 @@
-from .Utilities.CLIUtils import basic_check
+from .Utilities.CLIUtils import start_program
 
 
 def run_pki_practice() -> None:
-    basic_check()
+    start_program()

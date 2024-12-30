@@ -1,6 +1,5 @@
 import unittest
 import inspect
-from typing import Union
 
 # Append the parent directory to the sys.path
 import sys

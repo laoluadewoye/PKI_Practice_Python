@@ -1,5 +1,7 @@
 import sys
+from typing import Union
 from .IngestUtils import parse_config_auto, parse_config_manual, validate_settings_auto, search_for_typecast_manual
+from PKIPractice.Simulation.Network import PKINetwork
 
 
 def get_default_auto() -> dict:
@@ -318,7 +320,7 @@ def get_default_manual() -> dict:
     return manual_config
 
 
-def start_program(args: list, default: bool = False) -> None:
+def ingest_config(args: list, default: bool = False) -> Union[tuple, None]:
     """
     Starts the program using the command-line arguments.
 
@@ -396,11 +398,15 @@ def start_program(args: list, default: bool = False) -> None:
             '\t   Use the default configuration files provided in the Default_Configs folder as a guide.\n'
         )
 
-    print('Was able to print both.')
+    return env_auto_settings, env_manual_settings
 
 
-def basic_check() -> None:
+def start_program() -> None:
     try:
+        # Create empty variables
+        env_auto_settings, env_manual_settings = None, None
+        pki_network = None
+
         # Check if there are more than one argument
         assert len(sys.argv) > 1, (
             'No configuration file provided.\n' 
@@ -453,11 +459,15 @@ def basic_check() -> None:
                 '   For now though, here is a default run of the program using the default yaml files.\n'
             )
 
-            start_program(sys.argv, default=True)
+            env_auto_settings, env_manual_settings = ingest_config(sys.argv, default=True)
 
         # No options apply, so just start the program
         else:
-            start_program(sys.argv)
+            env_auto_settings, env_manual_settings = ingest_config(sys.argv)
+
+        # Build the environment
+        pki_network = PKINetwork('Network', env_auto_settings, env_manual_settings)
+        print(pki_network)
 
     # Ultimate error escape
     except AssertionError as e:
