@@ -6,7 +6,7 @@ from os.path import curdir, abspath, basename, dirname, join
 
 script_dir = dirname(abspath(__file__))
 
-if script_dir in ['PKI_Practice', 'app']:
+if script_dir in ['PKI_Practice', 'PKI Practice', 'app']:
     sys.path.append(abspath(script_dir))
 elif script_dir == 'PKIPractice':
     sys.path.append(abspath(join(script_dir, '..')))
@@ -20,7 +20,7 @@ from PKIPractice.Utilities.IngestUtils import parse_config_auto, parse_config_ma
 class TestIngestion(unittest.TestCase):
     def setUp(self) -> None:
         current_dir = basename(abspath(curdir))
-        if current_dir in ['PKI_Practice', 'PKI Practice']:
+        if current_dir in ['PKI_Practice', 'PKI Practice', 'app']:
             self.dc_dir = './'
         elif current_dir == 'PKIPractice':
             self.dc_dir = '../'

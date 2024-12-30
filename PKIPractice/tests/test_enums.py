@@ -9,7 +9,7 @@ from os.path import abspath, dirname, join
 
 script_dir = dirname(abspath(__file__))
 
-if script_dir in ['PKI_Practice', 'app']:
+if script_dir in ['PKI_Practice', 'PKI Practice', 'app']:
     sys.path.append(abspath(script_dir))
 elif script_dir == 'PKIPractice':
     sys.path.append(abspath(join(script_dir, '..')))
