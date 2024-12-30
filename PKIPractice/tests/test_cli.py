@@ -108,12 +108,12 @@ class TestCLI(unittest.TestCase):
             self.assertEqual(
                 0,
                 result.returncode,
-                f'Failed with args: {args}. Full file path: {abspath(self.pyfile)}'
+                f'Failed with args: {args}. {dirname(abspath(__file__))} Full file path: {abspath(self.pyfile)}'
             )
             self.assertEqual(
                 b'',
                 result.stderr,
-                f'Failed with args: {args}. Full file path: {abspath(self.pyfile)}'
+                f'Failed with args: {args}. {dirname(abspath(__file__))} Full file path: {abspath(self.pyfile)}'
             )
 
     def test_fail(self) -> None:
