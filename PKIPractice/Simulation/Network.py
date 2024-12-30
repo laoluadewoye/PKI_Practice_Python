@@ -1,5 +1,19 @@
 from typing import Union
-from .Holder import Holder
+
+# Relative pathing from project package
+import sys
+from os.path import abspath, dirname
+
+script_dir = dirname(abspath(__file__))
+
+if script_dir in ['PKI_Practice', 'app']:
+    sys.path.append(abspath('PKIPractice'))
+elif script_dir == 'PKIPractice':
+    sys.path.append(abspath(script_dir))
+else:
+    sys.path.append(abspath('..'))
+
+from PKIPractice.Simulation.Holder import Holder
 
 
 class PKINetwork:
@@ -27,8 +41,8 @@ class PKINetwork:
         self.network_log = []
 
         # Manual configuration
-        for key, value in manual_config.keys():
+        for key, value in manual_config.items():
             self.add_to_network(key, value, auto_config)
 
     def add_to_network(self, holder_name: str, holder_man_config: dict, auto_config: dict) -> None:
-        self.network[holder_name] = Holder(holder_name, holder_man_config, auto_config)
+        self.network[holder_name] = 'Holder'

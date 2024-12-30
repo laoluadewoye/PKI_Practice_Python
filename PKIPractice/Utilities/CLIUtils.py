@@ -1,6 +1,19 @@
-import sys
 from typing import Union
-from .IngestUtils import parse_config_auto, parse_config_manual, validate_settings_auto, search_for_typecast_manual
+
+# Relative pathing from project package
+import sys
+from os.path import abspath, dirname
+
+script_dir = dirname(abspath(__file__))
+
+if script_dir in ['PKI_Practice', 'app']:
+    sys.path.append(abspath('PKIPractice'))
+elif script_dir == 'PKIPractice':
+    sys.path.append(abspath(script_dir))
+else:
+    sys.path.append(abspath('..'))
+
+from PKIPractice.Utilities.IngestUtils import *
 from PKIPractice.Simulation.Network import PKINetwork
 
 
@@ -359,18 +372,18 @@ def ingest_config(args: list, default: bool = False) -> Union[tuple, None]:
 
     # Pass auto argument to ingestion utilities
     if default:
-        env_auto_settings: dict | None = get_default_auto()
+        env_auto_settings: Union[dict, None] = get_default_auto()
         assert validate_settings_auto(env_auto_settings) is True, (
             'Ingested autoconfiguration settings were not found to be valid.\n'
             '\t   Please ensure your configuration file is correctly created.\n'
             '\t   Use the default configuration file as a template.\n'
         )
     else:
-        env_auto_settings: dict | None = parse_config_auto(args[1])
+        env_auto_settings: Union[dict, None] = parse_config_auto(args[1])
 
     # Pass manual argument to ingestion utilities
     if default:
-        env_manual_settings: dict | None = get_default_manual()
+        env_manual_settings: Union[dict, None] = get_default_manual()
         env_manual_settings = search_for_typecast_manual(env_manual_settings)
         assert env_manual_settings is not None, (
             'Ingested manual configuration settings were not able to be adjusted due to '
@@ -380,9 +393,9 @@ def ingest_config(args: list, default: bool = False) -> Union[tuple, None]:
         )
     else:
         if len(args) > 2:
-            env_manual_settings: dict | None = parse_config_manual(args[2])
+            env_manual_settings: Union[dict, None] = parse_config_manual(args[2])
         else:
-            env_manual_settings: dict | None = None
+            env_manual_settings: Union[dict, None] = None
 
     # Check the return values for both
     assert env_auto_settings is not None, (

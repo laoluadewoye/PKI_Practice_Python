@@ -1,10 +1,18 @@
 import unittest
 import subprocess
 
-# Append the parent directory to the sys.path
+# Relative pathing from project package
 import sys
-from os.path import curdir, abspath, basename, join, dirname
-sys.path.append(abspath(join(dirname(__file__), '..')))
+from os.path import abspath, dirname, basename, curdir
+
+script_dir = dirname(abspath(__file__))
+
+if script_dir in ['PKI_Practice', 'app']:
+    sys.path.append(abspath('PKIPractice'))
+elif script_dir == 'PKIPractice':
+    sys.path.append(abspath(script_dir))
+else:
+    sys.path.append(abspath('..'))
 
 
 class TestCLI(unittest.TestCase):

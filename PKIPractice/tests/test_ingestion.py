@@ -1,12 +1,18 @@
 import unittest
 
-# Append the parent directory to the sys.path
+# Relative pathing from project package
 import sys
-from os.path import curdir, abspath, basename, join, dirname
-sys.path.append(abspath(join(dirname(__file__), '..')))
+from os.path import curdir, abspath, basename
+
+if curdir in ['PKI_Practice', 'app']:
+    sys.path.append(abspath('PKIPractice'))
+elif curdir == 'PKIPractice':
+    sys.path.append(abspath('.'))
+else:
+    sys.path.append(abspath('..'))
 
 # Personal Modules must be imported after the system path is modified.
-from ..Utilities.IngestUtils import parse_config_auto, parse_config_manual
+from PKIPractice.Utilities.IngestUtils import parse_config_auto, parse_config_manual
 
 
 class TestIngestion(unittest.TestCase):
