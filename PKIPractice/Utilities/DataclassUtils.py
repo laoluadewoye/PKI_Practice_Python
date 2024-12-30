@@ -27,7 +27,7 @@ class HOLDER_TYPE_INFO:
     account_subtype: str
     ca_status: str
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.hardware_type = self.hardware_type.lower().replace(" ", "_").replace("-", "_")
         self.hardware_subtype = self.hardware_subtype.lower().replace(" ", "_").replace("-", "_")
         self.hardware_brand = self.hardware_brand.lower().replace(" ", "_").replace("-", "_")
@@ -40,13 +40,13 @@ class HOLDER_TYPE_INFO:
         self.ca_status = self.ca_status.lower().replace(" ", "_").replace("-", "_")
 
     @property
-    def long_name(self):
+    def long_name(self) -> str:
         return f'{self.hardware_type}_{self.hardware_subtype}_{self.hardware_brand}.' \
                f'{self.os_category}_{self.os_subcategory}_{self.os_dist}_{self.os_subdist}.' \
                f'{self.account_type}_{self.account_subtype}.{self.ca_status}'
 
     @property
-    def short_name(self):
+    def short_name(self) -> str:
         return f'{self.hardware_brand}.{self.os_subdist}.{self.account_subtype}.{self.ca_status}'
 
 
@@ -62,7 +62,7 @@ class HOLDER_INFO:
     url: str
 
     @property
-    def hash_content(self):
+    def hash_content(self) -> str:
         return f'{self.common_name}' \
                f'{self.country}{self.state}{self.local}' \
                f'{self.org}{self.org_unit}{self.email}{self.url}'

@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, List
 
 # Relative pathing from project root
 import sys
@@ -23,22 +23,22 @@ class PKINetwork:
 
         # Network counts
         self.network_level_count: int = auto_config['level_count']
-        self.network_count_by_level: list[int] = auto_config['count_by_level']
+        self.network_count_by_level: List[int] = auto_config['count_by_level']
         self.network_total_count: int = 0
 
         # Environment variables
         self.env_uid_hash: str = auto_config['uid_hash']
         self.env_sig_hash: str = auto_config['sig_hash']
         self.env_encrypt_alg: dict = auto_config['encrypt_alg']
-        self.env_revoc_probs: list[float] = auto_config['revoc_probs']
-        self.env_cert_valid_durs: list[str] = auto_config['cert_valid_durs']
-        self.env_cache_durs: list[str] = auto_config['cache_durs']
-        self.env_cooldown_durs: list[str] = auto_config['cooldown_durs']
-        self.env_timeout_durs: list[str] = auto_config['timeout_durs']
+        self.env_revoc_probs: List[float] = auto_config['revoc_probs']
+        self.env_cert_valid_durs: List[str] = auto_config['cert_valid_durs']
+        self.env_cache_durs: List[str] = auto_config['cache_durs']
+        self.env_cooldown_durs: List[str] = auto_config['cooldown_durs']
+        self.env_timeout_durs: List[str] = auto_config['timeout_durs']
 
         # Network hierarchy
         self.network: dict = {}
-        self.network_log: list[str] = []
+        self.network_log: List[str] = []
 
         # Log events that have already happened
         self.network_log.append(f'Network {self.network_name} created.')

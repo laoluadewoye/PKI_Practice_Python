@@ -308,7 +308,7 @@ def get_all_items(enum_class, verbose: bool = False) -> Union[dict, list]:
                         If False, return the versions as a list with names only.
 
     Returns:
-        dict | list: The versions of the enum class.
+        Union[dict, list]: The versions of the enum class.
     """
     if verbose:
         return {item.name: item.value for item in enum_class}

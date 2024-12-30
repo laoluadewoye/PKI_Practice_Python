@@ -2,6 +2,7 @@ import unittest
 import subprocess
 import random
 import string
+from typing import List
 
 # Relative pathing from project root
 import sys
@@ -128,7 +129,7 @@ class TestCLI(unittest.TestCase):
             return ''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=length))
 
         def generate_random_string_list(
-                min_items: int = 1, max_items: int = 3, min_length: int = 1, max_length: int = 20) -> list[str]:
+                min_items: int = 1, max_items: int = 3, min_length: int = 1, max_length: int = 20) -> List[str]:
             """Generate a list of random strings with random length and random number of items."""
             num_items = random.randint(min_items, max_items)  # Random number of items in the list
             return [generate_random_string(min_length, max_length) for _ in range(num_items)]
