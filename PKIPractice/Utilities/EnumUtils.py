@@ -47,6 +47,12 @@ class SUPPORTED_ECC_CURVES(Enum):
     SECP256K1 = 'secp256k1'
 
 
+class COMMON_CA(Enum):
+    NOT_AUTH = 'not_auth'
+    INTER_AUTH = 'inter_auth'
+    ROOT_AUTH = 'root_auth'
+
+
 class COMMON_USERS(Enum):
     """
     This class contains all supported user types by default.
@@ -332,100 +338,183 @@ def pass_rule_check(cur_settings: list) -> bool:
     h_type = cur_settings[0][0]
     h_subtype = cur_settings[0][1]
     os_type = cur_settings[1][0]
+    os_subtype = cur_settings[1][1]
     os_dist = cur_settings[1][2]
+    a_type = cur_settings[2][0]
+    ca_type = cur_settings[3][0]
 
     # Hardware based rules
     # If a device type is a networking device, it can only use routing OSes and Unix OSes that are not Mac OS X
-    network_is_routing = h_type == 'network' and os_type == 'routing'
+    network_is_routing = h_type == 'network' and os_type in ['routing', '']
 
-    network_is_unix = h_type == 'network' and os_type == 'unix'
-    unix_network_not_mac = network_is_unix and os_dist != 'mac_os_x'
+    network_is_unix = h_type == 'network' and os_type in ['unix', '']
+    unix_network_not_mac = network_is_unix and os_subtype != 'mac_os_x'
 
     if h_type == 'network' and not (network_is_routing or unix_network_not_mac):
         return False
 
     # If a device endpoint type is an IoT device, it can only use Unix OSes that are not Mac OS X
-    iot_is_unix = h_subtype == 'iot' and os_type == 'unix'
-    unix_iot_not_mac = iot_is_unix and os_dist != 'mac_os_x'
-
+    iot_is_unix = h_subtype == 'iot' and os_type in ['unix', '']
+    unix_iot_not_mac = iot_is_unix and os_subtype != 'mac_os_x'
     if h_subtype == 'iot' and not unix_iot_not_mac:
         return False
 
     # If a device endpoint type is a phone, it can only use mobile operating systems
-    phone_is_mobile = h_subtype == 'phone' and os_type == 'mobile'
+    phone_is_mobile = h_subtype == 'phone' and os_type in ['mobile', '']
     if h_subtype == 'phone' and not phone_is_mobile:
         return False
 
     # If a device endpoint type is a server, it can only use Windows Server OSes and Unix OSes that are not Mac OS X
-    server_is_ws = h_subtype == 'server' and os_dist == 'windows_server'
+    server_is_microsoft = h_subtype == 'server' and os_type in ['microsoft', '']
+    ms_server_is_ws = server_is_microsoft and os_subtype in ['windows_server', '']
 
-    server_is_unix = h_subtype == 'server' and os_type == 'unix'
-    unix_server_not_mac = server_is_unix and os_dist != 'mac_os_x'
+    server_is_unix = h_subtype == 'server' and os_type in ['unix', '']
+    unix_server_not_mac = server_is_unix and os_subtype != 'mac_os_x'
 
-    if h_subtype == 'server' and not (server_is_ws or unix_server_not_mac):
+    if h_subtype == 'server' and not (ms_server_is_ws or unix_server_not_mac):
         return False
 
-    # If a device endpoint type is a laptop or desktop
+    # If a device endpoint type is a laptop or desktop it can't use a mobile OS
     laptop_or_desktop = h_subtype == 'laptop' or h_subtype == 'desktop'
     lap_desk_not_mobile = laptop_or_desktop and os_type != 'mobile'
-
     if laptop_or_desktop and not lap_desk_not_mobile:
+        return False
+
+    # Software based rules
+    # If Windows Server OS it has to be a system or admin account
+    ws_is_system_or_admin = os_subtype == 'windows_server' and a_type in ['system', 'admin', '']
+    if os_subtype == 'windows_server' and not ws_is_system_or_admin:
+        return False
+
+    # If Ubuntu Server OS it has to be a system or admin account
+    us_is_system_or_admin = os_dist == 'ubuntu_server' and a_type in ['system', 'admin', '']
+    if os_dist == 'ubuntu_server' and not us_is_system_or_admin:
+        return False
+
+    # Appliances and Peripherals have to be a system account
+    app_or_peri = h_type == 'appliance' or h_type == 'peripheral'
+    app_peri_is_system = app_or_peri and a_type in ['system', '']
+    if app_or_peri and not app_peri_is_system:
+        return False
+
+    # CA based rules
+    # If Not a Server it cannot be a certificate authority
+    is_ca = ca_type in ['inter_auth', 'root_auth']
+    ca_is_endpoint = is_ca and h_type in ['endpoint', '']
+    ca_is_server = is_ca and h_subtype in ['server', '']
+    if is_ca and not (ca_is_endpoint and ca_is_server):
         return False
 
     return True
 
 
-def check_for_exceptions(cur_settings: list, cur_value: str) -> Tuple[bool, list]:
+def check_exceptions(cur_settings: list) -> list:
     """
-    Checks current value to see if it fits a specific exception.
-    If so, the rest of the settings are generated manually and no more randomness happens.
+    Pre-emptively fills out the settings if it runs into an exception rule.
 
     Args:
         cur_settings (list): The current settings.
-        cur_value (str): The current value.
 
     Returns:
-        Tuple[bool, list]: A tuple containing a boolean and a list.
-        The boolean is True if the current value is an exception, False otherwise.
-        The list is the list of settings to generate manually if True.
+        list: The pre-filled list if needed.
     """
-    # Sample structure
-    # 0 : [type, subtype, brand]
-    # 1 : [cat, subcat, dist, subdist]
-    # 2 : [type, subtype, status]
 
     h_type = cur_settings[0][0]
-    h_subtype = cur_settings[0][1]
     os_type = cur_settings[1][0]
     os_subtype = cur_settings[1][1]
     os_dist = cur_settings[1][2]
+    a_type = cur_settings[2][0]
 
-    # Software based exceptions
-    # Holders without any operating system specified are considered unknown and should have the system account.
-    os_group_unknown = not has_value(COMMON_OS, os_type)
-    os_subgroup_unknown = (
-            not has_value(COMMON_ROUTING, os_dist) and
-            not has_value(COMMON_MOBILE, os_dist) and
-            not has_value(COMMON_UNIX, os_dist) and
-            not has_value(COMMON_MICROSOFT, os_dist)
-    )
-    os_dist_unknown = (
-            not has_value(COMMON_MAC_OS_X, os_dist) and
-            not has_value(COMMON_BSD, os_dist) and
-            not has_value(COMMON_LINUX, os_dist) and
-            not has_value(COMMON_WINDOWS, os_dist) and
-            not has_value(COMMON_WINDOWS_SERVER, os_dist)
-    )
+    # Hardware exceptions
+    # If an appliance or peripheral, the all OS types should be the specific brand followed by "_os"
+    if h_type in ['appliance', 'peripheral']:
+        cur_settings[1][0] = cur_settings[0][2] + '_os'
+        cur_settings[1][1] = cur_settings[0][2] + '_os'
+        cur_settings[1][2] = cur_settings[0][2] + '_os'
+        cur_settings[1][3] = cur_settings[0][2] + '_os'
 
-    if os_group_unknown and os_subgroup_unknown and os_dist_unknown:
-        cur_settings[1][0] = cur_settings[0][2]
-        cur_settings[1][1] = cur_settings[0][2]
-        cur_settings[1][2] = cur_settings[0][2]
-        cur_settings[1][3] = cur_settings[0][2]
-        cur_settings[2][0] = 'system'
-        cur_settings[2][1] = 'system'
+    # Software exceptions
+    # If not windows, windows-server, suse, red-hat, or debian dist, then OS subdist should be the OS dist.
+    os_is_microsoft = os_type == 'microsoft'
+    linux_os_has_subdist = os_dist in ['suse', 'red_hat', 'debian']
 
-    return False, []
+    if not (os_is_microsoft or linux_os_has_subdist):
+        cur_settings[1][3] = os_dist
+
+    # If a routing os, mobile-ios, or solaris, then all OS types should be the routing os or ios
+    if os_type == 'routing' or os_subtype == 'ios' or os_subtype == 'solaris':
+        cur_settings[1][2] = os_subtype
+        cur_settings[1][3] = os_subtype
+
+    # Account exceptions
+    # If system, then the account subtype should be system
+    if a_type == 'system':
+        cur_settings[2][1] = a_type
+
+    return cur_settings
+
+
+def check_enum_value(outer_index: int, inner_index: int, cur_settings: list,
+                     key: str, value: Union[tuple, str], parent: bool = False) -> tuple:
+    """
+    Decision Tree to check the values of the chosen enum given the enum key and the value(s).
+
+    Args:
+        outer_index (int): The index of the outer list.
+        inner_index (int): The index of the inner list.
+        cur_settings (list): The current settings list.
+        key (str): The chosen key from the returned enum dictionary.
+        value (Union[tuple, str]): The values of the chosen key.
+        parent (bool): Whether a parent was used to get here.
+
+    Returns:
+        tuple: A tuple of-
+            If the tested value was validated.
+            A list of the current settings regardless of modification.
+    """
+
+    # Set variables
+    temp_settings = copy.deepcopy(cur_settings)
+    new_value_unvalidated = True
+
+    # Set the inner index for the check
+    if parent:
+        local_inner_index = inner_index - 1
+    else:
+        local_inner_index = inner_index
+
+    # Check if the value is a tuple and work accordingly
+    if isinstance(value, tuple):
+        # Create a list to go through
+        end_options = list(value)
+        using_end_options = True
+
+        # Try options in list
+        while end_options and using_end_options:
+            # Set options
+            temp_settings[outer_index][local_inner_index] = key.lower()
+
+            end_option_index = random.randint(0, len(end_options) - 1)
+            temp_settings[outer_index][local_inner_index + 1] = end_options[end_option_index]
+
+            # Check if temporary settings passes the rule check
+            if pass_rule_check(temp_settings):
+                cur_settings = temp_settings
+                using_end_options = False
+                new_value_unvalidated = False
+
+            # Remove used option
+            del end_options[end_option_index]
+            print(end_options)
+    else:
+        temp_settings[outer_index][local_inner_index] = value
+
+        # Check if temporary settings passes the rule check
+        if pass_rule_check(temp_settings):
+            cur_settings = temp_settings
+            new_value_unvalidated = False
+
+    return new_value_unvalidated, cur_settings
 
 
 def update_settings(outer_index: int, inner_index: int, cur_settings: list) -> list:
@@ -441,7 +530,25 @@ def update_settings(outer_index: int, inner_index: int, cur_settings: list) -> l
         list: The updated settings list.
     """
 
-    enum_class_switch: dict = {
+    enum_switch_known: dict = {
+        'endpoint': COMMON_ENDPOINT,
+        'network': COMMON_NETWORK,
+        'appliance': COMMON_APPLIANCE,
+        'peripheral': COMMON_PERIPHERALS,
+        'routing': COMMON_ROUTING,
+        'mobile': COMMON_MOBILE,
+        'unix': COMMON_UNIX,
+        'microsoft': COMMON_MICROSOFT,
+        'windows': COMMON_WINDOWS,
+        'windows_server': COMMON_WINDOWS_SERVER,
+        'bsd': COMMON_BSD,
+        'linux': COMMON_LINUX,
+        'mac_os_x': COMMON_MAC_OS_X,
+        'admin': COMMON_ADMINS,
+        'user': COMMON_USERS
+    }
+
+    enum_switch_unknown: dict = {
         0: {
             0: [COMMON_HARDWARE],
             1: [COMMON_PERIPHERALS, COMMON_APPLIANCE, COMMON_NETWORK, COMMON_ENDPOINT]
@@ -454,38 +561,82 @@ def update_settings(outer_index: int, inner_index: int, cur_settings: list) -> l
         2: {
             0: [COMMON_ACCOUNTS],
             1: [COMMON_ADMINS, COMMON_USERS]
+        },
+        3: {
+            0: [COMMON_CA]
         }
     }
 
-    # Choose the enum wanted
-    enum_type_loc = enum_class_switch[outer_index][inner_index]
-    enum_index = random.randint(0, len(enum_type_loc) - 1)
-    enum_choice = enum_type_loc[enum_index]
+    parent_value = ''
+    last_value = ''
+    new_value_unvalidated = True
+
+    # Choose the next enum if the last value is not empty
+    if inner_index > 0 and cur_settings[outer_index][inner_index-1] != '':  # Go down a certain path
+        last_value = cur_settings[outer_index][inner_index-1]
+
+        # If setting the last value was successful, set the enum to use.
+        if last_value in enum_switch_known.keys():
+            enum_choice = enum_switch_known[last_value]
+        else:
+            # If not, use the parent to get the enum data
+            parent_value = cur_settings[outer_index][inner_index-2]
+
+            # If the parent's found, set the enum_choice
+            if parent_value in enum_switch_known.keys():
+                enum_choice = enum_switch_known[parent_value]
+            else:
+                # If the parent is not found, fill with whatever value was detected and call it a day
+                for i in range(inner_index, len(cur_settings[outer_index])):
+                    if cur_settings[outer_index][inner_index] == '':
+                        cur_settings[outer_index][inner_index] = last_value
+
+                cur_settings = check_exceptions(cur_settings)
+                return cur_settings
+    else:  # Random selection as final solution
+        enum_type_loc = enum_switch_unknown[outer_index][inner_index]
+        enum_index = random.randint(0, len(enum_type_loc) - 1)
+        enum_choice = enum_type_loc[enum_index]
 
     # Get the enum data
     enum_data = get_all_items(enum_choice, verbose=True)
 
-    # Get a random value from the enum data the abides by generation rules
-    while True:
-        # Get a value
-        random_key = random.choice(list(enum_data.keys()))
-        random_value = enum_data[random_key].lower().replace(' ', '_').replace('-', '_')
+    # If parent value set, go straight through the parent for the attempt
+    if parent_value != '':
+        # Set the child value and test it
+        if last_value.upper() in enum_data.keys():
+            child_value = enum_data[last_value.upper()]
+            new_value_unvalidated, cur_settings = check_enum_value(
+                outer_index, inner_index, cur_settings, last_value, child_value, parent=True
+            )
 
-        # Check if the value is a tuple and append accordingly
-        temp_settings = copy.deepcopy(cur_settings)
-        if isinstance(random_value, tuple):
-            temp_settings[outer_index][inner_index] = random_key.lower().replace(' ', '_').replace('-', '_')
-            temp_settings[outer_index][inner_index+1] = random.choice(random_value)
-        else:
-            temp_settings[outer_index][inner_index] = random_value
+        else:  # If the parent is not found, fill with whatever value was detected and call it a day
+            for i in range(inner_index, len(cur_settings[outer_index])):
+                if cur_settings[outer_index][inner_index] == '':
+                    cur_settings[outer_index][inner_index] = last_value
+    else:
+        # Get a random value from the enum data the abides by unknown enum switch and test.
+        # Keep doing that until a value passes the rule set.
+        while enum_data and new_value_unvalidated:
+            # Get a random value
+            random_key = random.choice(list(enum_data.keys()))
+            random_value = enum_data[random_key]
 
-        # Check if temporary settings passes the rule check
-        if pass_rule_check(temp_settings):
-            cur_settings = temp_settings
-            break
+            # Test the value
+            new_value_unvalidated, cur_settings = check_enum_value(
+                outer_index, inner_index, cur_settings, random_key, random_value
+            )
+
+            # Remove key once used
+            del enum_data[random_key]
+            print(enum_data)
+
+    # Address Hard-fill cases
+    cur_settings = check_exceptions(cur_settings)
+    return cur_settings
 
 
-def auto_fill_types(cur_settings: list) -> tuple:
+def auto_fill_types(cur_settings: list) -> list:
     """
     Autofill the types of the enum class.
 
@@ -501,58 +652,14 @@ def auto_fill_types(cur_settings: list) -> tuple:
             # Get the enum to try to change
             cur_info = cur_settings[outer_index][inner_index]
             if cur_info == '':
-                settings_locked, cur_settings = update_settings(outer_index, inner_index, cur_settings)
-            else:
-                ...
+                cur_settings = update_settings(outer_index, inner_index, cur_settings)
+            print(cur_settings)
 
-    return settings_locked, cur_settings
+    return cur_settings
 
 
 if __name__ == '__main__':
-    type_fill = [['', '', ''], ['', '', '', ''], ['', '', '']]
-    type_fill = auto_fill_types(type_fill)
+    # print(get_all_items(COMMON_ROUTING, True))
 
-
-"""
-
-    if cur_value == '':
-        # Start from the beginning
-        cur_settings = [[], [], []]
-        enum_data = get_all_items(enum_class_switch[cur_number]['hardware'], verbose=True)
-    else:
-        enum_data = get_all_items(enum_class_switch[cur_number][cur_value], verbose=True)
-
-    # Get a random value from the enum data the abides by generation rules
-    while True:
-        # Get a value
-        random_key = random.choice(list(enum_data.keys()))
-        random_value = enum_data[random_key].lower().replace(' ', '_').replace('-', '_')
-
-        # Check if the value is a tuple and append accordingly
-        if isinstance(random_value, tuple):
-            temp_settings = copy.deepcopy(cur_settings)
-            temp_settings[cur_number].append(random_key.lower().replace(' ', '_').replace('-', '_'))
-            temp_settings[cur_number].append(random.choice(random_value))
-        else:
-            temp_settings = copy.deepcopy(cur_settings)
-            temp_settings[cur_number].append(random.choice(random_value))
-
-        # Check if temporary settings passes the rule check
-        if pass_rule_check(temp_settings):
-            cur_settings = temp_settings
-            break
-
-    # Check if there is an exception
-    is_exception, cur_settings = check_for_exceptions(cur_settings, cur_value)
-
-    # Check if there is another level
-    next_level = search_in_switch(random_value, enum_class_switch)
-    if next_level != -1 and not is_exception:
-        is_exception, cur_settings = auto_fill_types(
-            cur_value=random_value, cur_number=next_level, cur_settings=cur_settings
-        )
-
-    # Return if not
-    return is_exception, cur_settings
-    
-"""
+    for i in range(5000):
+         auto_fill_types([['', '', ''], ['', '', '', ''], ['', ''], ['']])

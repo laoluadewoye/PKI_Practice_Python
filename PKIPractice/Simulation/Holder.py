@@ -70,8 +70,15 @@ class Holder:
         )
 
         # Type information
-        type_fill = [['', '', ''], ['', '', '', ''], ['', '', '']]
+        type_fill = [['', '', ''], ['', '', '', ''], ['', ''], ['']]
         has_holder_type = 'holder_type_info' in holder_config.keys()
+
+        if level == 1:
+            type_fill[3][0] = 'root_auth'
+        elif level < auto_config['level_count']:
+            type_fill[3][0] = 'inter_auth'
+        else:
+            type_fill[3][0] = 'not_auth'
 
         if has_holder_type:
             for key in holder_config['holder_type_info'].keys():
@@ -94,6 +101,6 @@ class Holder:
                 elif key == 'account_subtype':
                     type_fill[2][1] = holder_config['holder_type_info']['account_subtype'].lower().replace(" ", "_").replace("-", "_")
                 elif key == 'ca_status':
-                    type_fill[2][2] = holder_config['holder_type_info']['ca_status'].lower().replace(" ", "_").replace("-", "_")
+                    type_fill[3][0] = holder_config['holder_type_info']['ca_status'].lower().replace(" ", "_").replace("-", "_")
 
         type_fill = auto_fill_types(type_fill)

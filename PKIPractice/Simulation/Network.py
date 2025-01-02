@@ -58,6 +58,8 @@ class PKINetwork:
                 else:
                     self.network_log.append(f'Invalid location configuration. {holder_name} was ignored.')
 
+        #
+
 
     def add_to_network(self, holder_name: str, holder_config: dict, auto_config: dict) -> bool:
         # Check if location is valid
