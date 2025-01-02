@@ -16,7 +16,6 @@
 		<!--For example, as there is only 1 root, the level starts at 1 and the holder is the first one.-->
 		<location>
 			<level>1</level>
-			<holder>1</holder>
 		</location>
 
 		<!--This sets the environment overrides that default_auto passes into the program.-->
@@ -82,7 +81,6 @@
 	<second_lvl_ca_one>
 		<location>
 			<level>2</level>
-			<holder>1</holder>
 		</location>
 		<env_overrides>
 			<uid_hash>sha512</uid_hash>
@@ -103,7 +101,6 @@
 	<second_lvl_ca_two>
 		<location>
 			<level>2</level>
-			<holder>2</holder>
 		</location>
 		<env_overrides>
 			<uid_hash>sha512</uid_hash>
@@ -126,7 +123,6 @@
 	<third_lvl_ca_one>
 		<location>
 			<level>3</level>
-			<holder>1</holder>
 		</location>
 		<env_overrides>
 			<uid_hash>sha512</uid_hash>
@@ -146,7 +142,6 @@
 	<third_lvl_ca_two>
 		<location>
 			<level>3</level>
-			<holder>2</holder>
 		</location>
 		<env_overrides>
 			<uid_hash>sha512</uid_hash>
@@ -166,7 +161,6 @@
 	<third_lvl_ca_three>
 		<location>
 			<level>3</level>
-			<holder>3</holder>
 		</location>
 		<env_overrides>
 			<uid_hash>sha512</uid_hash>
@@ -186,7 +180,6 @@
 	<third_lvl_ca_four>
 		<location>
 			<level>3</level>
-			<holder>4</holder>
 		</location>
 		<env_overrides>
 			<uid_hash>sha512</uid_hash>
@@ -208,7 +201,6 @@
 	<fourth_level_one>
 		<location>
 			<level>4</level>
-			<holder>1</holder>
 		</location>
 		<holder_type_info>
 			<hardware_type>Network</hardware_type>
@@ -225,7 +217,6 @@
 	<fourth_level_two>
 		<location>
 			<level>4</level>
-			<holder>2</holder>
 		</location>
 		<holder_type_info>
 			<hardware_type>Endpoint</hardware_type>
@@ -242,7 +233,6 @@
 	<fourth_level_three>
 		<location>
 			<level>4</level>
-			<holder>3</holder>
 		</location>
 		<holder_type_info>
 			<hardware_type>Peripheral</hardware_type>
@@ -254,7 +244,6 @@
 	<fourth_level_four>
 		<location>
 			<level>4</level>
-			<holder>4</holder>
 		</location>
 		<holder_type_info>
 			<hardware_type>Endpoint</hardware_type>
@@ -265,7 +254,6 @@
 	<fourth_level_five>
 		<location>
 			<level>4</level>
-			<holder>5</holder>
 		</location>
 		<holder_type_info>
 			<hardware_type>Appliance</hardware_type>
@@ -278,7 +266,6 @@
 	<fourth_level_six>
 		<location>
 			<level>4</level>
-			<holder>6</holder>
 		</location>
 		<holder_type_info>
 			<hardware_type>Endpoint</hardware_type>
@@ -291,7 +278,6 @@
 	<fourth_level_seven>
 		<location>
 			<level>4</level>
-			<holder>7</holder>
 		</location>
 		<holder_type_info>
 			<hardware_type>Endpoint</hardware_type>
@@ -308,7 +294,6 @@
 	<fourth_level_eight>
 		<location>
 			<level>4</level>
-			<holder>8</holder>
 		</location>
 		<holder_type_info>
 			<os_subcategory>Mac OS X</os_subcategory>

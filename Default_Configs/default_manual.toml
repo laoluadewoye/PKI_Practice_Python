@@ -14,7 +14,6 @@
 # The direction is top-down and left to right.
 # For example, as there is only 1 root, the level starts at 1 and the holder is the first one.
 level = 1
-holder = 1
 
 [default_root_ca.env_overrides]
 # This sets the environment overrides that default_auto passes into the program.
@@ -74,7 +73,6 @@ url = "root_enterprises.com/root_ca"
 # Level Two
 [second_lvl_ca_one.location]
 level = 2
-holder = 1
 
 [second_lvl_ca_one.env_overrides]
 uid_hash = "sha512"
@@ -93,7 +91,6 @@ os_dist = "Ubuntu Server"
 
 [second_lvl_ca_two.location]
 level = 2
-holder = 2
 
 [second_lvl_ca_two.env_overrides]
 uid_hash = "sha512"
@@ -113,7 +110,6 @@ os_dist = "Ubuntu Server"
 # Level Three
 [third_lvl_ca_one.location]
 level = 3
-holder = 1
 
 [third_lvl_ca_one.env_overrides]
 uid_hash = "sha512"
@@ -131,7 +127,6 @@ url = "cert_incorporated.com/peru/intermediate_ca"
 
 [third_lvl_ca_two.location]
 level = 3
-holder = 2
 
 [third_lvl_ca_two.env_overrides]
 uid_hash = "sha512"
@@ -149,7 +144,6 @@ url = "cloudcert.com/nigeria/intermediate_ca"
 
 [third_lvl_ca_three.location]
 level = 3
-holder = 3
 
 [third_lvl_ca_three.env_overrides]
 uid_hash = "sha512"
@@ -167,7 +161,6 @@ url = "europass.com/norway_intermediate_ca"
 
 [third_lvl_ca_four.location]
 level = 3
-holder = 4
 
 [third_lvl_ca_four.env_overrides]
 uid_hash = "sha512"
@@ -186,7 +179,6 @@ url = "lonestarnet.com/us/houston/intermediate_ca"
 # Level Four
 [fourth_level_one.location]
 level = 4
-holder = 1
 
 [fourth_level_one.holder_type_info]
 hardware_type = "Network"
@@ -201,7 +193,6 @@ account_subtype = "Network Admin"
 
 [fourth_level_two.location]
 level = 4
-holder = 2
 
 [fourth_level_two.holder_type_info]
 hardware_type = "Endpoint"
@@ -216,7 +207,6 @@ account_subtype = "Personal"
 
 [fourth_level_three.location]
 level = 4
-holder = 3
 
 [fourth_level_three.holder_type_info]
 hardware_type = "Peripheral"
@@ -226,7 +216,6 @@ account_subtype = "Enterprise"
 
 [fourth_level_four.location]
 level = 4
-holder = 4
 
 [fourth_level_four.holder_type_info]
 hardware_type = "Endpoint"
@@ -235,7 +224,6 @@ account_type = "User"
 
 [fourth_level_five.location]
 level = 4
-holder = 5
 
 [fourth_level_five.holder_type_info]
 hardware_type = "Appliance"
@@ -246,7 +234,6 @@ account_subtype = "Network Admin"
 
 [fourth_level_six.location]
 level = 4
-holder = 6
 
 [fourth_level_six.holder_type_info]
 hardware_type = "Endpoint"
@@ -257,7 +244,6 @@ account_subtype = "Cloud Admin"
 
 [fourth_level_seven.location]
 level = 4
-holder = 7
 
 [fourth_level_seven.holder_type_info]
 hardware_type = "Endpoint"
@@ -272,7 +258,6 @@ account_subtype = "Guest"
 
 [fourth_level_eight.location]
 level = 4
-holder = 8
 
 [fourth_level_eight.holder_type_info]
 os_subcategory = "Mac OS X"

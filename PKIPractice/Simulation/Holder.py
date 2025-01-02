@@ -83,24 +83,24 @@ class Holder:
         if has_holder_type:
             for key in holder_config['holder_type_info'].keys():
                 if key == 'hardware_type':
-                    type_fill[0][0] = holder_config['holder_type_info']['hardware_type'].lower().replace(" ", "_").replace("-", "_")
+                    type_fill[0][0] = holder_config['holder_type_info']['hardware_type']
                 elif key == 'hardware_subtype':
-                    type_fill[0][1] = holder_config['holder_type_info']['hardware_subtype'].lower().replace(" ", "_").replace("-", "_")
+                    type_fill[0][1] = holder_config['holder_type_info']['hardware_subtype']
                 elif key == 'hardware_brand':
-                    type_fill[0][2] = holder_config['holder_type_info']['hardware_brand'].lower().replace(" ", "_").replace("-", "_")
+                    type_fill[0][2] = holder_config['holder_type_info']['hardware_brand']
                 elif key == 'os_category':
-                    type_fill[1][0] = holder_config['holder_type_info']['os_category'].lower().replace(" ", "_").replace("-", "_")
+                    type_fill[1][0] = holder_config['holder_type_info']['os_category']
                 elif key == 'os_subcategory':
-                    type_fill[1][1] = holder_config['holder_type_info']['os_subcategory'].lower().replace(" ", "_").replace("-", "_")
+                    type_fill[1][1] = holder_config['holder_type_info']['os_subcategory']
                 elif key == 'os_dist':
-                    type_fill[1][2] = holder_config['holder_type_info']['os_dist'].lower().replace(" ", "_").replace("-", "_")
+                    type_fill[1][2] = holder_config['holder_type_info']['os_dist']
                 elif key == 'os_subdist':
-                    type_fill[1][3] = holder_config['holder_type_info']['os_subdist'].lower().replace(" ", "_").replace("-", "_")
+                    type_fill[1][3] = holder_config['holder_type_info']['os_subdist']
                 elif key == 'account_type':
-                    type_fill[2][0] = holder_config['holder_type_info']['account_type'].lower().replace(" ", "_").replace("-", "_")
+                    type_fill[2][0] = holder_config['holder_type_info']['account_type']
                 elif key == 'account_subtype':
-                    type_fill[2][1] = holder_config['holder_type_info']['account_subtype'].lower().replace(" ", "_").replace("-", "_")
+                    type_fill[2][1] = holder_config['holder_type_info']['account_subtype']
                 elif key == 'ca_status':
-                    type_fill[3][0] = holder_config['holder_type_info']['ca_status'].lower().replace(" ", "_").replace("-", "_")
+                    type_fill[3][0] = holder_config['holder_type_info']['ca_status']
 
         type_fill = auto_fill_types(type_fill)

@@ -58,15 +58,13 @@ class PKINetwork:
                 else:
                     self.network_log.append(f'Invalid location configuration. {holder_name} was ignored.')
 
-        #
-
 
     def add_to_network(self, holder_name: str, holder_config: dict, auto_config: dict) -> bool:
         # Check if location is valid
         proper_keys: bool = all(
             isinstance(holder_config['location'][key], int) for key in holder_config['location'].keys()
         )
-        enough_keys: bool = len(holder_config['location'].keys()) == 2
+        enough_keys: bool = len(holder_config['location'].keys()) == 1
 
         if not proper_keys or not enough_keys:
             print(f'Invalid location configuration. {holder_name} configuration will be ignored.')
@@ -77,7 +75,6 @@ class PKINetwork:
 
         # Add holder to network
         level = holder_config['location']['level']
-        level_place = holder_config['location']['holder']
-        self.network[level][level_place] = holder
+        self.network[level].append(holder)
 
         return True

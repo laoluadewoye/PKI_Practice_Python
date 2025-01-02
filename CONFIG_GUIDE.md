@@ -75,8 +75,8 @@ This name is a useful way to identify a specific holder in the environment to th
 
 The holder location is the first major detail specified in the "values" of the holder. It is specified using the 
 `location` parameter and specifies where the holder being set is in the environment. The `level` states the level
-in the hierarchy from top to bottom, and the `holder` the position in the level from left to right. This is used to
-identify which holder to start setting. If this detail is not specified, the entire key will be ignored.
+in the hierarchy from top to bottom. This is used to identify where in the environment hierarchy the holder will be.
+If this detail is not specified, the entire key will be ignored.
 
 ## Holder environment overrides
 

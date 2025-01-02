@@ -246,7 +246,7 @@ def search_for_typecast_manual(settings: dict) -> Union[dict, None]:
 
     try:
         for key, value in settings.items():
-            if key in ['level', 'holder', 'pub_exp', 'key_size']:
+            if key in ['level', 'pub_exp', 'key_size']:
                 settings[key] = int(value)
             elif key in ['revoc_prob']:
                 settings[key] = float(value)

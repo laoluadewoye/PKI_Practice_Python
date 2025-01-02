@@ -1,8 +1,7 @@
 {
     "default_root_ca": {
         "location": {
-            "level": 1,
-            "holder": 1
+            "level": 1
         },
         "env_overrides": {
             "uid_hash": "sha3_512",
@@ -44,8 +43,7 @@
     },
     "second_lvl_ca_one": {
         "location": {
-            "level": 2,
-            "holder": 1
+            "level": 2
         },
         "env_overrides": {
             "uid_hash": "sha512",
@@ -65,8 +63,7 @@
     },
     "second_lvl_ca_two": {
         "location": {
-            "level": 2,
-            "holder": 2
+            "level": 2
         },
         "env_overrides": {
             "uid_hash": "sha512",
@@ -86,8 +83,7 @@
     },
     "third_lvl_ca_one": {
         "location": {
-            "level": 3,
-            "holder": 1
+            "level": 3
         },
         "env_overrides": {
             "uid_hash": "sha512",
@@ -106,8 +102,7 @@
     },
     "third_lvl_ca_two": {
         "location": {
-            "level": 3,
-            "holder": 2
+            "level": 3
         },
         "env_overrides": {
             "uid_hash": "sha512",
@@ -126,8 +121,7 @@
     },
     "third_lvl_ca_three": {
         "location": {
-            "level": 3,
-            "holder": 3
+            "level": 3
         },
         "env_overrides": {
             "uid_hash": "sha512",
@@ -146,8 +140,7 @@
     },
     "third_lvl_ca_four": {
         "location": {
-            "level": 3,
-            "holder": 4
+            "level": 3
         },
         "env_overrides": {
             "uid_hash": "sha512",
@@ -166,8 +159,7 @@
     },
     "fourth_level_one": {
         "location": {
-            "level": 4,
-            "holder": 1
+            "level": 4
         },
         "holder_type_info": {
             "hardware_type": "Network",
@@ -183,8 +175,7 @@
     },
     "fourth_level_two": {
         "location": {
-            "level": 4,
-            "holder": 2
+            "level": 4
         },
         "holder_type_info": {
             "hardware_type": "Endpoint",
@@ -200,8 +191,7 @@
     },
     "fourth_level_three": {
         "location": {
-            "level": 4,
-            "holder": 3
+            "level": 4
         },
         "holder_type_info": {
             "hardware_type": "Peripheral",
@@ -212,8 +202,7 @@
     },
     "fourth_level_four": {
         "location": {
-            "level": 4,
-            "holder": 4
+            "level": 4
         },
         "holder_type_info": {
             "hardware_type": "Endpoint",
@@ -223,8 +212,7 @@
     },
     "fourth_level_five": {
         "location": {
-            "level": 4,
-            "holder": 5
+            "level": 4
         },
         "holder_type_info": {
             "hardware_type": "Appliance",
@@ -236,8 +224,7 @@
     },
     "fourth_level_six": {
         "location": {
-            "level": 4,
-            "holder": 6
+            "level": 4
         },
         "holder_type_info": {
             "hardware_type": "Endpoint",
@@ -249,8 +236,7 @@
     },
     "fourth_level_seven": {
         "location": {
-            "level": 4,
-            "holder": 7
+            "level": 4
         },
         "holder_type_info": {
             "hardware_type": "Endpoint",
@@ -266,8 +252,7 @@
     },
     "fourth_level_eight": {
         "location": {
-            "level": 4,
-            "holder": 8
+            "level": 4
         },
         "holder_type_info": {
             "os_subcategory": "Mac OS X"
