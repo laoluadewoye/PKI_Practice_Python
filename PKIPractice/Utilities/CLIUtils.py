@@ -479,8 +479,8 @@ def start_program() -> None:
             env_auto_settings, env_manual_settings = ingest_config(sys.argv)
 
         # Build the environment
-        # pki_network = PKINetwork('Network', env_auto_settings, env_manual_settings)
-        # print(pki_network)
+        pki_network = PKINetwork('Network', env_auto_settings, env_manual_settings)
+        print(pki_network)
 
     # Ultimate error escape
     except AssertionError as e:

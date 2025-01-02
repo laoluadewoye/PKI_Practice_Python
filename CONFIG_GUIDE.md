@@ -122,8 +122,8 @@ program does not recognize a value, it may just copy the value over and over to 
     * 'smart_card' for a smart card
     * 'external_storage' for an external storage device
 * `hardware_brand` specifies the brand of the device. Each device can be made by a number of companies, and each 
-  subtype has its own list of default companies. They won't be listed here for brevity, but you can check NOTES.md to
-  find the information.
+  subtype has its own list of default companies. They won't be listed here for brevity, but you can check the default 
+  parameters section at the end of this file to find the information.
 
 ### Software
 
@@ -159,9 +159,10 @@ program does not recognize a value, it may just copy the value over and over to 
     * 'nxos' for a Nexus NOS operating system
     * 'openwrt' for an OpenWrt operating system
 * `os_dist` specifies the distribution of the operating system and is based off of `os_subcategory`. As there are a lot
-  of distributions, we won't list them here, but you can check NOTES.md to find the information.
+  of distributions, we won't list them here, but you can check the default parameters section to find the information.
 * `os_subdist` specifies the sub-distribution or edition of the operating system and is based off of `os_dist`. As 
-  there are a lot of these as well, we won't list them here, but you can check NOTES.md to find the information.
+  there are a lot of these as well, we won't list them here, but you can check the default parameters section to find 
+  the information.
 
 Some rules to note that will be expressed in random generation:
 
@@ -231,3 +232,288 @@ In addition, it must be emphasized that the manual configuration file is **OPTIO
 decide to not specify some parameters, or only specify the ones you WANT to change. You will see this if looking
 the examples, as while some are fully specified, others leave many details up to the random generation and environment
 parameters.
+
+# All default parameters
+
+## 1) Accounts
+
+Account parameters indented as follows-
+
+ * account_type
+    * account_subtype
+
+1) user
+   1) guest
+   2) personal
+   3) enterprise
+2) admin
+   1) domain_admin
+   2) schema_admin
+   3) server_admin
+   4) network_admin
+   5) cloud_admin
+   6) database_admin
+   7) auditor
+3) system
+
+## 2) Operating Systems
+
+OS parameters indented as follows-
+
+ * os_category
+    * os_subcategory
+       * os_dist
+          * os_subdist
+
+1) microsoft
+   1) windows
+      1) windows_2000
+         1) professional
+         2) server
+         3) advanced_server
+         4) datacenter_server
+      2) windows_xp
+         1) home
+         2) professional
+      3) windows_vista
+         1) starter
+         2) home_basic
+         3) home_premium
+         4) business
+         5) enterprise
+         6) ultimate
+      4) windows_7
+         1) starter
+         2) home_basic
+         3) home_premium
+         4) business
+         5) enterprise
+         6) ultimate
+      5) windows_8
+         1) home
+         2) pro
+         3) enterprise
+      6) windows_10
+         1) home
+         2) pro
+         3) educational
+         4) enterprise
+      7) windows_11
+         1) home
+         2) pro
+         3) educational
+         4) enterprise
+   2) windows_server
+      1) windows_server_2003
+         1) web
+         2) standard
+         3) enterprise
+         4) datacenter
+      2) windows_server_2008
+         1) web
+         2) standard
+         3) enterprise
+         4) datacenter
+         5) itanium
+         6) foundation
+         7) hpc
+      3) windows_server_2012
+         1) foundation
+         2) essentials
+         3) standard
+         4) datacenter
+      4) windows_server_2016
+         1) standard
+         2) datacenter
+      5) windows_server_2019
+         1) standard
+         2) datacenter
+      6) windows_server_2022
+         1) standard
+         2) datacenter
+         3) datacenter_azure
+2) unix
+   1) linux
+      1) debian
+         1) ubuntu
+         2) linux_mint
+         3) kali_linux
+         4) raspberry_pi
+         5) mx_linux
+         6) debian
+      2) red_hat
+         1) red_hat
+         2) fedora
+         3) cent_os
+      3) arch_linux
+      4) gentoo
+      5) suse
+         1) open_suse
+         2) suse_linux_enterprise
+      6) alpine
+      7) nix_os
+      8) qubes_os
+      9) ubuntu_server
+   2) bsd
+      1) free_bsd
+      2) open_bsd
+      3) net_bsd
+   3) solaris
+   4) mac_os_x
+      1) leopard
+      2) snow_leopard
+      3) lion
+      4) mountain_lion
+      5) mavericks
+      6) yosemite
+      7) el_capitan
+      8) sierra
+      9) high_sierra
+      10) mojave
+      11) catalina
+      12) big_sur
+      13) monterey
+      14) ventura
+      15) sonoma
+      16) sequoia
+3) mobile
+   1) ios
+   2) android
+      1) android_nougat
+      2) android_oreo
+      3) android_pie
+      4) android_10
+      5) android_11
+      6) android_12
+      7) android_13
+      8) android_14
+      9) android_15
+      10) android_16
+4) routing
+   1) onie
+   2) onl
+   3) opx
+   4) dnos
+   5) junos
+   6) fboss
+   7) sonic
+   8) aruba_os
+   9) cisco_ios
+   10) nexus_nos
+   11) openwrt
+
+## 3) Hardware
+
+Hardware parameters indented as follows-
+
+ * hardware_type
+    * hardware_subtype
+       * hardware_brand
+
+1) endpoint
+   1) desktop
+      1) hewlett_packard
+      2) acer
+      3) dell
+      4) lenovo
+      5) toshiba
+      6) ibm
+      7) fujitsu
+      8) nec
+      9) apple
+   2) laptop
+      1) samsung
+      2) razer
+      3) microsoft
+      4) msi
+      5) asus
+      6) acer
+      7) dell
+      8) lenovo
+      9) hewlett_packard
+      10) apple
+   3) phone
+      1) samsung
+      2) apple
+      3) huawei
+      4) sony
+      5) google
+      6) microsoft
+      7) toshiba
+      8) dell
+   4) server
+      1) dell
+      2) hewlett_packard
+      3) supermicro
+      4) inspur
+      5) lenovo
+      6) huawei
+      7) ibm
+      8) fukitsu
+      9) cisco
+   5) iot
+      1) advantech
+      2) raspberry_pi
+      3) arduino
+      4) nvidia
+      5) beagleboard
+      6) udoo
+      7) onlogic
+      8) kontron
+      9) arbor
+      10) axiomtek
+2) network
+   1) router
+      1) cisco
+      2) peplink
+      3) advantech
+      4) netgear
+      5) tp_link
+   2) switch
+      1) anchor
+      2) honeywell
+      3) philips
+      4) siemens
+      5) cisco
+      6) hpl
+   3) access_point
+      1) cisco
+      2) fortinet
+      3) netgear
+      4) zyxel
+      5) tp_link
+      6) engenius
+3) appliance
+   1) firewall
+      1) bitdefender
+      2) cisco
+      3) fortinet
+      4) palo_alto
+      5) netgate
+      6) watchguard
+      7) sonicwall
+   2) utm
+      1) sonicwall
+      2) fortigate
+      3) barracuda
+      4) juniper
+      5) trellix
+      6) palo_alto
+4) peripheral
+   1) usb_key
+      1) samsung
+      2) sandisk
+      3) corsiar
+      4) kingston
+      5) pny
+   2) smart_card
+      1) thales
+      2) nxp_semiconductors
+      3) cardlogix
+      4) infineon
+   3) external_storage
+      1) seagate
+      2) western_digital
+      3) sandisk
+      4) transcend
+      5) lacie

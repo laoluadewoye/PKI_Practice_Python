@@ -38,6 +38,9 @@ class PKINetwork:
 
         # Network hierarchy
         self.network: dict = {}
+        for i in range(self.network_level_count):
+            self.network[i+1] = [0] * self.network_count_by_level[i]
+
         self.network_log: List[str] = []
 
         # Log events that have already happened
@@ -49,21 +52,30 @@ class PKINetwork:
         # Manual configuration
         if manual_config is not None:
             for holder_name, holder_config in manual_config.items():
-                self.add_to_network(holder_name, holder_config, auto_config)
+                result: bool = self.add_to_network(holder_name, holder_config, auto_config)
+                if result:
+                    self.network_log.append(f'Holder {holder_name} added to network.')
+                else:
+                    self.network_log.append(f'Invalid location configuration. {holder_name} was ignored.')
 
-    def add_to_network(self, holder_name: str, holder_config: dict, auto_config: dict) -> None:
-        print(holder_name)
 
+    def add_to_network(self, holder_name: str, holder_config: dict, auto_config: dict) -> bool:
         # Check if location is valid
-        proper_keys = all(
+        proper_keys: bool = all(
             isinstance(holder_config['location'][key], int) for key in holder_config['location'].keys()
         )
-        enough_keys = len(holder_config['location'].keys()) == 2
+        enough_keys: bool = len(holder_config['location'].keys()) == 2
 
-        if proper_keys and enough_keys:
-            ...
-        else:
+        if not proper_keys or not enough_keys:
             print(f'Invalid location configuration. {holder_name} configuration will be ignored.')
+            return False
 
         # Create holder
         holder: Holder = Holder(holder_name, holder_config, auto_config)
+
+        # Add holder to network
+        level = holder_config['location']['level']
+        level_place = holder_config['location']['holder']
+        self.network[level][level_place] = holder
+
+        return True
