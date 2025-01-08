@@ -92,8 +92,12 @@ recognized in `env_overrides` since we only care about where now.
 The hardware, software, and account type of the holder is the third major detail specified in the "values" of the
 holder. It is specified using the `holder_type_info` parameter and describes the underlying details of the device
 holding the certificate. This detail is optional, meaning if it is not there, the holder will auto generate the
-information. If it is there, be sure to spell everything correctly if you want some level of random generation. If the
-program does not recognize a value, it may just copy the value over and over to fill in gaps.
+information. If it is there, and you wish to use the default parameters, be sure to spell everything correctly, else the
+program will either back-fill an unrecognized value or overwrite it. 
+
+You can use the all default parameters section in this file to aid you with creating a manual configuration. This 
+section will start with a list of rules that govern the random generation. This will be the logic the program uses
+to autofill whatever you don't enter in. Afterward, the list of default values will begin.
 
 ### Hardware
 
@@ -113,7 +117,7 @@ program does not recognize a value, it may just copy the value over and over to 
   * 'network' has the following subtypes:
     * 'switch' for a switch
     * 'router' for a router
-    * 'access point' for an access point
+    * 'access_point' for an access point
   * 'appliance' has the following subtypes:
     * 'firewall' for a firewall
     * 'utm' for a unified threat management device
@@ -233,7 +237,46 @@ decide to not specify some parameters, or only specify the ones you WANT to chan
 the examples, as while some are fully specified, others leave many details up to the random generation and environment
 parameters.
 
-# All default parameters
+# All default type parameters
+
+## Rules governing type autogeneration
+
+### Hardware to Software
+
+* IoT Endpoint Devices can only use Unix OSes not Mac OS X
+* Phone Endpoint Devices can only use Mobile Operating Systems
+* Server Endpoint Devices can only use Windows Server and Unix OSes not Mac OS X
+* Laptop and Desktop Endpoint Devices can not use a Mobile OS
+* Networking Devices can only use Routing OSes and Unix OSes not Mac OS X
+* Peripheral and Appliances are assumed to carry their own logic and do not use a default OS option
+
+### Hardware to Accounts
+
+* Phones cannot use Admin accounts
+* Servers cannot use User accounts
+* Networking devices cannot use User accounts
+* Appliances and Peripherals can only have system accounts
+
+### Software to Hardware
+
+* Mobile OSs can only use phones
+* Mac OS X can only be on desktops and laptops
+* Windows can only be on desktops and laptops
+
+### Software to Account
+
+* Windows Server and Ubuntu Server OS can only use system or admin accounts
+* Routing OSes cannot have user accounts
+* Mobile OSes cannot have admin accounts
+
+### Account to Hardware
+
+* User accounts can only use desktops, laptops, and phones
+* Admin accounts cannot use peripherals
+
+### Account to Software
+
+* User accounts cannot exist on routing OSes or Ubuntu Server
 
 ## 1) Accounts
 

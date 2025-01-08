@@ -19,16 +19,16 @@
             "timeout_dur": "none"
         },
         "holder_type_info": {
-            "hardware_type": "Endpoint",
-            "hardware_subtype": "Server",
-            "hardware_brand": "Dell",
-            "os_category": "Microsoft",
-            "os_subcategory": "Windows Server",
-            "os_dist": "Windows Server 2019",
-            "os_subdist": "Standard",
-            "account_type": "Admin",
-            "account_subtype": "Domain Admin",
-            "ca_status": "Root_Auth"
+            "hardware_type": "endpoint",
+            "hardware_subtype": "server",
+            "hardware_brand": "dell",
+            "os_category": "microsoft",
+            "os_subcategory": "windows_server",
+            "os_dist": "windows_server_2019",
+            "os_subdist": "standard",
+            "account_type": "admin",
+            "account_subtype": "domain_admin",
+            "ca_status": "root_auth"
         },
         "holder_info": {
             "common_name": "Root Enterprises Root CA",
@@ -56,9 +56,9 @@
             }
         },
         "holder_type_info": {
-            "os_category": "Unix",
-            "os_subcategory": "Linux",
-            "os_dist": "Ubuntu Server"
+            "os_category": "unix",
+            "os_subcategory": "linux",
+            "os_dist": "ubuntu_server"
         }
     },
     "second_lvl_ca_two": {
@@ -76,9 +76,9 @@
             }
         },
         "holder_type_info": {
-            "os_category": "Unix",
-            "os_subcategory": "Linux",
-            "os_dist": "Ubuntu Server"
+            "os_category": "unix",
+            "os_subcategory": "linux",
+            "os_dist": "ubuntu_server"
         }
     },
     "third_lvl_ca_one": {
@@ -162,15 +162,15 @@
             "level": 4
         },
         "holder_type_info": {
-            "hardware_type": "Network",
-            "hardware_subtype": "Access Point",
-            "hardware_brand": "Cisco",
-            "os_category": "Routing",
-            "os_subcategory": "OpenWrt",
-            "os_dist": "OpenWrt",
-            "os_subdist": "OpenWrt",
-            "account_type": "Admin",
-            "account_subtype": "Network Admin"
+            "hardware_type": "network",
+            "hardware_subtype": "access_point",
+            "hardware_brand": "cisco",
+            "os_category": "routing",
+            "os_subcategory": "openwrt",
+            "os_dist": "openwrt",
+            "os_subdist": "openwrt",
+            "account_type": "admin",
+            "account_subtype": "network_admin"
         }
     },
     "fourth_level_two": {
@@ -178,15 +178,15 @@
             "level": 4
         },
         "holder_type_info": {
-            "hardware_type": "Endpoint",
-            "hardware_subtype": "Laptop",
-            "hardware_brand": "Asus",
-            "os_category": "Microsoft",
-            "os_subcategory": "Windows",
-            "os_dist": "Windows 10",
-            "os_subdist": "Home",
-            "account_type": "User",
-            "account_subtype": "Personal"
+            "hardware_type": "endpoint",
+            "hardware_subtype": "laptop",
+            "hardware_brand": "asus",
+            "os_category": "microsoft",
+            "os_subcategory": "windows",
+            "os_dist": "windows_10",
+            "os_subdist": "home",
+            "account_type": "user",
+            "account_subtype": "personal"
         }
     },
     "fourth_level_three": {
@@ -194,10 +194,10 @@
             "level": 4
         },
         "holder_type_info": {
-            "hardware_type": "Peripheral",
-            "hardware_subtype": "Smart Card",
-            "account_type": "User",
-            "account_subtype": "Enterprise"
+            "hardware_type": "peripheral",
+            "hardware_subtype": "smart_card",
+            "account_type": "user",
+            "account_subtype": "enterprise"
         }
     },
     "fourth_level_four": {
@@ -205,9 +205,9 @@
             "level": 4
         },
         "holder_type_info": {
-            "hardware_type": "Endpoint",
-            "hardware_subtype": "Mobile",
-            "account_type": "User"
+            "hardware_type": "endpoint",
+            "hardware_subtype": "mobile",
+            "account_type": "user"
         }
     },
     "fourth_level_five": {
@@ -215,11 +215,11 @@
             "level": 4
         },
         "holder_type_info": {
-            "hardware_type": "Appliance",
-            "hardware_subtype": "UTM",
-            "hardware_brand": "Barracuda",
-            "account_type": "Admin",
-            "account_subtype": "Network Admin"
+            "hardware_type": "appliance",
+            "hardware_subtype": "utm",
+            "hardware_brand": "barracuda",
+            "account_type": "admin",
+            "account_subtype": "network_admin"
         }
     },
     "fourth_level_six": {
@@ -227,11 +227,11 @@
             "level": 4
         },
         "holder_type_info": {
-            "hardware_type": "Endpoint",
-            "hardware_subtype": "Desktop",
-            "os_category": "Unix",
-            "os_subcategory": "Solaris",
-            "account_subtype": "Cloud Admin"
+            "hardware_type": "endpoint",
+            "hardware_subtype": "desktop",
+            "os_category": "unix",
+            "os_subcategory": "solaris",
+            "account_subtype": "cloud_admin"
         }
     },
     "fourth_level_seven": {
@@ -239,15 +239,15 @@
             "level": 4
         },
         "holder_type_info": {
-            "hardware_type": "Endpoint",
-            "hardware_subtype": "IoT",
-            "hardware_brand": "Arduino",
-            "os_category": "Unix",
-            "os_subcategory": "Linux",
-            "os_dist": "Alpine",
-            "os_subdist": "Alpine",
-            "account_type": "User",
-            "account_subtype": "Guest"
+            "hardware_type": "endpoint",
+            "hardware_subtype": "iot",
+            "hardware_brand": "arduino",
+            "os_category": "unix",
+            "os_subcategory": "linux",
+            "os_dist": "alpine",
+            "os_subdist": "alpine",
+            "account_type": "user",
+            "account_subtype": "guest"
         }
     },
     "fourth_level_eight": {
@@ -255,7 +255,7 @@
             "level": 4
         },
         "holder_type_info": {
-            "os_subcategory": "Mac OS X"
+            "os_subcategory": "mac_os_x"
         }
     }
 }

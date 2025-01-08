@@ -1,11 +1,10 @@
 """
 This file contains enums used in the program along with functions to retrieve information.
 """
-
-from enum import Enum
-from typing import Union, List, Tuple
 import random
 import copy
+from enum import Enum
+from typing import Union, List, Tuple
 
 
 class SUPPORTED_HASH_ALGS(Enum):
@@ -255,7 +254,7 @@ class COMMON_APPLIANCE(Enum):
     It is used in the manual configuration file to specify appliance hardware manufacturers.
     """
     FIREWALL = ('bitdefender', 'cisco', 'fortinet', 'palo_alto', 'netgate', 'watchguard', 'sonicwall')
-    UTM_DEVICE = ('sonicwall', 'fortigate', 'barracuda', 'juniper', 'trellix', 'palo_alto')
+    UTM = ('sonicwall', 'fortigate', 'barracuda', 'juniper', 'trellix', 'palo_alto')
 
 
 class COMMON_PERIPHERALS(Enum):
@@ -335,15 +334,34 @@ def pass_rule_check(cur_settings: list) -> bool:
         bool: True if the current value passes the rule check, False otherwise.
     """
 
-    h_type = cur_settings[0][0]
-    h_subtype = cur_settings[0][1]
-    os_type = cur_settings[1][0]
-    os_subtype = cur_settings[1][1]
-    os_dist = cur_settings[1][2]
-    a_type = cur_settings[2][0]
-    ca_type = cur_settings[3][0]
+    h_type: str = cur_settings[0][0]
+    h_subtype: str = cur_settings[0][1]
+    h_brand: str = cur_settings[0][2]
+    os_type: str = cur_settings[1][0]
+    os_subtype: str = cur_settings[1][1]
+    os_dist: str = cur_settings[1][2]
+    a_type: str = cur_settings[2][0]
+    ca_type: str = cur_settings[3][0]
 
-    # Hardware based rules
+    # Misplace checks
+    # The hardware brand cannot be the hardware subtype
+    brand_is_subtype = h_brand in [
+        'desktop', 'laptop', 'server', 'phone', 'iot', 'switch', 'router', 'access_point', 'firewall', 'utm',
+        'usb_key', 'smart_card', 'external_storage'
+    ]
+    if brand_is_subtype:
+        return False
+
+    # Type to subtype check
+    bad_endpoint = h_type == 'endpoint' and h_subtype not in ['desktop', 'laptop', 'server', 'phone', 'iot', '']
+    bad_network = h_type == 'network' and h_subtype not in ['switch', 'router', 'access_point', '']
+    bad_appliance = h_type == 'appliance' and h_subtype not in ['firewall', 'utm', '']
+    bad_peripheral = h_type == 'peripheral' and h_subtype not in ['usb_key', 'smart_card', 'external_storage', '']
+
+    if bad_endpoint or bad_network or bad_appliance or bad_peripheral:
+        return False
+
+    # Hardware-to-Software rules
     # If a device type is a networking device, it can only use routing OSes and Unix OSes that are not Mac OS X
     network_is_routing = h_type == 'network' and os_type in ['routing', '']
 
@@ -380,7 +398,60 @@ def pass_rule_check(cur_settings: list) -> bool:
     if laptop_or_desktop and not lap_desk_not_mobile:
         return False
 
-    # Software based rules
+    # Hardware-to-Account rules
+    # A phone cannot have an admin account
+    phone_is_not_admin = h_subtype == 'phone' and a_type != 'admin'
+    if h_subtype == 'phone' and not phone_is_not_admin:
+        return False
+
+    # A server cannot have a user account
+    server_is_not_user = h_subtype == 'server' and a_type != 'user'
+    if h_subtype == 'server' and not server_is_not_user:
+        return False
+
+    # Networking devices cannot use user accounts
+    net_is_not_user = h_type == 'network' and a_type != 'user'
+    if h_type == 'network' and not net_is_not_user:
+        return False
+
+    # Appliances and Peripherals have to be a system account
+    app_or_peri = h_type == 'appliance' or h_type == 'peripheral'
+    app_peri_is_system = app_or_peri and a_type in ['system', '']
+    if app_or_peri and not app_peri_is_system:
+        return False
+
+    # Software-to-Hardware rules
+    # Mobile OSs can only be endpoints
+    mobile_uses_endpoint = os_type == 'mobile' and h_type in ['endpoint', '']
+    if os_type == 'mobile' and not mobile_uses_endpoint:
+        return False
+
+    # Mobile OSs can only use phones
+    mobile_uses_phone = os_type == 'mobile' and h_subtype in ['phone', '']
+    if os_type == 'mobile' and not mobile_uses_phone:
+        return False
+
+    # Mac OS X can only be endpoints
+    mac_uses_endpoint = os_subtype == 'mac_os_x' and h_type in ['endpoint', '']
+    if os_subtype == 'mac_os_x' and not mac_uses_endpoint:
+        return False
+
+    # Mac OS X can only be on desktops and laptops
+    mac_uses_pc = os_subtype == 'mac_os_x' and h_subtype in ['desktop', 'laptop', '']
+    if os_subtype == 'mac_os_x' and not mac_uses_pc:
+        return False
+
+    # Windows can only be on endpoints
+    windows_uses_endpoint = os_subtype == 'windows' and h_type in ['endpoint', '']
+    if os_subtype == 'windows' and not windows_uses_endpoint:
+        return False
+
+    # Windows can only be on desktops and laptops
+    windows_uses_pc = os_subtype == 'windows' and h_subtype in ['desktop', 'laptop', '']
+    if os_subtype == 'windows' and not windows_uses_pc:
+        return False
+
+    # Software-to-Account rules
     # If Windows Server OS it has to be a system or admin account
     ws_is_system_or_admin = os_subtype == 'windows_server' and a_type in ['system', 'admin', '']
     if os_subtype == 'windows_server' and not ws_is_system_or_admin:
@@ -391,10 +462,32 @@ def pass_rule_check(cur_settings: list) -> bool:
     if os_dist == 'ubuntu_server' and not us_is_system_or_admin:
         return False
 
-    # Appliances and Peripherals have to be a system account
-    app_or_peri = h_type == 'appliance' or h_type == 'peripheral'
-    app_peri_is_system = app_or_peri and a_type in ['system', '']
-    if app_or_peri and not app_peri_is_system:
+    # Routing OSes cannot have user accounts
+    routing_is_not_user = os_type == 'routing' and a_type != 'user'
+    if os_type == 'routing' and not routing_is_not_user:
+        return False
+
+    # Mobile OSes cannot have admin accounts
+    mobile_is_not_admin = os_type == 'mobile' and a_type != 'admin'
+    if os_type == 'mobile' and not mobile_is_not_admin:
+        return False
+
+    # Account-to-Hardware rules
+    # User accounts can only use desktops, laptops, and phones
+    user_is_user_device = a_type == 'user' and h_subtype in ['desktop', 'laptop', 'phone', '']
+    if a_type == 'user' and not user_is_user_device:
+        return False
+
+    # Admin accounts cannot use peripherals
+    admin_is_not_peri = a_type == 'admin' and h_type != 'peripheral'
+    if a_type == 'admin' and not admin_is_not_peri:
+        return False
+
+    # Account-to-Software rules
+    # User accounts cannot exist on routing OSes or Ubuntu Server
+    user_is_not_routing = a_type == 'user' and os_type != 'routing'
+    user_is_not_us = a_type == 'user' and os_dist != 'ubuntu_server'
+    if a_type == 'user' and not (user_is_not_routing and user_is_not_us):
         return False
 
     # CA based rules
@@ -419,11 +512,11 @@ def check_exceptions(cur_settings: list) -> list:
         list: The pre-filled list if needed.
     """
 
-    h_type = cur_settings[0][0]
-    os_type = cur_settings[1][0]
-    os_subtype = cur_settings[1][1]
-    os_dist = cur_settings[1][2]
-    a_type = cur_settings[2][0]
+    h_type: str = cur_settings[0][0]
+    os_type: str = cur_settings[1][0]
+    os_subtype: str = cur_settings[1][1]
+    os_dist: str = cur_settings[1][2]
+    a_type: str = cur_settings[2][0]
 
     # Hardware exceptions
     # If an appliance or peripheral, the all OS types should be the specific brand followed by "_os"
@@ -474,27 +567,27 @@ def check_enum_value(outer_index: int, inner_index: int, cur_settings: list,
     """
 
     # Set variables
-    temp_settings = copy.deepcopy(cur_settings)
-    new_value_unvalidated = True
+    temp_settings: list = copy.deepcopy(cur_settings)
+    new_value_unvalidated: bool = True
 
     # Set the inner index for the check
     if parent:
-        local_inner_index = inner_index - 1
+        local_inner_index: int = inner_index - 1
     else:
-        local_inner_index = inner_index
+        local_inner_index: int = inner_index
 
     # Check if the value is a tuple and work accordingly
     if isinstance(value, tuple):
         # Create a list to go through
-        end_options = list(value)
-        using_end_options = True
+        end_options: list = list(value)
+        using_end_options: bool = True
 
         # Try options in list
         while end_options and using_end_options:
             # Set options
             temp_settings[outer_index][local_inner_index] = key.lower()
 
-            end_option_index = random.randint(0, len(end_options) - 1)
+            end_option_index: int = random.randint(0, len(end_options) - 1)
             temp_settings[outer_index][local_inner_index + 1] = end_options[end_option_index]
 
             # Check if temporary settings passes the rule check
@@ -505,7 +598,6 @@ def check_enum_value(outer_index: int, inner_index: int, cur_settings: list,
 
             # Remove used option
             del end_options[end_option_index]
-            print(end_options)
     else:
         temp_settings[outer_index][local_inner_index] = value
 
@@ -517,7 +609,7 @@ def check_enum_value(outer_index: int, inner_index: int, cur_settings: list,
     return new_value_unvalidated, cur_settings
 
 
-def update_settings(outer_index: int, inner_index: int, cur_settings: list) -> list:
+def update_settings(outer_index: int, inner_index: int, cur_settings: list, locked_settings: tuple) -> list:
     """
     Updates the settings list based on the current information being looked at.
 
@@ -525,6 +617,7 @@ def update_settings(outer_index: int, inner_index: int, cur_settings: list) -> l
         outer_index (int): The index of the outer list.
         inner_index (int): The index of the inner list.
         cur_settings (list): The current settings list.
+        locked_settings (tuple): The settings that MUST stay.
 
     Returns:
         list: The updated settings list.
@@ -567,9 +660,9 @@ def update_settings(outer_index: int, inner_index: int, cur_settings: list) -> l
         }
     }
 
-    parent_value = ''
-    last_value = ''
-    new_value_unvalidated = True
+    parent_value: str = ''
+    last_value: str = ''
+    new_value_unvalidated: bool = True
 
     # Choose the next enum if the last value is not empty
     if inner_index > 0 and cur_settings[outer_index][inner_index-1] != '':  # Go down a certain path
@@ -580,7 +673,7 @@ def update_settings(outer_index: int, inner_index: int, cur_settings: list) -> l
             enum_choice = enum_switch_known[last_value]
         else:
             # If not, use the parent to get the enum data
-            parent_value = cur_settings[outer_index][inner_index-2]
+            parent_value: str = cur_settings[outer_index][inner_index-2]
 
             # If the parent's found, set the enum_choice
             if parent_value in enum_switch_known.keys():
@@ -591,15 +684,23 @@ def update_settings(outer_index: int, inner_index: int, cur_settings: list) -> l
                     if cur_settings[outer_index][inner_index] == '':
                         cur_settings[outer_index][inner_index] = last_value
 
+                # Address Hard-fill cases
                 cur_settings = check_exceptions(cur_settings)
+
+                # Re-enter locks
+                for lock_i in range(len(locked_settings)):
+                    for lock_j in range(len(locked_settings[lock_i])):
+                        if locked_settings[lock_i][lock_j] != '':
+                            cur_settings[lock_i][lock_j] = locked_settings[lock_i][lock_j]
+
                 return cur_settings
     else:  # Random selection as final solution
-        enum_type_loc = enum_switch_unknown[outer_index][inner_index]
-        enum_index = random.randint(0, len(enum_type_loc) - 1)
+        enum_type_loc: list = enum_switch_unknown[outer_index][inner_index]
+        enum_index: int = random.randint(0, len(enum_type_loc) - 1)
         enum_choice = enum_type_loc[enum_index]
 
     # Get the enum data
-    enum_data = get_all_items(enum_choice, verbose=True)
+    enum_data: dict = get_all_items(enum_choice, verbose=True)
 
     # If parent value set, go straight through the parent for the attempt
     if parent_value != '':
@@ -619,8 +720,8 @@ def update_settings(outer_index: int, inner_index: int, cur_settings: list) -> l
         # Keep doing that until a value passes the rule set.
         while enum_data and new_value_unvalidated:
             # Get a random value
-            random_key = random.choice(list(enum_data.keys()))
-            random_value = enum_data[random_key]
+            random_key: str = random.choice(list(enum_data.keys()))
+            random_value: str = enum_data[random_key]
 
             # Test the value
             new_value_unvalidated, cur_settings = check_enum_value(
@@ -629,14 +730,20 @@ def update_settings(outer_index: int, inner_index: int, cur_settings: list) -> l
 
             # Remove key once used
             del enum_data[random_key]
-            print(enum_data)
 
     # Address Hard-fill cases
     cur_settings = check_exceptions(cur_settings)
+
+    # Re-enter locks
+    for lock_i in range(len(locked_settings)):
+        for lock_j in range(len(locked_settings[lock_i])):
+            if locked_settings[lock_i][lock_j] != '':
+                cur_settings[lock_i][lock_j] = locked_settings[lock_i][lock_j]
+
     return cur_settings
 
 
-def auto_fill_types(cur_settings: list) -> list:
+def auto_fill_types(cur_settings: list) -> Union[list, None]:
     """
     Autofill the types of the enum class.
 
@@ -647,19 +754,20 @@ def auto_fill_types(cur_settings: list) -> list:
         tuple: Exception flag and randomly generated type properties for holder.
     """
 
-    for outer_index in range(len(cur_settings)):
-        for inner_index in range(len(cur_settings[outer_index])):
-            # Get the enum to try to change
-            cur_info = cur_settings[outer_index][inner_index]
-            if cur_info == '':
-                cur_settings = update_settings(outer_index, inner_index, cur_settings)
-            print(cur_settings)
+    # Set locks
+    locked_settings: tuple = tuple(copy.deepcopy(cur_settings))
+
+    # Try the system
+    try:
+        for outer_index in range(len(cur_settings)):
+            for inner_index in range(len(cur_settings[outer_index])):
+                # Get the enum to try to change
+                cur_info: str = cur_settings[outer_index][inner_index]
+                if cur_info == '':
+                    cur_settings = update_settings(outer_index, inner_index, cur_settings, locked_settings)
+    except Exception as e:
+        print(e)
+        print(cur_settings)
+        return None
 
     return cur_settings
-
-
-if __name__ == '__main__':
-    # print(get_all_items(COMMON_ROUTING, True))
-
-    for i in range(5000):
-         auto_fill_types([['', '', ''], ['', '', '', ''], ['', ''], ['']])

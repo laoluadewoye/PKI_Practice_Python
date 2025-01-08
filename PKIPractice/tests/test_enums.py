@@ -72,7 +72,7 @@ class TestEnums(unittest.TestCase):
                             f'{enum.__name__} class.'
                         )
 
-    def test_fail(self) -> None:
+    def test_fail_unknown_inputs(self) -> None:
         """
         Fuzzing tests that EnumUtils.has_value() returns False for non-existent enums.
         """
@@ -90,6 +90,60 @@ class TestEnums(unittest.TestCase):
             for i in range(10):
                 random_string = generate_random_string()
                 self.assertFalse(EnumUtils.has_value(enum, random_string), f'Failed with {random_string}')
+
+    def test_random_generation(self) -> None:
+        """
+        Random generation stress test to ensure nothing breaks.
+        """
+
+        # Creating test set
+        test_set: list = [
+            [['', '', ''], ['', '', '', ''], ['', ''], ['']],
+            [['endpoint', '', ''], ['', '', '', ''], ['', ''], ['']],
+            [['network', '', ''], ['', '', '', ''], ['', ''], ['']],
+            [['appliance', '', ''], ['', '', '', ''], ['', ''], ['']],
+            [['peripheral', '', ''], ['', '', '', ''], ['', ''], ['']],
+            [['', 'desktop', ''], ['', '', '', ''], ['', ''], ['']],
+            [['', 'laptop', ''], ['', '', '', ''], ['', ''], ['']],
+            [['', 'server', ''], ['', '', '', ''], ['', ''], ['']],
+            [['', 'phone', ''], ['', '', '', ''], ['', ''], ['']],
+            [['', 'iot', ''], ['', '', '', ''], ['', ''], ['']],
+            [['', 'switch', ''], ['', '', '', ''], ['', ''], ['']],
+            [['', 'router', ''], ['', '', '', ''], ['', ''], ['']],
+            [['', 'access_point', ''], ['', '', '', ''], ['', ''], ['']],
+            [['', 'firewall', ''], ['', '', '', ''], ['', ''], ['']],
+            [['', 'utm', ''], ['', '', '', ''], ['', ''], ['']],
+            [['', 'usb_key', ''], ['', '', '', ''], ['', ''], ['']],
+            [['', 'smart_card', ''], ['', '', '', ''], ['', ''], ['']],
+            [['', 'external_storage', ''], ['', '', '', ''], ['', ''], ['']],
+            [['', '', ''], ['microsoft', '', '', ''], ['', ''], ['']],
+            [['', '', ''], ['unix', '', '', ''], ['', ''], ['']],
+            [['', '', ''], ['mobile', '', '', ''], ['', ''], ['']],
+            [['', '', ''], ['routing', '', '', ''], ['', ''], ['']],
+            [['', '', ''], ['', 'windows', '', ''], ['', ''], ['']],
+            [['', '', ''], ['', 'windows_server', '', ''], ['', ''], ['']],
+            [['', '', ''], ['', 'linux', '', ''], ['', ''], ['']],
+            [['', '', ''], ['', 'bsd', '', ''], ['', ''], ['']],
+            [['', '', ''], ['', 'solaris', '', ''], ['', ''], ['']],
+            [['', '', ''], ['', 'mac_os_x', '', ''], ['', ''], ['']],
+            [['', '', ''], ['', 'android', '', ''], ['', ''], ['']],
+            [['', '', ''], ['', 'ios', '', ''], ['', ''], ['']],
+            [['', '', ''], ['', '', '', ''], ['user', ''], ['']],
+            [['', '', ''], ['', '', '', ''], ['admin', ''], ['']],
+            [['', '', ''], ['', '', '', ''], ['system', ''], ['']],
+            [['', '', ''], ['', '', '', ''], ['', ''], ['not_auth']],
+            [['', '', ''], ['', '', '', ''], ['', ''], ['inter_auth']],
+            [['', '', ''], ['', '', '', ''], ['', ''], ['root_auth']],
+        ]
+
+        # Random stress test
+        for test_fill in test_set:
+            for i in range(400):
+                print(test_fill)
+                self.assertIsNotNone(
+                    EnumUtils.auto_fill_types(test_fill),
+                    f'Test Fill that broke test: {test_fill}'
+                )
 
 
 if __name__ == '__main__':

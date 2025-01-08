@@ -12,7 +12,7 @@ else:
     sys.path.append(abspath(join(script_dir, '../..')))
 
 from PKIPractice.Utilities.DataclassUtils import *
-from PKIPractice.Utilities.EnumUtils import *
+from PKIPractice.Utilities.EnumUtils import auto_fill_types
 
 
 class Holder:
