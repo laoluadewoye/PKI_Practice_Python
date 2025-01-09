@@ -15,7 +15,7 @@ jobs:
       - name: Check Out Repository Code
         uses: actions/checkout@v4
       - name: Test Project
-        uses: laoluadewoye/PKI_Practice_Python/.github/workflows/nox_test.yml@network-dev
+        uses: laoluadewoye/PKI_Practice_Python/.github/workflows/nox_test.yml@main
   tagging-test:
     needs: test-project-nox
     runs-on: ubuntu-latest
@@ -39,7 +39,7 @@ jobs:
       - name: Check Out Repository Code
         uses: actions/checkout@v4
       - name: Build the Project
-        uses: laoluadewoye/PKI_Practice_Python/.github/workflows/pypi_build.yml@network-dev
+        uses: laoluadewoye/PKI_Practice_Python/.github/workflows/pypi_build.yml@main
   publish-to-testpypi:
     needs: build-project
     runs-on: ubuntu-latest
