@@ -1,3 +1,7 @@
+"""
+Module used for defining the network class and it's functionality.
+"""
+
 from typing import Union, List
 
 # Relative pathing from project root
@@ -17,6 +21,9 @@ from PKIPractice.Simulation.Holder import Holder
 
 
 class PKINetwork:
+    """
+    Placeholder docuscript.
+    """
     def __init__(self, name: str, auto_config: Union[dict, None], manual_config: Union[dict, None]) -> None:
         # Unique identifier
         self.network_name: str = name
@@ -59,6 +66,9 @@ class PKINetwork:
                     self.network_log.append(f'Invalid location configuration. {holder_name} was ignored.')
 
     def add_to_network(self, holder_name: str, holder_config: dict, auto_config: dict) -> bool:
+        """
+        Placeholder
+        """
         # Check if location is valid
         proper_keys: bool = all(
             isinstance(holder_config['location'][key], int) for key in holder_config['location'].keys()

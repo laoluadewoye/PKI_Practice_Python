@@ -1,6 +1,7 @@
 """
 This file contains enums used in the program along with functions to retrieve information.
 """
+
 import random
 import copy
 from enum import Enum
@@ -47,6 +48,10 @@ class SUPPORTED_ECC_CURVES(Enum):
 
 
 class COMMON_CA(Enum):
+    """
+    This class contains all supported certificate authority types by default.
+    It is used in the manual configuration file to specify authority type.
+    """
     NOT_AUTH = 'not_auth'
     INTER_AUTH = 'inter_auth'
     ROOT_AUTH = 'root_auth'

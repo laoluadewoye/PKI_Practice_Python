@@ -1,3 +1,7 @@
+"""
+Module for testing configuration ingestion utilities.
+"""
+
 import unittest
 
 # Relative pathing from project root
@@ -19,6 +23,10 @@ from PKIPractice.Utilities.IngestUtils import parse_config_auto, parse_config_ma
 
 class TestIngestion(unittest.TestCase):
     def setUp(self) -> None:
+        """
+        Sets up the parameters for testing.
+        """
+
         current_dir = basename(abspath(curdir))
         if current_dir in ['PKI_Practice', 'PKI Practice', 'app']:
             self.dc_dir = './'
@@ -33,7 +41,12 @@ class TestIngestion(unittest.TestCase):
         """
         Checks if the number of keys in the auto config files is consistent across all formats.
         """
+
         def total_keys(test_dict: dict) -> int:
+            """
+            Returns how many keys are in the dictionary.
+            """
+
             return 0 if not isinstance(test_dict, dict) else len(test_dict) + sum(
                 total_keys(val) for val in test_dict.values())
 
@@ -64,6 +77,9 @@ class TestIngestion(unittest.TestCase):
         Checks if the number of keys in the manual config files is consistent across all formats.
         """
         def total_keys(test_dict: dict) -> int:
+            """
+            Returns how many keys are in the dictionary.
+            """
             return 0 if not isinstance(test_dict, dict) else len(test_dict) + sum(
                 total_keys(val) for val in test_dict.values())
 

@@ -1,3 +1,7 @@
+"""
+Module to test enumeration functionality.
+"""
+
 import unittest
 import inspect
 import random
@@ -26,6 +30,9 @@ class TestEnums(unittest.TestCase):
         Tests the EnumUtils.get_all_items() function
         """
         def get_classes_from_module(module) -> list:
+            """
+            Retrieve the classes from the module as a list.
+            """
             return [cls for name, cls in inspect.getmembers(module, inspect.isclass) if
                     cls.__module__ == module.__name__]
 
@@ -39,6 +46,9 @@ class TestEnums(unittest.TestCase):
         Tests that the values returned by EnumUtils.get_all_items() can be worked with.
         """
         def get_classes_from_module(module) -> list:
+            """
+            Retrieve the classes from the module as a list.
+            """
             return [cls for name, cls in inspect.getmembers(module, inspect.isclass) if
                     cls.__module__ == module.__name__]
 
@@ -53,6 +63,9 @@ class TestEnums(unittest.TestCase):
         Tests that all values in EnumUtils are tuples of strings or strings.
         """
         def get_classes_from_module(module) -> list:
+            """
+            Retrieve the classes from the module as a list.
+            """
             return [cls for name, cls in inspect.getmembers(module, inspect.isclass) if
                     cls.__module__ == module.__name__]
 
@@ -77,6 +90,9 @@ class TestEnums(unittest.TestCase):
         Fuzzing tests that EnumUtils.has_value() returns False for non-existent enums.
         """
         def get_classes_from_module(module) -> list:
+            """
+            Retrieve the classes from the module as a list.
+            """
             return [cls for name, cls in inspect.getmembers(module, inspect.isclass) if
                     cls.__module__ == module.__name__]
 

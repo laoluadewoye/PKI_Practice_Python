@@ -1,3 +1,7 @@
+"""
+Nox testing file.
+"""
+
 import nox
 
 

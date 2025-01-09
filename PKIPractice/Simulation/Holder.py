@@ -1,3 +1,7 @@
+"""
+Module used for defining the holder class and it's functionality.
+"""
+
 # Relative pathing from project root
 import sys
 from os.path import abspath, dirname, join
@@ -16,6 +20,9 @@ from PKIPractice.Utilities.EnumUtils import auto_fill_types
 
 
 class Holder:
+    """
+    Placeholder docuscript.
+    """
     def __init__(self, holder_name: str, holder_config: dict, auto_config: dict):
         # Name of holder
         self.holder_name: str = holder_name
@@ -104,4 +111,19 @@ class Holder:
                     type_fill[3][0] = holder_config['holder_type_info']['ca_status']
 
         type_fill = auto_fill_types(type_fill)
-        print(type_fill)
+        self.type_info: HOLDER_TYPE_INFO = HOLDER_TYPE_INFO(
+            hardware_type=type_fill[0][0],
+            hardware_subtype=type_fill[0][1],
+            hardware_brand=type_fill[0][2],
+            os_category=type_fill[1][0],
+            os_subcategory=type_fill[1][1],
+            os_dist=type_fill[1][2],
+            os_subdist=type_fill[1][3],
+            account_type=type_fill[2][0],
+            account_subtype=type_fill[2][1],
+            ca_status=type_fill[3][0]
+        )
+        print(self.type_info)
+        print(self.type_info.long_name)
+        print(self.type_info.short_name)
+        print()

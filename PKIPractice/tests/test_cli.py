@@ -1,3 +1,7 @@
+"""
+Testing module for command line interface.
+"""
+
 import unittest
 import subprocess
 import random

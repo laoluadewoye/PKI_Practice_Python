@@ -617,8 +617,8 @@ statuses, and checking certificate statuses for lower levels.
    9) The CSR wait time, or the time to wait until a request times out, is read in.
       1) Formatted in seconds.
    10) If manual, the hierarchical structure is read in last.
-      1) The number of layers is first.
-      2) The list of CAs and non-CAs is next.
+       1) The number of layers is first.
+       2) The list of CAs and non-CAs is next.
 2) For each holder read or created-
    1) Phase one
       1) The name of the object is generated as random alphabet characters or loaded in.
