@@ -15,7 +15,7 @@ jobs:
       - name: Check Out Repository Code
         uses: actions/checkout@v4
       - name: Test Project
-        uses: .github/workflows/nox_test.yml
+        uses: laoluadewoye/PKI_Practice_Python/github/workflows/nox_test.yml
   build-project:
     if: github.event_name == 'push' && github.ref_type == 'tag'
     needs: test-project-nox
@@ -25,7 +25,7 @@ jobs:
       - name: Check Out Repository Code
         uses: actions/checkout@v4
       - name: Build the Project
-        uses: .github/workflows/pypi_build.yml
+        uses: laoluadewoye/PKI_Practice_Python/github/workflows/pypi_build.yml
   publish-to-pypi:
     needs: build-project
     runs-on: ubuntu-latest
