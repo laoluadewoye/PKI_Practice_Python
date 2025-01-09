@@ -241,6 +241,11 @@ parameters.
 
 ## Rules governing type autogeneration
 
+### Basic rules
+
+* Brands of hardware cannot be a subtype
+* Hardware subtypes must be of their parent type
+
 ### Hardware to Software
 
 * IoT Endpoint Devices can only use Unix OSes not Mac OS X
@@ -259,9 +264,9 @@ parameters.
 
 ### Software to Hardware
 
-* Mobile OSs can only use phones
-* Mac OS X can only be on desktops and laptops
-* Windows can only be on desktops and laptops
+* Mobile OSs can only use endpoint phones
+* Mac OS X can only be on endpoint desktops and laptops
+* Windows can only be on endpoint desktops and laptops
 
 ### Software to Account
 
@@ -277,6 +282,10 @@ parameters.
 ### Account to Software
 
 * User accounts cannot exist on routing OSes or Ubuntu Server
+
+### CA Rules
+
+* Anything that isn't a server cannot be a certificate authority
 
 ## 1) Accounts
 

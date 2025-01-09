@@ -237,8 +237,6 @@
 		<holder_type_info>
 			<hardware_type>peripheral</hardware_type>
 			<hardware_subtype>smart_card</hardware_subtype>
-			<account_type>user</account_type>
-			<account_subtype>enterprise</account_subtype>
 		</holder_type_info>
 	</fourth_level_three>
 	<fourth_level_four>
@@ -259,8 +257,6 @@
 			<hardware_type>appliance</hardware_type>
 			<hardware_subtype>utm</hardware_subtype>
 			<hardware_brand>barracuda</hardware_brand>
-			<account_type>admin</account_type>
-			<account_subtype>network_admin</account_subtype>
 		</holder_type_info>
 	</fourth_level_five>
 	<fourth_level_six>

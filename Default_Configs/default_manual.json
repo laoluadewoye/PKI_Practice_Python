@@ -195,9 +195,7 @@
         },
         "holder_type_info": {
             "hardware_type": "peripheral",
-            "hardware_subtype": "smart_card",
-            "account_type": "user",
-            "account_subtype": "enterprise"
+            "hardware_subtype": "smart_card"
         }
     },
     "fourth_level_four": {
@@ -217,9 +215,7 @@
         "holder_type_info": {
             "hardware_type": "appliance",
             "hardware_subtype": "utm",
-            "hardware_brand": "barracuda",
-            "account_type": "admin",
-            "account_subtype": "network_admin"
+            "hardware_brand": "barracuda"
         }
     },
     "fourth_level_six": {

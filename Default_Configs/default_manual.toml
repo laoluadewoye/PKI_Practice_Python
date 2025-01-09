@@ -211,8 +211,6 @@ level = 4
 [fourth_level_three.holder_type_info]
 hardware_type = "peripheral"
 hardware_subtype = "smart_card"
-account_type = "user"
-account_subtype = "enterprise"
 
 [fourth_level_four.location]
 level = 4
@@ -229,8 +227,6 @@ level = 4
 hardware_type = "appliance"
 hardware_subtype = "utm"
 hardware_brand = "barracuda"
-account_type = "admin"
-account_subtype = "network_admin"
 
 [fourth_level_six.location]
 level = 4
