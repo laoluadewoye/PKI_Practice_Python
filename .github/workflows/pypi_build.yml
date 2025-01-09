@@ -1,0 +1,20 @@
+on:
+  workflow_call:
+jobs:
+  build-project:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+          cache: pip
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+      - name: Build Project
+        run: python -m build
+      - name: Save Distribution Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: distribution-packages
+          path: dist/
