@@ -42,7 +42,7 @@ class Holder:
         if has_env_overrides and 'revoc_prob' in holder_config['env_overrides'].keys():
             revoc_prob = holder_config['env_overrides']['revoc_prob']
         else:
-            revoc_prob = auto_config['revoc_prob'][level-1]
+            revoc_prob = auto_config['revoc_probs'][level-1]
 
         if has_env_overrides and 'cert_valid_dur' in holder_config['env_overrides'].keys():
             cert_valid_dur = holder_config['env_overrides']['cert_valid_dur']
@@ -104,3 +104,4 @@ class Holder:
                     type_fill[3][0] = holder_config['holder_type_info']['ca_status']
 
         type_fill = auto_fill_types(type_fill)
+        print(type_fill)

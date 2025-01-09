@@ -91,7 +91,7 @@ class TestEnums(unittest.TestCase):
                 random_string = generate_random_string()
                 self.assertFalse(EnumUtils.has_value(enum, random_string), f'Failed with {random_string}')
 
-    def test_random_generation(self) -> None:
+    def test_default_generation(self) -> None:
         """
         Random generation stress test to ensure nothing breaks.
         """
@@ -139,11 +139,35 @@ class TestEnums(unittest.TestCase):
         # Random stress test
         for test_fill in test_set:
             for i in range(400):
-                print(test_fill)
                 self.assertIsNotNone(
                     EnumUtils.auto_fill_types(test_fill),
                     f'Test Fill that broke test: {test_fill}'
                 )
+
+    def test_random_generation(self) -> None:
+        def generate_random_string(min_length: int = 1, max_length: int = 15) -> str:
+            """Generate a random string of random length."""
+            length = random.randint(min_length, max_length)  # Random length between min_length and max_length
+            return ''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=length))
+
+        for i in range(1000):
+            default_fill = [['', '', ''], ['', '', '', ''], ['', ''], ['']]
+
+            # Pick a random list
+            random_fill_index = random.randint(0, len(default_fill) - 1)
+            random_fill = default_fill[random_fill_index]
+
+            # Pick a random index from that
+            random_index = random.randint(0, len(random_fill) - 1)
+
+            # Set that point to a random value
+            default_fill[random_fill_index][random_index] = generate_random_string()
+
+            # Run assurance
+            self.assertIsNotNone(
+                EnumUtils.auto_fill_types(default_fill),
+                f'Test Fill that broke test: {default_fill}'
+            )
 
 
 if __name__ == '__main__':
