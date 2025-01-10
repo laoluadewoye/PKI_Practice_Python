@@ -3,7 +3,10 @@ on:
 jobs:
   build-project:
     runs-on: ubuntu-latest
+    environment: Test Deployment
     steps:
+      - name: Check Out Repository Code
+        uses: actions/checkout@v4
       - name: Setup Python
         uses: actions/setup-python@v5
         with:

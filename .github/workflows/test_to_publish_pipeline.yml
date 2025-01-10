@@ -9,23 +9,11 @@ on:
       - main
 jobs:
   test-project-nox:
-    runs-on: ubuntu-latest
-    environment: Test Deployment
-    steps:
-      - name: Check Out Repository Code
-        uses: actions/checkout@v4
-      - name: Test Project
-        uses: laoluadewoye/PKI_Practice_Python/github/workflows/nox_test.yml@main
+    uses: laoluadewoye/PKI_Practice_Python/.github/workflows/nox_test.yml@main
   build-project:
     if: github.event_name == 'push' && github.ref_type == 'tag'
     needs: test-project-nox
-    runs-on: ubuntu-latest
-    environment: Test Deployment
-    steps:
-      - name: Check Out Repository Code
-        uses: actions/checkout@v4
-      - name: Build the Project
-        uses: laoluadewoye/PKI_Practice_Python/github/workflows/pypi_build.yml@main
+    uses: laoluadewoye/PKI_Practice_Python/.github/workflows/pypi_build.yml@main
   publish-to-pypi:
     needs: build-project
     runs-on: ubuntu-latest
