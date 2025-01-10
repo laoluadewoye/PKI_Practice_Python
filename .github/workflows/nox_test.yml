@@ -1,3 +1,4 @@
+name: nox-test
 on:
   workflow_call:
 jobs:
