@@ -12,7 +12,7 @@ jobs:
     uses: laoluadewoye/PKI_Practice_Python/.github/workflows/nox_test.yml@main
   tagging-test:
     needs: test-project-nox
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     environment: Test Deployment
     steps:
       - name: Decide on New Tags
@@ -30,7 +30,7 @@ jobs:
     uses: laoluadewoye/PKI_Practice_Python/.github/workflows/pypi_build.yml@main
   publish-to-testpypi:
     needs: build-project
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     environment:
       name: Test Deployment
       url: https://test.pypi.org/p/PyPkiPractice

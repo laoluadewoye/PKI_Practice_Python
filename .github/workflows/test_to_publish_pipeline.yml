@@ -16,7 +16,7 @@ jobs:
     uses: laoluadewoye/PKI_Practice_Python/.github/workflows/pypi_build.yml@main
   publish-to-pypi:
     needs: build-project
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     environment:
       name: Deployment
       url: https://pypi.org/p/PyPkiPractice
@@ -32,7 +32,7 @@ jobs:
         uses: pypa/gh-action-pypi-publish@67339c736fd9354cd4f8cb0b744f2b82a74b5c70
   publish-to-docker:
     needs: build-project
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     environment: Deployment
     steps:
       - name: Check Out Repository Code
@@ -59,7 +59,7 @@ jobs:
           sbom: true
   update-docker-repo-info:
     needs: publish-to-docker
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     environment: Deployment
     steps:
       - name: Check Out Repository Code
