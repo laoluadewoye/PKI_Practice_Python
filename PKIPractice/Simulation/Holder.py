@@ -5,6 +5,7 @@ Module used for defining the holder class and it's functionality.
 # Relative pathing from project root
 import sys
 from os.path import abspath, dirname, join
+from .SimUtils import hash_info, get_random_country, get_random_division, create_private_key
 
 script_dir = dirname(abspath(__file__))
 
@@ -111,7 +112,7 @@ class Holder:
                     type_fill[3][0] = holder_config['holder_type_info']['ca_status']
 
         type_fill = auto_fill_types(type_fill)
-        self.type_info: HOLDER_TYPE_INFO = HOLDER_TYPE_INFO(
+        self.holder_type_info: HOLDER_TYPE_INFO = HOLDER_TYPE_INFO(
             hardware_type=type_fill[0][0],
             hardware_subtype=type_fill[0][1],
             hardware_brand=type_fill[0][2],
@@ -123,7 +124,74 @@ class Holder:
             account_subtype=type_fill[2][1],
             ca_status=type_fill[3][0]
         )
-        print(self.type_info)
-        print(self.type_info.long_name)
-        print(self.type_info.short_name)
-        print()
+
+        # Holder information
+        has_holder_info = 'holder_info' in holder_config.keys()
+        if has_holder_info and 'common_name' in holder_config['holder_info'].keys():
+            common_name = holder_config['holder_info']['common_name']
+        else:
+            common_name = 'device_' + hash_info(self.holder_type_info.long_name, self.env_info.uid_hash)[:16]
+
+        if has_holder_info and 'country' in holder_config['holder_info'].keys():
+            country = holder_config['holder_info']['country']
+        else:
+            country = get_random_country()
+
+        if has_holder_info and 'state' in holder_config['holder_info'].keys():
+            state = holder_config['holder_info']['state']
+        else:
+            state = 'State in ' + country
+
+        if has_holder_info and 'locality' in holder_config['holder_info'].keys():
+            locality = holder_config['holder_info']['locality']
+        else:
+            locality = 'Locality in ' + country
+
+        if has_holder_info and 'org' in holder_config['holder_info'].keys():
+            org = holder_config['holder_info']['org']
+        else:
+            org = common_name + "'s organization"
+
+        if has_holder_info and 'org_unit' in holder_config['holder_info'].keys():
+            org_unit = holder_config['holder_info']['org_unit']
+        else:
+            if self.holder_type_info.ca_status in ['inter_auth', 'root_auth']:
+                org_unit = 'Certificates'
+            else:
+                org_unit = get_random_division()
+
+        if has_holder_info and 'email' in holder_config['holder_info'].keys():
+            email = holder_config['holder_info']['email']
+            subdomain = email.split('@')[1]
+        else:
+            username = common_name.lower().replace(" ", "")
+            subdomain = f'{org_unit.lower().replace(" ", "")}.theirorg.com'
+            email = f'{username}@{subdomain}'
+
+        if has_holder_info and 'url' in holder_config['holder_info'].keys():
+            url = holder_config['holder_info']['url']
+        else:
+            if self.holder_type_info.ca_status == 'inter_auth':
+                url = subdomain + '/intermediate_ca'
+            elif self.holder_type_info.ca_status == 'root_auth':
+                url = subdomain + '/root_ca'
+            else:
+                url = 'www.' + subdomain
+
+        self.holder_info: HOLDER_INFO = HOLDER_INFO(
+            common_name=common_name,
+            country=country,
+            state=state,
+            local=locality,
+            org=org,
+            org_unit=org_unit,
+            email=email,
+            url=url
+        )
+
+        self.holder_info_hash = hash_info(self.holder_info.hash_content, self.env_info.uid_hash)
+
+        # Create key pair
+        self.holder_priv_key = create_private_key(self.env_info.encrypt_alg)
+        print(self.holder_priv_key)
+
