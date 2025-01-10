@@ -1,0 +1,21 @@
+on:
+  workflow_call:
+jobs:
+  setup-test-nox:
+    runs-on: ubuntu-latest
+    environment: Test Deployment
+    steps:
+      - name: Check Out Repository Code
+        uses: actions/checkout@v4
+      - name: Setup Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.13
+      - name: Setup Python 3.14 Alpha 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.14.0-alpha.3
+      - name: Setup Nox
+        uses: fjwillemsen/setup-nox2@v3.0.0
+      - name: Run Nox
+        run: nox

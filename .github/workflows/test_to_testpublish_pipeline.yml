@@ -6,26 +6,10 @@ on:
     tags:
       - '*'
     branches:
-      - main
+      - '*'
 jobs:
   test-project-nox:
-    runs-on: ubuntu-latest
-    environment: Test Deployment
-    steps:
-      - name: Check Out Repository Code
-        uses: actions/checkout@v4
-      - name: Setup Python 3.13
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.13
-      - name: Setup Python 3.14 Alpha 3
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.14.0-alpha.3
-      - name: Setup Nox
-        uses: fjwillemsen/setup-nox2@v3.0.0
-      - name: Run Nox
-        run: nox
+    uses: laoluadewoye/PKI_Practice_Python/.github/workflows/nox_test.yml@main
   tagging-test:
     needs: test-project-nox
     runs-on: ubuntu-latest
@@ -43,25 +27,7 @@ jobs:
   build-project:
     if: github.event_name == 'push' && github.ref_type == 'tag'
     needs: test-project-nox
-    runs-on: ubuntu-latest
-    environment: Test Deployment
-    steps:
-      - name: Check Out Repository Code
-        uses: actions/checkout@v4
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.12
-          cache: pip
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
-      - name: Build Project
-        run: python -m build
-      - name: Save Distribution Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: distribution-packages
-          path: dist/
+    uses: laoluadewoye/PKI_Practice_Python/.github/workflows/pypi_build.yml@main
   publish-to-testpypi:
     needs: build-project
     runs-on: ubuntu-latest
