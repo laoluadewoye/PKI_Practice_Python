@@ -3,24 +3,24 @@ on:
   workflow_call:
 jobs:
   setup-test-nox:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment: Test Deployment
     steps:
       - name: Check Out Repository Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - name: Setup Python 3.8
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b
         with:
           python-version: 3.8
       - name: Setup Python 3.13
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b
         with:
           python-version: 3.13
       - name: Setup Python 3.14 Alpha 3
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b
         with:
           python-version: 3.14.0-alpha.3
       - name: Setup Nox
-        uses: fjwillemsen/setup-nox2@v3.0.0
+        uses: fjwillemsen/setup-nox2@fc5420448a3f1145b0128f86b1837e82841684a4
       - name: Run Nox
         run: nox

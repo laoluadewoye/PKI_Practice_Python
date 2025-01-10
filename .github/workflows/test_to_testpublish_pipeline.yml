@@ -12,7 +12,7 @@ jobs:
     uses: laoluadewoye/PKI_Practice_Python/.github/workflows/nox_test.yml@main
   tagging-test:
     needs: test-project-nox
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment: Test Deployment
     steps:
       - name: Decide on New Tags
@@ -30,7 +30,7 @@ jobs:
     uses: laoluadewoye/PKI_Practice_Python/.github/workflows/pypi_build.yml@main
   publish-to-testpypi:
     needs: build-project
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment:
       name: Test Deployment
       url: https://test.pypi.org/p/PyPkiPractice
@@ -38,11 +38,11 @@ jobs:
       id-token: write
     steps:
       - name: Retrieve Distribution Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
         with:
           name: distribution-packages
           path: dist/
       - name: Publish to PyPi
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@67339c736fd9354cd4f8cb0b744f2b82a74b5c70
         with:
           repository-url: https://test.pypi.org/legacy/
