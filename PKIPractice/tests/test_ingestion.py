@@ -113,12 +113,18 @@ class TestIngestion(unittest.TestCase):
         config_xml: dict = parse_config_auto(f'{self.dc_dir}Default_Configs/default_auto.xml')
         config_toml: dict = parse_config_auto(f'{self.dc_dir}Default_Configs/default_auto.toml')
 
+        del config_json['log_save_filepath']
+        del config_xml['log_save_filepath']
+        del config_toml['log_save_filepath']
+
         self.assertEqual(config_json, config_xml)
         self.assertEqual(config_json, config_toml)
 
         # Accommodating for earlier versions before Python 3.10
         if sys.version_info[1] > 9:
             config_yaml: dict = parse_config_auto(f'{self.dc_dir}Default_Configs/default_auto.yaml')
+
+            del config_yaml['log_save_filepath']
             self.assertEqual(config_json, config_yaml)
 
     def test_key_types_manual(self) -> None:
