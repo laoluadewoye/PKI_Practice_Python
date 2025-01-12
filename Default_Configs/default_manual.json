@@ -204,7 +204,7 @@
         },
         "holder_type_info": {
             "hardware_type": "endpoint",
-            "hardware_subtype": "mobile",
+            "hardware_subtype": "phone",
             "account_type": "user"
         }
     },

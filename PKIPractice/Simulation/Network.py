@@ -17,7 +17,15 @@ elif script_dir == 'PKIPractice':
 else:
     sys.path.append(abspath(join(script_dir, '../..')))
 
-from PKIPractice.Simulation.Holder import Holder
+from PKIPractice.Simulation.Holder import PKIHolder
+
+
+class PKIHub:
+    """
+    Placeholder docuscript. Will be used to direct communications between holders.
+    """
+    def __init__(self, network: dict):
+        ...
 
 
 class PKINetwork:
@@ -46,24 +54,50 @@ class PKINetwork:
         # Network hierarchy
         self.network: dict = {}
         for i in range(self.network_level_count):
-            self.network[i+1] = [0] * self.network_count_by_level[i]
+            self.network[i+1] = []
 
         self.network_log: List[str] = []
 
         # Log events that have already happened
-        self.network_log.append(f'Network {self.network_name} created.')
-        self.network_log.append('Environmental variables set.')
-        self.network_log.append('Empty network hierarchy created.')
-        self.network_log.append('Network log created and started.')
+        self.log_event(f'Network {self.network_name} created.')
+        self.log_event('Environmental variables set.')
+        self.log_event('Empty network hierarchy created.')
+        self.log_event('Network log created and started.')
 
         # Manual configuration
         if manual_config is not None:
             for holder_name, holder_config in manual_config.items():
                 result: bool = self.add_to_network(holder_name, holder_config, auto_config)
                 if result:
-                    self.network_log.append(f'Holder {holder_name} added to network.')
+                    self.log_event(f'Holder {holder_name} added to network.')
                 else:
-                    self.network_log.append(f'Invalid location configuration. {holder_name} was ignored.')
+                    self.log_event(f'Invalid location configuration. {holder_name} was ignored.')
+
+        # Filling in gaps
+        auto_holder_count = 1
+        for i in range(len(self.network_count_by_level)):
+            while len(self.network[i+1]) < self.network_count_by_level[i]:
+                self.add_to_network(
+                    f'holder_l{i+1}_c{auto_holder_count}',
+                    {'location': {'level': i+1}},
+                    auto_config
+                )
+                self.log_event(f'Gap found. Filler Holder #{auto_holder_count} at level {i+1} added to network.')
+                auto_holder_count += 1
+
+        # Network hub
+        self.network_hub = PKIHub(self.network)
+    
+    def log_event(self, message: str) -> None:
+        """
+        Takes a message, prints it, and saves it to network log.
+
+        Args:
+            message: str - String value to save.
+        """
+
+        print(message)
+        self.network_log.append(message)
 
     def add_to_network(self, holder_name: str, holder_config: dict, auto_config: dict) -> bool:
         """
@@ -80,7 +114,7 @@ class PKINetwork:
             return False
 
         # Create holder
-        holder: Holder = Holder(holder_name, holder_config, auto_config)
+        holder: PKIHolder = PKIHolder(holder_name, holder_config, auto_config)
 
         # Add holder to network
         level = holder_config['location']['level']

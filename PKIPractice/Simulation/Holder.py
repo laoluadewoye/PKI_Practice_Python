@@ -4,7 +4,10 @@ Module used for defining the holder class and it's functionality.
 
 # Relative pathing from project root
 import sys
+from queue import PriorityQueue
 from os.path import abspath, dirname, join
+from typing import Union
+from cryptography.hazmat.primitives.asymmetric import rsa, ec
 from .SimUtils import hash_info, get_random_country, get_random_division, create_private_key
 
 script_dir = dirname(abspath(__file__))
@@ -20,7 +23,7 @@ from PKIPractice.Utilities.DataclassUtils import *
 from PKIPractice.Utilities.EnumUtils import auto_fill_types
 
 
-class Holder:
+class PKIHolder:
     """
     Placeholder docuscript.
     """
@@ -112,6 +115,13 @@ class Holder:
                     type_fill[3][0] = holder_config['holder_type_info']['ca_status']
 
         type_fill = auto_fill_types(type_fill)
+        assert type_fill is not None, (
+            f'Manual configuration type settings for {holder_name} were not valid.\n'
+            f'\t   Settings in question: {holder_config["holder_type_info"]}.\n'
+            '\t   Please check that the type configuration of the holder does not'
+            ' violate any rules laid out in CONFIG_GUIDE.md and alter the settings.'
+        )
+
         self.holder_type_info: HOLDER_TYPE_INFO = HOLDER_TYPE_INFO(
             hardware_type=type_fill[0][0],
             hardware_subtype=type_fill[0][1],
@@ -189,9 +199,38 @@ class Holder:
             url=url
         )
 
-        self.holder_info_hash = hash_info(self.holder_info.hash_content, self.env_info.uid_hash)
+        self.holder_info_hash: str = hash_info(self.holder_info.hash_content, self.env_info.uid_hash)
 
         # Create key pair
-        self.holder_priv_key = create_private_key(self.env_info.encrypt_alg)
-        print(self.holder_priv_key)
+        self.holder_priv_key: Union[rsa.RSAPrivateKey, ec.EllipticCurvePrivateKey] = create_private_key(
+            self.env_info.encrypt_alg
+        )
+        self.holder_pub_key: Union[rsa.RSAPublicKey, ec.EllipticCurvePublicKey] = self.holder_priv_key.public_key()
 
+        # Creating certificate variables
+        self.holder_cert = None
+        self.root_certs = {}
+        self.cached_certs = {}
+
+        # Create ports for receiving information
+        self.csr_message_port: PriorityQueue = PriorityQueue()
+        self.reg_message_port: PriorityQueue = PriorityQueue()
+        self.ocsp_message_port: PriorityQueue = PriorityQueue()
+
+        # Create flags
+        self.has_root_cert_cache: bool = False
+        self.has_self_cert: bool = False
+
+        self.reg_message_port_empty: bool = False  # Might not be needed with Queues
+
+        self.waiting_for_csr_response: bool = False
+        self.waiting_to_send_csr: bool = False
+
+        self.waiting_for_reg_response: bool = False
+        self.waiting_to_send_reg: bool = False
+
+        self.waiting_for_ocsp_response: bool = False
+        self.waiting_to_send_oscp: bool = False
+
+        # Additional things below
+        self.network_hub = None
