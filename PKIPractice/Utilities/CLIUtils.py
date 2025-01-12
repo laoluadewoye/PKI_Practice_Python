@@ -44,7 +44,8 @@ def get_default_auto() -> dict:
         "cert_valid_durs": ["none", "00:15:00", "00:10:00", "00:05:00"],
         "cache_durs": ["none", "11:00", "06:00", "01:00"],
         "cooldown_durs": ["none", "5", "5", "5"],
-        "timeout_durs": ["none", "20", "20", "20"]
+        "timeout_durs": ["none", "20", "20", "20"],
+        "log_save_filepath": "saved_network_logs_default.csv"
     }
 
     return auto_config
@@ -469,8 +470,8 @@ def start_program() -> None:
         # Start the program if nothing else is needed.
         if sys.argv[1] not in ['-h', '--help']:
             # Build the environment
-            pki_network = PKINetwork('Network', env_auto_settings, env_manual_settings)
-            print(pki_network)
+            pki_network = PKINetwork('Sample_Net', env_auto_settings, env_manual_settings)
+            pki_network.save_logs()
 
     # Ultimate error escape
     except AssertionError as e:

@@ -14,13 +14,14 @@ Hi! This Project is under development. I set up the CI/CD pipeline in GitHub fir
 automatically test and push out updates to PyPi and Dockerhub. It took a few days to figure out but my system is
 pretty much set for any future updates and all I have to do is just push updates to my repo. I'll probably still be
 doing a bit more tinkering with GitHub actions but bottom line is that filepath arguments work and automation works and
-is dynamic enough as to not flubb up my repo posting system. I hope.
+is dynamic enough as to not flub up my repo posting system. I hope.
 
 For now, here is a basic idea of the project. I wanted to learn PKI architecture, how it's used, and do that while
 doing some more advanced stuff with the project in Python. The final goal for the program is that, given a 
 configuration file in one of the supported formats, it would create a simulation of a network of Certificate 
 Authorities and End-Certificate devices where communication between end devices are encrypted, signed, and supported by
-a Public Key Infrastructure. The supported formats are YAML, JSON, TOML, and XML.
+a Public Key Infrastructure. The supported formats are YAML, JSON, TOML, and XML. The final output of this program is
+a CSV log file.
 
 This program is developed in Python 3.12, but has support for Python 3.8-3.14. Currently, the only drawback is that any 
 interpreter that is earlier than Python 3.10 is unable to use YAML files for configuration, and will have to use one of 
@@ -85,26 +86,58 @@ Command Example: `run-pki-practice config_files/config_auto.json config_files/co
 
 If you have docker installed, you are able to run the program as a container without installing anything.
 
+### Basic run
+
+First, there is running the docker container "naked" without any additional options passed to the run command.
+
+Command Structure: docker run laoluade/pypkipractice:_{tag}_
+
+Command Example: `docker run laoluade/pypkipractice:latest`
+
+The docker container is automatically to use the "--default" option if no arguments are passed to the container
+environment. This way, you are able to see the example of what it would look like for the program to run.
+
+### Mounted run (output only)
+
+Next, there is mounting a folder as a volume to the docker. This way, you can save the CSV log file locally and access
+it. To do this, you will just have to connect a folder to the `/usr/local/app/` directory that the container operates
+in. 
+
+Command Structure: docker run -v _{local_output_folder_path}_:/usr/local/app/:ro laoluade/pypkipractice:_{tag}_
+
+Let's say for example, that you had an output folder called _"output"_ you would want to receive the output. Use the 
+following command:
+
+Command Example: `docker run -v output:/usr/local/app/:ro laoluade/pypkipractice:latest`
+
+### Mounted run (full)
+
+Lastly, there is mounting a local folder that _also_ contains configuration files for the program that you want to send
+into the container. The strategy is the same, but for safety, made the container folder a subdirectory of the `app`
+directory. You can even write the log filepath in a way where the log saves in the subdirectory, making it accessible
+to you on your hard drive.
+
 Command Structure: docker run -v _{local_config_folder_path}_:/usr/local/app/_{container_config_folder_path}_:ro 
-laoluade/pypkipractice:_{tag}_ _{arguments}_
+laoluade/pypkipractice:_{tag} {arguments}_
 
 Let's say that you had a folder called config_files, which had a file called config_auto.json and config_manual.json.
-You wished to expose this information to the docker container so you can run your own custom configuration.
+You wished to expose this information to the docker container, so you can run your own custom configuration.
 
 Command Example: `docker run -v config_files:/usr/local/app/config_files:ro laoluade/pypkipractice:latest 
 config_files/config_auto.json config_files/config_manual.json`
 
 In this example-
 
-* "docker run" is the basic subcommand that will be used to run the chosen image. 
-* The "-v" flag is used to mount the local config folder to the container's config folder. 
-* "config_files" is the name of the local config folder.
-* "/usr/local/app/config_files" is the path to the container's config folder.
+* **"docker run"** is the basic subcommand that will be used to run the chosen image. 
+* The **"-v"** flag is used to mount the local config folder as a volume to the container's config folder. 
+* **"config_files"** is the name of the local config folder.
+* **"/usr/local/app/config_files"** is the path to the container's config folder.
   * The container is run in /usr/local/app, so be cognisant of that when deciding where to mount your files.
-* The "-ro" flag is used to make the files you mount read only.
-* "laoluade/pypkipractice:latest" is the name of the image you would pull.
-  * "latest" is the tag of the image you would pull, which defaults to the most recent image in the repo.
+* The **"-ro"** flag is used to make the files you mount read only.
+* **"laoluade/pypkipractice:latest"** is the name of the image you would pull.
+  * **"latest"** is the tag of the image you would pull, which defaults to the most recent image in the repo.
 * The last part of the command is the arguments you passed to the command line after stating your image. The container
-  will take care of running the program for you.
-  * "config_files/config_auto.json" is the path to the auto configuration file.
-  * "config_files/config_manual.json" is the path to the manual configuration file.
+  will take care of handling the arguments for you. Filepaths must be from the perspective of the container working in
+  the app directory.
+  * **"config_files/config_auto.json"** is the path to the autoconfiguration file.
+  * **"config_files/config_manual.json"** is the path to the manual configuration file.

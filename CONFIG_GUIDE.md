@@ -39,7 +39,7 @@ guide this reading.
    varies considerably from file format to file format, but commonly an algorithm and parameters are passed together.
    The supported algorithms are RSA and ECC algorithms, each with its own parameters. Use the example files to see how
    to set the detail. This detail is specified using the `encrypt_alg` parameter.
-5) The last five details are level-by-level settings that are described in the same way as `count_by_level`.
+5) The next five details are level-by-level settings that are described in the same way as `count_by_level`.
    1) `revoc_probs` is the detail that sets the probability that a holder in a specific level will revoke a lower
       certificate or their own certificate. This setting must be a decimal value _inclusively_ between 0 and 1.
       Inclusively means that it can also be 0 and 1, but it cannot be outside the range any more than that.
@@ -52,9 +52,13 @@ guide this reading.
       lowercase.
    5) `timeout_durs` is the detail that states how long a holder would wait before timing out a sent message. It can 
       either be a number in seconds, or the word "none" in all lowercase.
+6) The last detail is where the information generated during the program should be saved. A log of every network action
+   is kept during runtime, and at the end or throughout the program, those logs can be saved as a CSV file. The
+   filepath that is passed must be at least eight characters long and can either be a relative or absolute filepath.
+   This detail is specified by the `log_save_filepath` parameter.
 
-These ten details are the only settings needed to run a PKI network simulation. However, if you wish for more detail,
-you can also create a manual configuration file.
+These eleven details are the only settings needed to run a PKI network simulation. However, if you wish for more 
+detail, you can also create a manual configuration file.
 
 # Manual Configuration
 

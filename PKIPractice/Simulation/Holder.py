@@ -25,7 +25,45 @@ from PKIPractice.Utilities.EnumUtils import auto_fill_types
 
 class PKIHolder:
     """
-    Placeholder docuscript.
+    The PKIHolder class represents a public key infrastructure (PKI) holder.
+
+    Attributes:
+        holder_name (str): The name of the PKI holder.
+        env_info (HOLDER_ENV_INFO): Environment-related information for the PKI holder, such as
+            encryption algorithm, UID hash, and various durations.
+        holder_type_info (HOLDER_TYPE_INFO): Information about the type of holder, such as hardware
+            type, operating system details, and certification authority status.
+        holder_info (HOLDER_INFO): General information about the holder, including name, location,
+            organization, and contact details.
+        holder_info_hash (str): Hash of the holder general information for secure identification.
+        holder_priv_key (Union[rsa.RSAPrivateKey, ec.EllipticCurvePrivateKey]): The holder's private key.
+        holder_pub_key (Union[rsa.RSAPublicKey, ec.EllipticCurvePublicKey]): The holder's public key.
+        holder_cert: Placeholder for the holder's certificate.
+        root_certs (dict): Dictionary storing root certificates.
+        cached_certs (dict): Cached certificates for quick access.
+        csr_message_port (PriorityQueue): Queue for CSR (Certificate Signing Request) messages.
+        reg_message_port (PriorityQueue): Queue for registration messages.
+        ocsp_message_port (PriorityQueue): Queue for OCSP (Online Certificate Status Protocol) messages.
+        has_root_cert_cache (bool): Flag indicating whether root certificates are cached.
+        has_self_cert (bool): Flag indicating whether the holder has a self-signed certificate.
+        need_new_cert (bool): Flag indicating whether the holder requires a new certificate.
+        cached_certs_empty (bool): Flag indicating whether cached certificates are empty.
+        waiting_for_csr_response (bool): Indicates if the holder is awaiting a CSR response.
+        waiting_to_send_csr (bool): Indicates if the holder is waiting to send a CSR.
+        waiting_for_reg_response (bool): Indicates if the holder is awaiting a registration response.
+        waiting_to_send_reg (bool): Indicates if the holder is waiting to send a registration request.
+        waiting_for_ocsp_response (bool): Indicates if the holder is awaiting an OCSP response.
+        waiting_to_send_oscp (bool): Indicates if the holder is waiting to send an OCSP request.
+        network_hub: Connection to the network hub.
+        is_ca (bool): Indicates if the holder is a certification authority (CA).
+        lower_level_certs (dict): Stores certificates for lower-level entities.
+        cert_revoc_list (dict): Stores the certificate revocation list.
+
+    Methods:
+        get_name() -> str:
+            Returns the name of the name of the holder.
+        set_hub_conn(hub) -> None:
+            Sets the hub connection of the holder.
     """
     def __init__(self, holder_name: str, holder_config: dict, auto_config: dict):
         # Name of holder
@@ -243,7 +281,6 @@ class PKIHolder:
 
         self.lower_level_certs: dict = {}
         self.cert_revoc_list: dict = {}
-
 
     def get_name(self) -> str:
         """
