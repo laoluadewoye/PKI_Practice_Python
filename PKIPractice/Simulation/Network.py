@@ -2,7 +2,7 @@
 Module used for defining the network class and it's functionality.
 """
 
-from typing import Union, List
+from typing import Union, List, Dict
 
 # Relative pathing from project root
 import sys
@@ -30,7 +30,7 @@ class PKIHub:
         send_store (dict): Where to send information for each holder, split into sending "up" or "down" the PKI
             hierarchy.
     """
-    def __init__(self, network: dict[int, list[PKIHolder]]):
+    def __init__(self, network: Dict[int, List[PKIHolder]]):
         # Create a mirror of network and location store
         self.mirror_store: dict = {}
         self.loc_store: dict = {}  # Sender = key, Receiver = value
