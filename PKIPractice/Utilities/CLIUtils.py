@@ -462,13 +462,15 @@ def start_program() -> None:
 
             env_auto_settings, env_manual_settings = ingest_config(sys.argv, default=True)
 
-        # No options apply, so just start the program
+        # No options apply, so just read the configuration files
         else:
             env_auto_settings, env_manual_settings = ingest_config(sys.argv)
 
-        # Build the environment
-        pki_network = PKINetwork('Network', env_auto_settings, env_manual_settings)
-        print(pki_network)
+        # Start the program if nothing else is needed.
+        if sys.argv[1] not in ['-h', '--help']:
+            # Build the environment
+            pki_network = PKINetwork('Network', env_auto_settings, env_manual_settings)
+            print(pki_network)
 
     # Ultimate error escape
     except AssertionError as e:

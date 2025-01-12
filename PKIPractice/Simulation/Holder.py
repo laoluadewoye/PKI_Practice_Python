@@ -220,8 +220,8 @@ class PKIHolder:
         # Create flags
         self.has_root_cert_cache: bool = False
         self.has_self_cert: bool = False
-
-        self.reg_message_port_empty: bool = False  # Might not be needed with Queues
+        self.need_new_cert: bool = False
+        self.cached_certs_empty: bool = False
 
         self.waiting_for_csr_response: bool = False
         self.waiting_to_send_csr: bool = False
@@ -232,5 +232,35 @@ class PKIHolder:
         self.waiting_for_ocsp_response: bool = False
         self.waiting_to_send_oscp: bool = False
 
-        # Additional things below
+        # Create hub connection
         self.network_hub = None
+
+        # Create CA-specific attributes
+        if self.holder_type_info.ca_status in ['inter_auth', 'root_auth']:
+            self.is_ca: bool = True
+        else:
+            self.is_ca: bool = False
+
+        self.lower_level_certs: dict = {}
+        self.cert_revoc_list: dict = {}
+
+
+    def get_name(self) -> str:
+        """
+        Returns the name of the holder.
+
+        Returns:
+            str: Name of the holder.
+        """
+
+        return self.holder_name
+
+    def set_hub_conn(self, hub) -> None:
+        """
+        Sets the connection to the hub.
+
+        Args:
+            hub: PKIHub - The hub to connect to.
+        """
+
+        self.network_hub = hub

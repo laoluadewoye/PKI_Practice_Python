@@ -22,9 +22,58 @@ from PKIPractice.Simulation.Holder import PKIHolder
 
 class PKIHub:
     """
-    Placeholder docuscript. Will be used to direct communications between holders.
+    The "infrastructure" of the network. Will be used to direct communications between holders.
+
+    Attributes:
+        mirror_store (dict): The "mirror" of the environment hierarchy in literal name.
+        loc_store (dict): The location of every holder in the environment.
+        send_store (dict): Where to send information for each holder, split into sending "up" or "down" the PKI
+            hierarchy.
     """
-    def __init__(self, network: dict):
+    def __init__(self, network: dict[int, list[PKIHolder]]):
+        # Create a mirror of network and location store
+        self.mirror_store: dict = {}
+        self.loc_store: dict = {}  # Sender = key, Receiver = value
+
+        for level, holders in network.items():
+            self.mirror_store[level] = []
+            for holder in holders:
+                # Add the name of the holder to the store
+                self.mirror_store[level].append(holder.get_name())
+
+                # Add the location of the holder
+                self.loc_store[holder.get_name()] = (level, len(self.mirror_store[level]) - 1)
+
+                # Set the hub for the holder
+                holder.set_hub_conn(self)
+
+        # Use mirror store to decide who to send things to.
+        self.send_store: dict = {'up': {}, 'down': {}}
+        for level, names in self.mirror_store.items():
+            # Skip first level
+            if level == 1:
+                continue
+
+            prev_level = self.mirror_store[level-1]
+            prev_level_index = 0
+            PREV_LEVEL_MAX = len(prev_level)
+
+            for holder_name in self.mirror_store[level]:
+                # Record where the holder will send the message to
+                self.send_store['up'][holder_name] = prev_level[prev_level_index]
+
+                # Record where the receiver can send the message back
+                if prev_level[prev_level_index] in self.send_store['down'].keys():
+                    self.send_store['down'][prev_level[prev_level_index]].append(holder_name)
+                else:
+                    self.send_store['down'][prev_level[prev_level_index]] = [holder_name]
+
+                prev_level_index += 1
+                if prev_level_index == PREV_LEVEL_MAX:
+                    prev_level_index = 0
+
+    def forward_message(self):
+        """Placeholder"""
         ...
 
 
@@ -87,6 +136,7 @@ class PKINetwork:
 
         # Network hub
         self.network_hub = PKIHub(self.network)
+        self.log_event('Network hub and connection information created.')
     
     def log_event(self, message: str) -> None:
         """
@@ -101,8 +151,18 @@ class PKINetwork:
 
     def add_to_network(self, holder_name: str, holder_config: dict, auto_config: dict) -> bool:
         """
-        Placeholder
+        Takes a given holder name, holder configuration dictionary, and auto_config elements and creates a holder.
+        Adds the holder to the growing network.
+
+        Args:
+            holder_name: str - The name of the manually created holder.
+            holder_config: dict - The configuration settings of the holder.
+            auto_config: dict - The configuration settings of the environment.
+
+        Returns:
+            bool - Success status on operation.
         """
+
         # Check if location is valid
         proper_keys: bool = all(
             isinstance(holder_config['location'][key], int) for key in holder_config['location'].keys()
