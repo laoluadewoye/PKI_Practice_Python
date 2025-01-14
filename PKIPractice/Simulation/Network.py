@@ -112,7 +112,7 @@ class PKINetwork:
         add_to_network(holder_name, holder_config, auto_config) -> bool:
             Adds a new holder to the network and returns a success status.
     """
-    def __init__(self, name: str, auto_config: Union[dict, None], manual_config: Union[dict, None]) -> None:
+    def __init__(self, name: str, auto_config: Union[dict, None], manual_config: Union[dict, None] = None) -> None:
         # Unique identifier
         self.network_name: str = name
 
@@ -168,6 +168,7 @@ class PKINetwork:
                         'Operations', 'Network', 'Addition', holder_name, self.network_name,
                         f'Holder {holder_name} added to network.'
                     )
+                    self.network_total_count += 1
                 else:
                     self.log_event(
                         'Operations', 'Network', 'Omission', holder_name, self.network_name,
@@ -176,7 +177,7 @@ class PKINetwork:
 
         # Filling in gaps
         auto_holder_count = 1
-        for i in range(len(self.network_count_by_level)):
+        for i in range(self.network_level_count):
             while len(self.network[i+1]) < self.network_count_by_level[i]:
                 self.add_to_network(
                     f'holder_l{i+1}_c{auto_holder_count}',
@@ -189,6 +190,7 @@ class PKINetwork:
                     f'Gap found. Filler Holder #{auto_holder_count} at level {i+1} added to network.'
                 )
                 auto_holder_count += 1
+                self.network_total_count += 1
 
         # Network hub
         self.network_hub = PKIHub(self, self.network)
@@ -266,3 +268,14 @@ class PKINetwork:
         self.network[level].append(holder)
 
         return True
+
+    def get_network(self) -> List[PKIHolder]:
+        """
+        Returns a flat list of all holders in the environment in order of level.
+
+        Returns:
+            List[PKIHolder]: A list of all holder objects.
+        """
+
+        flat_network = [holder for level in self.network.values() for holder in level]
+        return flat_network

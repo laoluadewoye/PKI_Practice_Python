@@ -264,7 +264,7 @@ def get_default_manual() -> dict:
             },
             "holder_type_info": {
                 "hardware_type": "endpoint",
-                "hardware_subtype": "mobile",
+                "hardware_subtype": "phone",
                 "account_type": "user"
             }
         },
@@ -327,6 +327,15 @@ def ingest_config(args: list, default: bool = False) -> Union[tuple, None]:
         args (list): A list of command-line arguments.
         default (bool, optional): If True, use the default configuration files. Defaults to False.
     """
+
+    # Check if a yaml file is passed on an interpreter before Python 3.10
+    if sys.version_info[1] < 10:
+        assert all('.yaml' not in arg for arg in args), (
+            'Invalid configuration filepath provided.\n'
+            '\t   Yaml files do not have support for Python versions before 3.10.\n'
+            '\t   Please use a different configuration format (JSON, XML, TOML).\n'
+        )
+
     # Check if there is a proper argument for the auto generation
     assert 'auto' in args[1] or default, (
         'Invalid configuration filepath provided.\n'
@@ -470,7 +479,9 @@ def start_program() -> None:
         # Start the program if nothing else is needed.
         if sys.argv[1] not in ['-h', '--help']:
             # Build the environment
-            pki_network = PKINetwork('Sample_Net', env_auto_settings, env_manual_settings)
+            pki_network: PKINetwork = PKINetwork('Sample_Net', env_auto_settings, env_manual_settings)
+
+            print(pki_network)
             pki_network.save_logs()
 
     # Ultimate error escape
