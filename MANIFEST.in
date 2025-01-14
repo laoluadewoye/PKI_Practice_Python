@@ -1,1 +1,2 @@
 include Default_Configs/*
+include README.adoc

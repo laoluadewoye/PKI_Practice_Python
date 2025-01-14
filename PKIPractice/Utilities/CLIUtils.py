@@ -2,10 +2,9 @@
 Module containing all utilities relevant for interacting with a command line interface.
 """
 
-from typing import Union
-
 # Relative pathing from project root
 import sys
+from typing import Union
 from os.path import abspath, dirname, join
 
 script_dir = dirname(abspath(__file__))
