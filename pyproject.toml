@@ -46,6 +46,7 @@ dependencies = [
     "cryptography==44.0.0",
     "PyYAML==6.0.2",
     "tomli==2.2.1",
+    "asciidoc==10.2.1",
 ]
 
 [project.urls]

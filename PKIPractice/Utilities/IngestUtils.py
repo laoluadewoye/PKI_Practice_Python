@@ -164,6 +164,24 @@ def validate_settings_auto(settings: dict) -> bool:
                   'encrypt_alg.params.curve. Please fix this in the autoconfiguration file.')
             return False
 
+    # Checking if a proper filepath is passed for the program.
+    if 'log_save_filepath' not in settings.keys():
+        print('The filepath for saving log files is not existent. Please add that to the autoconfiguration file.')
+        return False
+
+    if len(settings['log_save_filepath']) < 7:
+        print('The filepath for saving log files is too short to be valid. '
+              'File paths need to be at least 7 characters long. '
+              'Please fix that in the autoconfiguration file.')
+        return False
+
+    if settings['log_save_filepath'][-4:] != '.csv':
+        print('Invalid log file path found. '
+              'Please ensure that the filepath you pass to the network has the ".csv" extension at the end. '
+              'Logs are saved as CSV files for convenience. '
+              'Please fix this in the autoconfiguration file.')
+        return False
+
     return True
 
 
@@ -178,7 +196,7 @@ def parse_config_auto(filepath: str) -> Union[dict, None]:
         dict: A dictionary containing the parsed configuration data.
     """
 
-    settings: dict | None = None
+    settings: Union[dict, None] = None
 
     # Check file type
     assert any(ext in filepath for ext in ['.yaml', '.yml', '.json', '.xml', '.toml']), (
@@ -246,7 +264,7 @@ def search_for_typecast_manual(settings: dict) -> Union[dict, None]:
 
     try:
         for key, value in settings.items():
-            if key in ['level', 'holder', 'pub_exp', 'key_size']:
+            if key in ['level', 'pub_exp', 'key_size']:
                 settings[key] = int(value)
             elif key in ['revoc_prob']:
                 settings[key] = float(value)
@@ -279,7 +297,7 @@ def parse_config_manual(filepath: str) -> Union[dict, None]:
         dict: A dictionary containing the parsed configuration data.
     """
 
-    settings: dict | None = None
+    settings: Union[dict, None] = None
 
     # Check file type
     assert any(ext in filepath for ext in ['.yaml', '.yml', '.json', '.xml', '.toml']), (

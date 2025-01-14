@@ -97,146 +97,146 @@ The Certificate Authority should be able to keep a database of certificates
 
 A holder can be anything that holds a certificate. This includes-
 
-1) Account
-   1) User
-      1) Guest
-      2) Personal
-      3) Enterprise
-   2) Admin
-      1) Domain Admin
-      2) Schema Admin
-      3) Server Admin
-      4) Network Admin
-      5) Cloud Admin
-      6) Database Admin 
-      7) Auditor
-   3) System
-2) Operating System
-   1) Microsoft
-      1) Windows
-         1) Windows 2000
-            1) Professional
-            2) Server
-            3) Advanced Server
-            4) Datacenter Server
-         2) Windows XP
-            1) Home
-            2) Professional
-         3) Windows Vista
-            1) Starter
-            2) Home Basic
-            3) Home Premium
-            4) Business
-            5) Enterprise
-            6) Ultimate
-         4) Windows 7
-            1) Starter
-            2) Home Basic
-            3) Home Premium
-            4) Business
-            5) Enterprise
-            6) Ultimate
-         5) Windows 8
-            1) Home
-            2) Pro
-            3) Enterprise
-         6) Windows 10
-            1) Home
-            2) Pro
-            3) Educational
-            4) Enterprise
-         7) Windows 11
-            1) Home
-            2) Pro
-            3) Educational
-            4) Enterprise
-      2) Windows Server
-         1) Windows Server 2003
-            1) Web
-            2) Standard
-            3) Enterprise
-            4) Datacenter
-         2) Windows Server 2008
-            1) Web
-            2) Standard
-            3) Enterprise
-            4) Datacenter
-            5) Itanium
-            6) Foundation
-            7) HPC
-         3) Windows Server 2012
-            1) Foundation
-            2) Essentials
-            3) Standard
-            4) Datacenter
-         4) Windows Server 2016
-            1) Standard
-            2) Datacenter
-         5) Windows Server 2019
-            1) Standard
-            2) Datacenter
-         6) Windows Server 2022
-            1) Standard
-            2) Datacenter
-            3) Datacenter Azure
-   2) Unix
-      1) Linux
-         1) Debian
-            1) Ubuntu
-            2) Linux Mint
-            3) Kali Linux
-            4) Raspberry Pi
-            5) MX Linux
-            6) Debian
-         2) Red Hat
-            1) Red Hat
-            2) Fedora
-            3) Cent OS
-         3) Arch Linux
-         4) Gentoo
-         5) SUSE
-            1) openSUSE
-            2) SUSE Linux Enterprise
-         6) Alpine
-         7) Nix OS
-         8) Qubes OS
-         9) Ubuntu Server
-      2) BSD
-         1) FreeBSD
-         2) OpenBSD
-         3) NetBSD
-      3) Solaris
-      4) Mac OS X
-         1) Leopard
-         2) Snow Leopard
-         3) Lion
-         4) Mountain Lion
-         5) Mavericks
-         6) Yosemite
-         7) El Capitan
-         8) Sierra
-         9) High Sierra
-         10) Mojave
-         11) Catalina
-         12) Big Sur
-         13) Monterey
-         14) Ventura
-         15) Sonoma
-         16) Sequoia
-   3) Mobile
-      1) iOS
-      2) Android
-         1) Android Nougat
-         2) Android Oreo
-         3) Android Pie
-         4) Android 10
-         5) Android 11
-         6) Android 12
-         7) Android 13
-         8) Android 14
-         9) Android 15
-         10) Android 16
-   4) Routing
+1) Accounts
+   1) user
+      1) guest
+      2) personal
+      3) enterprise
+   2) admin
+      1) domain_admin
+      2) schema_admin
+      3) server_admin
+      4) network_admin
+      5) cloud_admin
+      6) database_admin
+      7) auditor
+   3) system
+2) Operating Systems
+   1) microsoft
+      1) windows
+         1) windows_2000
+            1) professional
+            2) server
+            3) advanced_server
+            4) datacenter_server
+         2) windows_xp
+            1) home
+            2) professional
+         3) windows_vista
+            1) starter
+            2) home_basic
+            3) home_premium
+            4) business
+            5) enterprise
+            6) ultimate
+         4) windows_7
+            1) starter
+            2) home_basic
+            3) home_premium
+            4) business
+            5) enterprise
+            6) ultimate
+         5) windows_8
+            1) home
+            2) pro
+            3) enterprise
+         6) windows_10
+            1) home
+            2) pro
+            3) educational
+            4) enterprise
+         7) windows_11
+            1) home
+            2) pro
+            3) educational
+            4) enterprise
+      2) windows_server
+         1) windows_server_2003
+            1) web
+            2) standard
+            3) enterprise
+            4) datacenter
+         2) windows_server_2008
+            1) web
+            2) standard
+            3) enterprise
+            4) datacenter
+            5) itanium
+            6) foundation
+            7) hpc
+         3) windows_server_2012
+            1) foundation
+            2) essentials
+            3) standard
+            4) datacenter
+         4) windows_server_2016
+            1) standard
+            2) datacenter
+         5) windows_server_2019
+            1) standard
+            2) datacenter
+         6) windows_server_2022
+            1) standard
+            2) datacenter
+            3) datacenter_azure
+   2) unix
+      1) linux
+         1) debian
+            1) ubuntu
+            2) linux_mint
+            3) kali_linux
+            4) raspberry_pi
+            5) mx_linux
+            6) debian
+         2) red_hat
+            1) red_hat
+            2) fedora
+            3) cent_os
+         3) arch_linux
+         4) gentoo
+         5) suse
+            1) opensuse
+            2) suse_linux_enterprise
+         6) alpine
+         7) nix_os
+         8) qubes_os
+         9) ubuntu_server
+      2) bsd
+         1) freebsd
+         2) openbsd
+         3) netbsd
+      3) solaris
+      4) mac_os_x
+         1) leopard
+         2) snow_leopard
+         3) lion
+         4) mountain_lion
+         5) mavericks
+         6) yosemite
+         7) el_capitan
+         8) sierra
+         9) high_sierra
+         10) mojave
+         11) catalina
+         12) big_sur
+         13) monterey
+         14) ventura
+         15) sonoma
+         16) sequoia
+   3) mobile
+      1) ios
+      2) android
+         1) nougat
+         2) oreo
+         3) pie
+         4) 10
+         5) 11
+         6) 12
+         7) 13
+         8) 14
+         9) 15
+         10) 16
+   4) routing
       1) ONIE (Open Network Install Environment)
       2) ONL (Open Network Linux)
       3) OPX (OpenSwitch)
@@ -249,113 +249,113 @@ A holder can be anything that holds a certificate. This includes-
       10) NX-OS (Nexus NOS)
       11) OpenWrt
 3) Hardware
-   1) Endpoint
-      1) Desktop
-         1) Hewlett-Packard
-         2) Acer
-         3) Dell
-         4) Lenovo
-         5) Toshiba
-         6) IBM
-         7) Fujitsu
-         8) NEC
-         9) Apple
-      2) Laptop
-         1) Samsung
-         2) Razer
-         3) Microsoft
-         4) MSI
-         5) Asus
-         6) Acer
-         7) Dell
-         8) Lenovo
-         9) Hewlett-Packard
-         10) Apple
-      3) Phone
-         1) Samsung
-         2) Apple
-         3) Huawei
-         4) Sony
-         5) Google
-         6) Microsoft
-         7) Toshiba
-         8) Dell
-      4) Server
-         1) Dell
-         2) Hewlett-Packard
-         3) Supermicro
-         4) Inspur
-         5) Lenovo
-         6) Huawei
-         7) IBM
-         8) Fukitsu
-         9) Cisco
-      5) IoT
-         1) Advantech
-         2) Raspberry Pi
-         3) Arduino
-         4) Nvidia
-         5) BeagleBoard
-         6) Udoo
-         7) OnLogic
-         8) Kontron
-         9) Arbor
-         10) Axiomtek
-   2) Network
-      1) Router
-         1) Cisco
-         2) Peplink
-         3) Advantech
-         4) Netgear
-         5) TP-Link
-      2) Switch
-         1) Anchor
-         2) Honeywell
-         3) Philips
-         4) Siemens
-         5) Cisco
-         6) HPL
-      3) Access Point
-         1) Cisco
-         2) Fortinet
-         3) Netgear
-         4) Zyxel
-         5) TP-Link
-         6) EnGenius
-   3) Appliance
-      1) Firewall
-         1) Bitdefender
-         2) Cisco
-         3) Fortinet
-         4) Palo Alto
-         5) Netgate
-         6) WatchGuard
-         7) SonicWall
-      2) UTM Device (i.e. IDS/IPS, DLP, AC, Proxy)
-         1) SonicWall
-         2) Fortigate
-         3) Barracuda
-         4) Juniper
-         5) Trellix
-         6) Palo Alto
-   4) Peripheral
-      1) USB Key
-         1) Samsung
-         2) SanDisk
-         3) Corsiar
-         4) Kingston
-         5) PNY
-      2) Smart Card
-         1) Thales
-         2) NXP Semiconductors
-         3) CardLogix
-         4) Infineon
-      3) External Storage
-         1) Seagate
-         2) Western Digital
-         3) SanDisk
-         4) Transcend
-         5) LaCie
+   1) endpoint
+      1) desktop
+         1) hewlett_packard
+         2) acer
+         3) dell
+         4) lenovo
+         5) toshiba
+         6) ibm
+         7) fujitsu
+         8) nec
+         9) apple
+      2) laptop
+         1) samsung
+         2) razer
+         3) microsoft
+         4) msi
+         5) asus
+         6) acer
+         7) dell
+         8) lenovo
+         9) hewlett_packard
+         10) apple
+      3) phone
+         1) samsung
+         2) apple
+         3) huawei
+         4) sony
+         5) google
+         6) microsoft
+         7) toshiba
+         8) dell
+      4) server
+         1) dell
+         2) hewlett_packard
+         3) supermicro
+         4) inspur
+         5) lenovo
+         6) huawei
+         7) ibm
+         8) fukitsu
+         9) cisco
+      5) iot
+         1) advantech
+         2) raspberry_pi
+         3) arduino
+         4) nvidia
+         5) beagleboard
+         6) udoo
+         7) onlogic
+         8) kontron
+         9) arbor
+         10) axiomtek
+   2) network
+      1) router
+         1) cisco
+         2) peplink
+         3) advantech
+         4) netgear
+         5) tp_link
+      2) switch
+         1) anchor
+         2) honeywell
+         3) philips
+         4) siemens
+         5) cisco
+         6) hpl
+      3) access_point
+         1) cisco
+         2) fortinet
+         3) netgear
+         4) zyxel
+         5) tp_link
+         6) engenius
+   3) appliance
+      1) firewall
+         1) bitdefender
+         2) cisco
+         3) fortinet
+         4) palo_alto
+         5) netgate
+         6) watchguard
+         7) sonicwall
+      2) utm (i.e. IDS/IPS, DLP, AC, Proxy)
+         1) sonicwall
+         2) fortigate
+         3) barracuda
+         4) juniper
+         5) trellix
+         6) palo_alto
+   4) peripheral
+      1) usb_key
+         1) samsung
+         2) sandisk
+         3) corsiar
+         4) kingston
+         5) pny
+      2) smart_card
+         1) thales
+         2) nxp_semiconductors
+         3) cardlogix
+         4) infineon
+      3) external_storage
+         1) seagate
+         2) western_digital
+         3) sandisk
+         4) transcend
+         5) lacie
 
 ## Holder Identifier
 
@@ -617,8 +617,8 @@ statuses, and checking certificate statuses for lower levels.
    9) The CSR wait time, or the time to wait until a request times out, is read in.
       1) Formatted in seconds.
    10) If manual, the hierarchical structure is read in last.
-      1) The number of layers is first.
-      2) The list of CAs and non-CAs is next.
+       1) The number of layers is first.
+       2) The list of CAs and non-CAs is next.
 2) For each holder read or created-
    1) Phase one
       1) The name of the object is generated as random alphabet characters or loaded in.

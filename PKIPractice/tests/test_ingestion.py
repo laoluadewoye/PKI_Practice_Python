@@ -1,18 +1,34 @@
+"""
+Module for testing configuration ingestion utilities.
+"""
+
 import unittest
 
-# Append the parent directory to the sys.path
+# Relative pathing from project root
 import sys
-from os.path import curdir, abspath, basename, join, dirname
-sys.path.append(abspath(join(dirname(__file__), '..')))
+from os.path import curdir, abspath, basename, dirname, join
+
+script_dir = dirname(abspath(__file__))
+
+if script_dir in ['PKI_Practice', 'PKI Practice', 'app']:
+    sys.path.append(abspath(script_dir))
+elif script_dir == 'PKIPractice':
+    sys.path.append(abspath(join(script_dir, '..')))
+else:
+    sys.path.append(abspath(join(script_dir, '../..')))
 
 # Personal Modules must be imported after the system path is modified.
-from ..Utilities.IngestUtils import parse_config_auto, parse_config_manual
+from PKIPractice.Utilities.IngestUtils import parse_config_auto, parse_config_manual
 
 
 class TestIngestion(unittest.TestCase):
     def setUp(self) -> None:
+        """
+        Sets up the parameters for testing.
+        """
+
         current_dir = basename(abspath(curdir))
-        if current_dir in ['PKI_Practice', 'PKI Practice']:
+        if current_dir in ['PKI_Practice', 'PKI Practice', 'app']:
             self.dc_dir = './'
         elif current_dir == 'PKIPractice':
             self.dc_dir = '../'
@@ -25,7 +41,12 @@ class TestIngestion(unittest.TestCase):
         """
         Checks if the number of keys in the auto config files is consistent across all formats.
         """
+
         def total_keys(test_dict: dict) -> int:
+            """
+            Returns how many keys are in the dictionary.
+            """
+
             return 0 if not isinstance(test_dict, dict) else len(test_dict) + sum(
                 total_keys(val) for val in test_dict.values())
 
@@ -56,6 +77,9 @@ class TestIngestion(unittest.TestCase):
         Checks if the number of keys in the manual config files is consistent across all formats.
         """
         def total_keys(test_dict: dict) -> int:
+            """
+            Returns how many keys are in the dictionary.
+            """
             return 0 if not isinstance(test_dict, dict) else len(test_dict) + sum(
                 total_keys(val) for val in test_dict.values())
 
@@ -89,12 +113,18 @@ class TestIngestion(unittest.TestCase):
         config_xml: dict = parse_config_auto(f'{self.dc_dir}Default_Configs/default_auto.xml')
         config_toml: dict = parse_config_auto(f'{self.dc_dir}Default_Configs/default_auto.toml')
 
+        del config_json['log_save_filepath']
+        del config_xml['log_save_filepath']
+        del config_toml['log_save_filepath']
+
         self.assertEqual(config_json, config_xml)
         self.assertEqual(config_json, config_toml)
 
         # Accommodating for earlier versions before Python 3.10
         if sys.version_info[1] > 9:
             config_yaml: dict = parse_config_auto(f'{self.dc_dir}Default_Configs/default_auto.yaml')
+
+            del config_yaml['log_save_filepath']
             self.assertEqual(config_json, config_yaml)
 
     def test_key_types_manual(self) -> None:
