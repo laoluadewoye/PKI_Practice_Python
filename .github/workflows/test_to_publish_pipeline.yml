@@ -30,7 +30,7 @@ jobs:
       - name: Setup Git User
         run: |
           git config --global user.name "Laolu Bot"
-          git config --global user.email ${{ vars.EMAIL }}
+          git config --global user.email "${{ vars.EMAIL }}"
       - name: Setup GPG Key
         uses: crazy-max/ghaction-import-gpg@cb9bde2e2525e640591a934b1fd28eef1dcaf5e5
         with:
