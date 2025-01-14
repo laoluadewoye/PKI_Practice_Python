@@ -319,7 +319,7 @@ def get_default_manual() -> dict:
     return manual_config
 
 
-def ingest_config(args: list, default: bool = False) -> Union[tuple, None]:
+def ingest_config(args: list, default: bool) -> Union[tuple, None]:
     """
     Starts the program using the command-line arguments.
 
@@ -337,16 +337,17 @@ def ingest_config(args: list, default: bool = False) -> Union[tuple, None]:
         )
 
     # Check if there is a proper argument for the auto generation
-    assert 'auto' in args[1] or default, (
-        'Invalid configuration filepath provided.\n'
-        '\t   Please provide a proper auto configuration file by '
-        'passing the filepath of your file as an command-line argument.\n'
-        '\t   Example: python Main.py Default_Configs/default_auto.yaml\n'
-    )
+    if not default:
+        assert 'auto' in args[1], (
+            'Invalid configuration filepath provided.\n'
+            '\t   Please provide a proper auto configuration file by '
+            'passing the filepath of your file as an command-line argument.\n'
+            '\t   Example: python Main.py Default_Configs/default_auto.yaml\n'
+        )
 
     # Check if there is a proper argument for the manual settings or if it's just one argument
-    only_auto: bool = len(args) == 2
-    if only_auto:
+    only_auto_or_default: bool = len(args) == 2 or default
+    if only_auto_or_default:
         manual_exists: bool = True
     else:
         manual_exists: bool = 'manual' in args[2]
@@ -413,6 +414,12 @@ def start_program() -> None:
     """
     Starts the program. Used by RunConfig.py and command line call to start program.
     """
+    # Name flags
+    help_flag = False
+    default_flag = False
+    test_flag = False
+
+    # Start assertion region
     try:
         # Create empty variables
         env_auto_settings, env_manual_settings = None, None
@@ -427,7 +434,7 @@ def start_program() -> None:
         )
 
         # Check if there is a help flag
-        if sys.argv[1] == '-h' or sys.argv[1] == '--help':
+        if any(arg in sys.argv for arg in ('-h', '--help')):
             print(
                 '   Help flag detected.\n'
                 '   Welcome to PKI Practice!\n'
@@ -446,9 +453,12 @@ def start_program() -> None:
                 '\n'
                 '   For more details, please check the README file.\n'
             )
+            help_flag = True
+            help_index = next((i for i, arg in enumerate(sys.argv) if arg in ('-h', '--help')), None)
+            sys.argv.pop(help_index)
 
         # Check if there is a default flag
-        elif sys.argv[1] == '-d' or sys.argv[1] == '--default':
+        if any(arg in sys.argv for arg in ('-d', '--default')):
             print(
                 '   Default flag detected.\n'
                 '   Welcome to PKI Practice!\n'
@@ -469,18 +479,26 @@ def start_program() -> None:
                 '\n'
                 '   For now though, here is a default run of the program using the default yaml files.\n'
             )
+            default_flag = True
+            default_index = next((i for i, arg in enumerate(sys.argv) if arg in ('-d', '--default')), None)
+            sys.argv.pop(default_index)
 
-            env_auto_settings, env_manual_settings = ingest_config(sys.argv, default=True)
-
-        # No options apply, so just read the configuration files
-        else:
-            env_auto_settings, env_manual_settings = ingest_config(sys.argv)
+        # Check if there is a test flag
+        if any(arg in sys.argv for arg in ('-t', '--test')):
+            test_flag = True
+            test_index = next((i for i, arg in enumerate(sys.argv) if arg in ('-t', '--test')), None)
+            sys.argv.pop(test_index)
 
         # Start the program if nothing else is needed.
-        if sys.argv[1] not in ['-h', '--help']:
+        if not help_flag:
+            # Read the configuration files or default configurations
+            env_auto_settings, env_manual_settings = ingest_config(sys.argv, default=default_flag)
+
             # Build the environment
             pki_network: PKINetwork = PKINetwork('Sample_Net', env_auto_settings, env_manual_settings)
 
+        # Go even further if not just testing the CLI options.
+        if not test_flag and not help_flag:
             print(pki_network)
             pki_network.save_logs()
 

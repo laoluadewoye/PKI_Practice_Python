@@ -45,13 +45,19 @@ class TestCLI(unittest.TestCase):
         """
         Test the help flag.
         """
-        result = subprocess.run(['python', self.pyfile, '-h'], capture_output=True)
+        result = subprocess.run(['python', self.pyfile, '-t', '-h'], capture_output=True)
         print(result)
 
         self.assertEqual(0, result.returncode)
         self.assertEqual(b'', result.stderr)
 
-        result = subprocess.run(['python', self.pyfile, '--help'], capture_output=True)
+        result = subprocess.run(['python', self.pyfile, '-t', '--help'], capture_output=True)
+        print(result)
+
+        self.assertEqual(0, result.returncode)
+        self.assertEqual(b'', result.stderr)
+
+        result = subprocess.run(['python', self.pyfile, '-h'], capture_output=True)
         print(result)
 
         self.assertEqual(0, result.returncode)
@@ -61,13 +67,13 @@ class TestCLI(unittest.TestCase):
         """
         Test the default flag.
         """
-        result = subprocess.run(['python', self.pyfile, '-d'], capture_output=True)
+        result = subprocess.run(['python', self.pyfile, '-t', '-d'], capture_output=True)
         print(result)
 
         self.assertEqual(0, result.returncode)
         self.assertEqual(b'', result.stderr)
 
-        result = subprocess.run(['python', self.pyfile, '--default'], capture_output=True)
+        result = subprocess.run(['python', self.pyfile, '-t', '--default'], capture_output=True)
         print(result)
 
         self.assertEqual(0, result.returncode)
@@ -78,31 +84,31 @@ class TestCLI(unittest.TestCase):
         Test the arguments using files from Default_Configs folder.
         """
         arg_combos = [
-            ['python', self.pyfile, f'{self.dc_dir}Default_Configs/default_auto.yaml'],
-            ['python', self.pyfile, f'{self.dc_dir}Default_Configs/default_auto.json'],
-            ['python', self.pyfile, f'{self.dc_dir}Default_Configs/default_auto.toml'],
-            ['python', self.pyfile, f'{self.dc_dir}Default_Configs/default_auto.xml'],
+            ['python', self.pyfile, '-t', f'{self.dc_dir}Default_Configs/default_auto.yaml'],
+            ['python', self.pyfile, '-t', f'{self.dc_dir}Default_Configs/default_auto.json'],
+            ['python', self.pyfile, '-t', f'{self.dc_dir}Default_Configs/default_auto.toml'],
+            ['python', self.pyfile, '-t', f'{self.dc_dir}Default_Configs/default_auto.xml'],
             [
                 'python',
-                self.pyfile,
+                self.pyfile, '-t',
                 f'{self.dc_dir}Default_Configs/default_auto.yaml',
                 f'{self.dc_dir}Default_Configs/default_manual.yaml'
             ],
             [
                 'python',
-                self.pyfile,
+                self.pyfile, '-t',
                 f'{self.dc_dir}Default_Configs/default_auto.json',
                 f'{self.dc_dir}Default_Configs/default_manual.json'
             ],
             [
                 'python',
-                self.pyfile,
+                self.pyfile, '-t',
                 f'{self.dc_dir}Default_Configs/default_auto.toml',
                 f'{self.dc_dir}Default_Configs/default_manual.toml'
             ],
             [
                 'python',
-                self.pyfile,
+                self.pyfile, '-t',
                 f'{self.dc_dir}Default_Configs/default_auto.xml',
                 f'{self.dc_dir}Default_Configs/default_manual.xml'
             ]
@@ -156,7 +162,7 @@ class TestCLI(unittest.TestCase):
         """
         args = [
             'python',
-            self.pyfile,
+            self.pyfile, '-t',
             f'{self.dc_dir}Default_Configs/default_auto.yaml',
             f'{self.dc_dir}Default_Configs/default_manual.yaml',
             'one too many arguments'
