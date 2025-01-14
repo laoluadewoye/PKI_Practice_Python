@@ -45,7 +45,7 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
       - name: Generate an HTML File
-        run: python -m asciidoc -o index.html README.adoc
+        run: python -m asciidoc -o docs/index.html README.adoc
       - name: Add New HTML to Repo
         run: |
           git add index.html
