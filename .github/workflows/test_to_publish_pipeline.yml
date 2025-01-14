@@ -18,6 +18,7 @@ jobs:
     needs: test-project-nox
     uses: laoluadewoye/PKI_Practice_Python/.github/workflows/pypi_build.yml@main
   create-html:
+    if: github.event.head_commit.author.name != "Laolu Bot"
     needs: build-project
     runs-on: ubuntu-latest
     environment: Deployment
