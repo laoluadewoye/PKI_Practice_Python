@@ -17,6 +17,40 @@ jobs:
     if: github.event_name == 'push' && github.ref_type == 'tag'
     needs: test-project-nox
     uses: laoluadewoye/PKI_Practice_Python/.github/workflows/pypi_build.yml@main
+  create-html:
+    needs: build-project
+    runs-on: ubuntu-latest
+    environment: Deployment
+    permissions:
+      contents: write
+    steps:
+      - name: Check Out Repository Code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Setup Git User
+        run: |
+          git config --global user.name "Laolu Bot"
+          git config --global user.email ${{ vars.EMAIL }}
+      - name: Setup GPG Key
+        uses: crazy-max/ghaction-import-gpg@cb9bde2e2525e640591a934b1fd28eef1dcaf5e5
+        with:
+          gpg_private_key: ${{ secrets.LAOLU_BOT_GPG_PRIVATE_KEY }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+      - name: Setup Python
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b
+        with:
+          python-version: 3.12
+          cache: pip
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+      - name: Generate an HTML File
+        run: python -m asciidoc -o index.html README.adoc
+      - name: Add New HTML to Repo
+        run: |
+          git checkout main
+          git add index.html
+          git commit -S -m "Automated update to HTML document."
+          git push
   publish-to-pypi:
     needs: build-project
     runs-on: ubuntu-latest
