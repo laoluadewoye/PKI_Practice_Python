@@ -48,7 +48,7 @@ jobs:
         run: python -m asciidoc -o docs/index.html README.adoc
       - name: Add New HTML to Repo
         run: |
-          git add index.html
+          git add docs/index.html
           git commit -S -m "Automated update to HTML document."
           git push
   publish-to-pypi:
