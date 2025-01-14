@@ -175,8 +175,8 @@ class TestCLI(unittest.TestCase):
         args = [
             'python',
             self.pyfile, '-t',
-            f'{self.dc_dir}Default_Configs/default_auto.yaml',
-            f'{self.dc_dir}Default_Configs/default_manual.yaml',
+            f'{self.dc_dir}Default_Configs/default_auto.json',
+            f'{self.dc_dir}Default_Configs/default_manual.json',
             'one too many arguments'
         ]
         result = subprocess.run(args, capture_output=True)
