@@ -21,7 +21,7 @@ jobs:
     if: github.event.head_commit.author.name != 'Laolu Bot'
     needs: test-project-nox
     runs-on: ubuntu-latest
-    environment: Deployment
+    environment: Test Deployment
     permissions:
       contents: write
     steps:
