@@ -2,33 +2,37 @@
 
 ## Project Links
 
-- [GitHub Repository](https://github.com/laoluadewoye/PKI_Practice_Python)
-
-- [PyPI Package](https://pypi.org/project/PyPkiPractice/)
-
-- [DockerHub Repository](https://hub.docker.com/r/laoluade/pypkipractice)
+### - [GitHub Repository](https://github.com/laoluadewoye/PKI_Practice_Python)
+### - [PyPI Package](https://pypi.org/project/PyPkiPractice/)
+### - [DockerHub Repository](https://hub.docker.com/r/laoluade/pypkipractice)
 
 ## Introduction
 
-Hi! This Project is under development. I set up the CI/CD pipeline in GitHub first before anything so that I could
-automatically test and push out updates to PyPi and Dockerhub. It took a few days to figure out but my system is
-pretty much set for any future updates and all I have to do is just push updates to my repo. I'll probably still be
-doing a bit more tinkering with GitHub actions but bottom line is that filepath arguments work and automation works and
-is dynamic enough as to not flub up my repo posting system. I hope.
+Hi! This Project is under development. Back in version 0, I was talking about how I spent most of the time just
+planning and writing notes and making sure everything is laid out before me before actually doing code. Back in version
+1, I then focused mainly on setting up the automation with GitHub actions, creating releases, tightening up 
+deployment environments, and then finally developing some of the actual classes I need for the project.
+
+We are now in version 2! I have a working network (without all the communication yet) and it is fully realized, tested,
+and ready for several versions of Python. It was a pain to get it all together, but we are full steam ahead on code! 
+One of my main goals is to "get it right the first time." Even if I wind up working in a place that prides itself on
+CI, being able to fully realize a project without mistakes is just satisfying as heck, and has forced me to learn alot
+more about programming than I knew just a month ago.
 
 For now, here is a basic idea of the project. I wanted to learn PKI architecture, how it's used, and do that while
 doing some more advanced stuff with the project in Python. The final goal for the program is that, given a 
 configuration file in one of the supported formats, it would create a simulation of a network of Certificate 
 Authorities and End-Certificate devices where communication between end devices are encrypted, signed, and supported by
 a Public Key Infrastructure. The supported formats are YAML, JSON, TOML, and XML. The final output of this program is
-a CSV log file.
+a CSV log file, but during it's run time you should be able to view all the action printed out in the terminal (and 
+maybe even a GUI once I finish the program itself).
 
 This program is developed in Python 3.12, but has support for Python 3.8-3.14. Currently, the only drawback is that any 
 interpreter that is earlier than Python 3.10 is unable to use YAML files for configuration, and will have to use one of 
 the other three supported formats. The code will let you know that.
 
 Use the NOTES.md file to get a deeper idea about what this project is about, and the CONFIG_GUIDE.md file to understand 
-how to create the configuration files yourself. 
+how to create the configuration files yourself.
 
 Below are basic instructions on how to install the project and use it, whether that be from the command line, a Python 
 IDE, or a Docker container. As you can see, I put alot of work into making this easy for future me and anyone else. 
@@ -56,7 +60,7 @@ the following sections show you how to install to either your local environment 
 
 # Usage
 
-## Don't have configurations?
+## Don't have configurations? And additional options
 
 No worries! There are some options you can pass instead of the files I use for examples below.
 
@@ -66,6 +70,11 @@ No worries! There are some options you can pass instead of the files I use for e
 There is also a folder of default configurations added to the project called "Default_Configs." In it, are annotated
 examples of autoconfiguration and manual configuration files in JSON, YAML, TOML, and XML. You can pass those files
 as arguments and experiment with them to your heart's content.
+
+Other options you can pass into the program are-
+
+* `-t` or `--test`: Run the program in test mode, which caps what parts of the program run to only the ones needed for
+  automated testing. You can try it, but it's really only for use in pytest and nox.
 
 ## Running in an IDE from project root
 

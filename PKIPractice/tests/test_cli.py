@@ -63,6 +63,12 @@ class TestCLI(unittest.TestCase):
         self.assertEqual(0, result.returncode)
         self.assertEqual(b'', result.stderr)
 
+        result = subprocess.run(['python', self.pyfile, '-h', '--help'], capture_output=True)
+        print(result)
+
+        self.assertEqual(0, result.returncode)
+        self.assertEqual(b'', result.stderr)
+
     def test_default(self) -> None:
         """
         Test the default flag.
@@ -74,6 +80,12 @@ class TestCLI(unittest.TestCase):
         self.assertEqual(b'', result.stderr)
 
         result = subprocess.run(['python', self.pyfile, '-t', '--default'], capture_output=True)
+        print(result)
+
+        self.assertEqual(0, result.returncode)
+        self.assertEqual(b'', result.stderr)
+
+        result = subprocess.run(['python', self.pyfile, '-t', '-d', '--default'], capture_output=True)
         print(result)
 
         self.assertEqual(0, result.returncode)

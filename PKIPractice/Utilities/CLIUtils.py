@@ -416,14 +416,12 @@ def start_program() -> None:
     """
     # Name flags
     help_flag = False
-    default_flag = False
     test_flag = False
+    default_flag = False
 
     # Start assertion region
     try:
-        # Create empty variables
-        env_auto_settings, env_manual_settings = None, None
-        pki_network = None
+        pki_network: Union[None, PKINetwork] = None
 
         # Check if there are more than one argument
         assert len(sys.argv) > 1, (
@@ -446,16 +444,36 @@ def start_program() -> None:
                 '   The second is a configuration file for the manual configuration of the environment.\n'
                 '   The second file is optional to run the program, but the first can be run without the second.\n'
                 '\n'
-                '   Structure: python Main.py [-h | --help] [<autoconfig filepath>] [<manualconfig filepath>]\n'
+                '   Structure: python Main.py [options] [<autoconfig filepath>] [<manualconfig filepath>]\n'
                 '   Example without second: python Main.py Default_Configs/default_auto.yaml\n'
                 '   Example with second: python Main.py Default_Configs/default_auto.yaml '
                 'Default_Configs/default_manual.yaml\n'
                 '\n'
+                '   Options:\n'
+                '   -h\n'
+                '   --help\n'
+                "   Prints the help information you see now.\n"
+                '   --------\n'
+                '   -d\n'
+                '   --default\n'
+                "   Tells the program to run it's default configuration\n"
+                '   --------\n'
+                '   -t\n'
+                '   --test\n'
+                "   Tells the program to run in test mode, where it only runs enough of the program to conduct "
+                "assessments.\n"
+                '\n\n'
                 '   For more details, please check the README file.\n'
             )
             help_flag = True
             help_index = next((i for i, arg in enumerate(sys.argv) if arg in ('-h', '--help')), None)
             sys.argv.pop(help_index)
+
+        # Check if there is a test flag
+        if any(arg in sys.argv for arg in ('-t', '--test')):
+            test_flag = True
+            test_index = next((i for i, arg in enumerate(sys.argv) if arg in ('-t', '--test')), None)
+            sys.argv.pop(test_index)
 
         # Check if there is a default flag
         if any(arg in sys.argv for arg in ('-d', '--default')):
@@ -470,12 +488,8 @@ def start_program() -> None:
                 '   The second is a configuration file for the manual configuration of the environment.\n'
                 '   The second file is optional to run the program, but the first can be run without the second.\n'
                 '\n'
-                '   Structure: python Main.py [-h | --help] [<autoconfig filepath>] [<manualconfig filepath>]\n'
-                '   Example without second: python Main.py Default_Configs/default_auto.yaml\n'
-                '   Example with second: python Main.py Default_Configs/default_auto.yaml '
-                'Default_Configs/default_manual.yaml\n'
-                '\n'
-                '   For more details, please check the README file.\n'
+                "   For more details, please run this command with the help option [-h | --help] "
+                "or check the README file.\n"
                 '\n'
                 '   For now though, here is a default run of the program using the default yaml files.\n'
             )
@@ -483,19 +497,13 @@ def start_program() -> None:
             default_index = next((i for i, arg in enumerate(sys.argv) if arg in ('-d', '--default')), None)
             sys.argv.pop(default_index)
 
-        # Check if there is a test flag
-        if any(arg in sys.argv for arg in ('-t', '--test')):
-            test_flag = True
-            test_index = next((i for i, arg in enumerate(sys.argv) if arg in ('-t', '--test')), None)
-            sys.argv.pop(test_index)
-
         # Start the program if nothing else is needed.
         if not help_flag:
             # Read the configuration files or default configurations
             env_auto_settings, env_manual_settings = ingest_config(sys.argv, default=default_flag)
 
             # Build the environment
-            pki_network: PKINetwork = PKINetwork('Sample_Net', env_auto_settings, env_manual_settings)
+            pki_network = PKINetwork('Sample_Net', env_auto_settings, env_manual_settings)
 
         # Go even further if not just testing the CLI options.
         if not test_flag and not help_flag:
