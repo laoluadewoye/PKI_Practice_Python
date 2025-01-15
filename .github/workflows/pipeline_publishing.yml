@@ -24,9 +24,6 @@ jobs:
     permissions:
       contents: write
     uses: laoluadewoye/PKI_Practice_Python/.github/workflows/site_update.yml@main
-    with:
-      email: ${{ vars.EMAIL }}
-      bot_key: ${{ secrets.LAOLU_BOT_GPG_PRIVATE_KEY }}
   publish-to-pypi:
     needs: build-project
     runs-on: ubuntu-latest
