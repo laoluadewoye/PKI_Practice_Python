@@ -3,6 +3,7 @@ FROM python:3.12-alpine
 
 # Work Directory
 WORKDIR /usr/local/app/
+RUN mkdir -p /usr/local/app/output
 
 # Copy content and expose a port
 COPY . .

@@ -5,7 +5,8 @@ Module used for defining the network class and it's functionality.
 # Relative pathing from project root
 import sys
 import datetime
-from os.path import abspath, dirname, join
+from os import makedirs
+from os.path import abspath, dirname, join, exists
 from typing import Union, List, Dict
 
 script_dir = dirname(abspath(__file__))
@@ -229,10 +230,17 @@ class PKINetwork:
         Saves the logs to a csv file.
         """
 
+        # Create one last log event
         self.log_event(
             'Operations', 'Network', 'Retention', 'CSV', self.network_name,
             f'Logs of network saved to {self.log_save_fp}.'
         )
+
+        # Make a directory if it doesn't exist
+        if not exists(dirname(self.log_save_fp)):
+            makedirs(dirname(self.log_save_fp))
+
+        # Save the log file
         with open(self.log_save_fp, 'w') as log_file:
             log_file.writelines(self.network_log)
 

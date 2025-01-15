@@ -110,5 +110,5 @@
     <!--This parameter specifies where the logs from the program save.-->
     <!--All values must be string filepaths that end in ".csv" as CSV is the only supported output.-->
     <!--Please ensure the filepath has a descriptive file name. Relative and Absolute paths are allowed.-->
-    <log_save_filepath>saved_network_logs_xml.csv</log_save_filepath>
+    <log_save_filepath>output/saved_network_logs_xml.csv</log_save_filepath>
 </config>

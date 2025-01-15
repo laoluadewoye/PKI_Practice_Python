@@ -1,5 +1,7 @@
 # Welcome to PyPkiPractice!
 
+Here is my webpage if you wish to see the README in web form - https://laoluadewoye.github.io/PKI_Practice_Python/
+
 ## Project Links
 
 ### - [GitHub Repository](https://github.com/laoluadewoye/PKI_Practice_Python)
@@ -24,8 +26,8 @@ doing some more advanced stuff with the project in Python. The final goal for th
 configuration file in one of the supported formats, it would create a simulation of a network of Certificate 
 Authorities and End-Certificate devices where communication between end devices are encrypted, signed, and supported by
 a Public Key Infrastructure. The supported formats are YAML, JSON, TOML, and XML. The final output of this program is
-a CSV log file, but during it's run time you should be able to view all the action printed out in the terminal (and 
-maybe even a GUI once I finish the program itself).
+a CSV log file saved in a dedicated "output" folder, but during it's run time you should be able to view all the action 
+printed out in the terminal (and maybe even a GUI once I finish the program itself).
 
 This program is developed in Python 3.12, but has support for Python 3.8-3.14. Currently, the only drawback is that any 
 interpreter that is earlier than Python 3.10 is unable to use YAML files for configuration, and will have to use one of 
@@ -93,7 +95,8 @@ Command Example: `run-pki-practice config_files/config_auto.json config_files/co
 
 ## Running as a Docker Container from the pulled Docker image
 
-If you have docker installed, you are able to run the program as a container without installing anything.
+If you have docker installed, you are able to run the program as a container without installing anything. However, to
+see the output yourself on your local storage, you will have to do a few extra things.
 
 ### Basic run
 
@@ -109,30 +112,50 @@ environment. This way, you are able to see the example of what it would look lik
 ### Mounted run (output only)
 
 Next, there is mounting a folder as a volume to the docker. This way, you can save the CSV log file locally and access
-it. To do this, you will just have to connect a folder to the `/usr/local/app/` directory that the container operates
-in. 
+it. 
 
-Command Structure: docker run -v _(local_output_folder_path)_:/usr/local/app/:ro laoluade/pypkipractice:_(tag)_
+By default, the docker container is configured to create an `output` folder on build. This way, the simplest way to
+save information is to first connect a volume to the `/usr/local/app/output` directory that the container operates in. 
 
-Let's say for example, that you had an output folder called _"output"_ you would want to receive the output. Use the 
-following command:
+Command Structure: docker run -v _(docker_volume)_:/usr/local/app/ laoluade/pypkipractice:_(tag)_
 
-Command Example: `docker run -v output:/usr/local/app/:ro laoluade/pypkipractice:latest`
+Let's say for example, that you want to create a persistent volume called _"output"_ you would want to save the output. 
+Use the following command:
+
+Command Example: `docker run -v output:/usr/local/app/output laoluade/pypkipractice:latest`
+
+Afterward, you can then get the name of the container that was created to run the pypkipractice image and use that to
+copy the results to your local computer. 
+
+First, get the list of containers you have:
+
+Command Example: `docker ps -a`
+
+Then, Use the name of your desired container below:
+
+Command Example: `docker cp container_name:/usr/local/app/output/saved_network_logs.csv .`
+
+If you get an error saying that the volume is inaccessible due to it not being used, you can run a container like
+busybox to list its data, or start it up again with the `docker start` command which should keep the volume alive a bit 
+longer, so you can try the cp command again. A better tutorial is available by 
+[GeeksForGeeks](https://www.geeksforgeeks.org/copying-files-to-and-from-docker-containers/).
 
 ### Mounted run (full)
 
 Lastly, there is mounting a local folder that _also_ contains configuration files for the program that you want to send
 into the container. The strategy is the same, but for safety, made the container folder a subdirectory of the `app`
 directory. You can even write the log filepath in a way where the log saves in the subdirectory, making it accessible
-to you on your hard drive.
+to you on your hard drive. To access it, your best bet would be binding to a volume that exists on build, like app or 
+output
 
-Command Structure: docker run -v _{local_config_folder_path}_:/usr/local/app/_{container_config_folder_path}_:ro 
+Command Structure: docker run -v _{local_config_folder_path}_:/usr/local/app/_{container_config_folder_path}_ 
 laoluade/pypkipractice:_(tag) (arguments)_
 
-Let's say that you had a folder called config_files, which had a file called **config_auto.json** and **config_manual.json**.
-You wished to expose this information to the docker container, so you can run your own custom configuration.
+Let's say that you had a folder called config_files, which had a file called **config_auto.json** and 
+**config_manual.json**. You wished to expose this information to the docker container, so you can run your own custom 
+configuration.
 
-Command Example: `docker run -v config_files:/usr/local/app/config_files:ro laoluade/pypkipractice:latest 
+Command Example: `docker run -v config_files:/usr/local/app/config_files laoluade/pypkipractice:latest 
 config_files/config_auto.json config_files/config_manual.json`
 
 In this example-
@@ -142,7 +165,6 @@ In this example-
 * **"config_files"** is the name of the local config folder.
 * **"/usr/local/app/config_files"** is the path to the container's config folder.
   * The container is run in /usr/local/app, so be cognisant of that when deciding where to mount your files.
-* The **"-ro"** flag is used to make the files you mount read only.
 * **"laoluade/pypkipractice:latest"** is the name of the image you would pull.
   * **"latest"** is the tag of the image you would pull, which defaults to the most recent image in the repo.
 * The last part of the command is the arguments you passed to the command line after stating your image. The container
@@ -153,7 +175,7 @@ In this example-
 
 ## Table comparing options
 
-Here is a table comparing how each strategy compares. These are my best guess of how easy it would be for someone to
+Here is a table comparing how each strategy compares. These are my opinions of how easy it would be for someone to
 use an option if they didn't have any experience. I hope this table helps you decide which one to try.
 
 |       Metric        | Python Interpreter | Installed CLI | Docker Container |
