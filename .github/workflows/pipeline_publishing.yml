@@ -1,0 +1,43 @@
+name: Publishing Pipeline
+permissions:
+  contents: read
+  pull-requests: write
+on:
+  schedule:
+    - cron: '0 17 * * *'
+  push:
+    tags:
+      - '*'
+    branches:
+      - main
+jobs:
+  test-project-nox:
+    if: github.event.head_commit.author.name != 'Laolu Bot'
+    uses: laoluadewoye/PKI_Practice_Python/.github/workflows/nox_test.yml@main
+  build-project:
+    if: github.event_name == 'push' && github.ref_type == 'tag'
+    needs: test-project-nox
+    uses: laoluadewoye/PKI_Practice_Python/.github/workflows/pypi_build.yml@main
+  create-html:
+    if: github.event.head_commit.author.name != 'Laolu Bot' && github.ref_type == 'branch'
+    needs: test-project-nox
+    uses: laoluadewoye/PKI_Practice_Python/.github/workflows/site_update.yml@main
+  publish-to-pypi:
+    needs: build-project
+    runs-on: ubuntu-latest
+    environment:
+      name: Deployment
+      url: https://pypi.org/p/PyPkiPractice
+    permissions:
+      id-token: write
+    steps:
+      - name: Retrieve Distribution Artifact
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
+        with:
+          name: distribution-packages
+          path: dist/
+      - name: Publish to PyPi
+        uses: pypa/gh-action-pypi-publish@67339c736fd9354cd4f8cb0b744f2b82a74b5c70
+  update-docker:
+    needs: build-project
+    uses: laoluadewoye/PKI_Practice_Python/.github/workflows/docker_update.yml@main

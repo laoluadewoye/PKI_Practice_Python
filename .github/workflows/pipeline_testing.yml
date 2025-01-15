@@ -1,4 +1,4 @@
-name: test-to-testpublish-pipeline
+name: Testing Pipeline
 permissions:
   contents: read
   pull-requests: write
@@ -12,6 +12,7 @@ on:
       - '*'
 jobs:
   test-project-nox:
+    if: github.event.head_commit.author.name != 'Laolu Bot'
     uses: laoluadewoye/PKI_Practice_Python/.github/workflows/nox_test.yml@main
   tagging-test:
     needs: test-project-nox

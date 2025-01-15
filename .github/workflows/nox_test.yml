@@ -1,4 +1,4 @@
-name: nox-test
+name: Python Version Testing
 on:
   workflow_call:
 jobs:

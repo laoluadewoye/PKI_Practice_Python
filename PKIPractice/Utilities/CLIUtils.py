@@ -462,7 +462,7 @@ def start_program() -> None:
                 "   Tells the program to run in test mode, where it only runs enough of the program to conduct "
                 "assessments.\n"
                 '\n\n'
-                '   For more details, please check the README file.\n'
+                '   For more details, please check out https://laoluadewoye.github.io/PKI_Practice_Python/.\n'
             )
             help_flag = True
             help_index = next((i for i, arg in enumerate(sys.argv) if arg in ('-h', '--help')), None)
@@ -488,7 +488,7 @@ def start_program() -> None:
                 '   The second file is optional to run the program, but the first can be run without the second.\n'
                 '\n'
                 "   For more details, please run this command with the help option [-h | --help] "
-                "or check the README file.\n"
+                "or check out https://laoluadewoye.github.io/PKI_Practice_Python/.\n"
                 '\n'
                 '   For now though, here is a default run of the program using the default yaml files.\n'
             )
