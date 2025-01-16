@@ -41,20 +41,7 @@ jobs:
           path: dist/
       - name: Publish to PyPi
         uses: pypa/gh-action-pypi-publish@67339c736fd9354cd4f8cb0b744f2b82a74b5c70
-  dockerinputs:
-    needs: build-project
-    runs-on: ubuntu-latest
-    environment: Deployment
-    outputs:
-      docker_user: ${{ steps.pass_inputs.outputs.user }}
-      docker_pass: ${{ steps.pass_inputs.outputs.pass }}
-    steps:
-      - name: Pass Inputs
-        id: pass_inputs
-        run: |
-          echo "user=${{ vars.DOCKERHUB_USERNAME }}" >> "$GITHUB_OUTPUT"
-          echo "pass=${{ secrets.DOCKERHUB_TOKEN }}" >> "$GITHUB_OUTPUT"
   update-docker:
-    needs: dockerinputs
+    needs: build-project
     uses: laoluadewoye/PKI_Practice_Python/.github/workflows/docker_update.yml@main
     secrets: inherit
