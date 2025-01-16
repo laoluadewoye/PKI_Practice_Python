@@ -30,7 +30,7 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
       - name: Generate a README HTML File
-        run: python -m asciidoc -o docs/index.html README.adoc
+        run: python -m asciidoc -o docs/index.html README_WEB.adoc
       - name: Generate a CONFIG_GUIDE HTML File
         run: pandoc CONFIG_GUIDE.md -o docs/config-guide.html
       - name: Add New HTMLs to Repo
