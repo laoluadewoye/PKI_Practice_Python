@@ -743,13 +743,25 @@ asciidoc.install();
 <div class="sect2">
 <h3 id="_project_links">Project Links</h3>
 <div class="sect3">
-<h4 id="_a_href_https_github_com_laoluadewoye_pki_practice_python_github_repository_a"><a href="https://github.com/laoluadewoye/PKI_Practice_Python">GitHub Repository</a></h4>
+<h4 id="_repos">Repos</h4>
+<div class="sect4">
+<h5 id="_a_href_https_github_com_laoluadewoye_pki_practice_python_github_repository_a"><a href="https://github.com/laoluadewoye/PKI_Practice_Python">GitHub Repository</a></h5>
+</div>
+<div class="sect4">
+<h5 id="_a_href_https_pypi_org_project_pypkipractice_pypi_package_a"><a href="https://pypi.org/project/PyPkiPractice/">PyPI Package</a></h5>
+</div>
+<div class="sect4">
+<h5 id="_a_href_https_hub_docker_com_r_laoluade_pypkipractice_dockerhub_repository_a"><a href="https://hub.docker.com/r/laoluade/pypkipractice">DockerHub Repository</a></h5>
+</div>
 </div>
 <div class="sect3">
-<h4 id="_a_href_https_pypi_org_project_pypkipractice_pypi_package_a"><a href="https://pypi.org/project/PyPkiPractice/">PyPI Package</a></h4>
+<h4 id="_other_documents">Other documents</h4>
+<div class="sect4">
+<h5 id="_a_href_https_laoluadewoye_github_io_pki_practice_python_config_guide_html_configuration_guide_a"><a href="https://laoluadewoye.github.io/PKI_Practice_Python/config-guide.html">Configuration Guide</a></h5>
 </div>
-<div class="sect3">
-<h4 id="_a_href_https_hub_docker_com_r_laoluade_pypkipractice_dockerhub_repository_a"><a href="https://hub.docker.com/r/laoluade/pypkipractice">DockerHub Repository</a></h4>
+<div class="sect4">
+<h5 id="_a_href_https_github_com_laoluadewoye_pki_practice_python_blob_main_notes_md_random_notes_a"><a href="https://github.com/laoluadewoye/PKI_Practice_Python/blob/main/NOTES.md">Random Notes</a></h5>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -768,13 +780,13 @@ doing some more advanced stuff with the project in Python. The final goal for th
 configuration file in one of the supported formats, it would create a simulation of a network of Certificate
 Authorities and End-Certificate devices where communication between end devices are encrypted, signed, and supported by
 a Public Key Infrastructure. The supported formats are YAML, JSON, TOML, and XML. The final output of this program is
-a CSV log file, but during it&#8217;s run time you should be able to view all the action printed out in the terminal (and
-maybe even a GUI once I finish the program itself).</p></div>
+a CSV log file saved in a dedicated "output" folder, but during it&#8217;s run time you should be able to view all the action
+printed out in the terminal (and maybe even a GUI once I finish the program itself).</p></div>
 <div class="paragraph"><p>This program is developed in Python 3.12, but has support for Python 3.8-3.14. Currently, the only drawback is that any
 interpreter that is earlier than Python 3.10 is unable to use YAML files for configuration, and will have to use one of
 the other three supported formats. The code will let you know that.</p></div>
-<div class="paragraph"><p>Use the NOTES.md file to get a deeper idea about what this project is about, and the CONFIG_GUIDE.md file to understand
-how to create the configuration files yourself.</p></div>
+<div class="paragraph"><p>Use the <strong>NOTES</strong> link at the top to get a deeper idea about what this project is about, and the <strong>CONFIG_GUIDE</strong> link
+at the top to understand how to create the configuration files yourself.</p></div>
 <div class="paragraph"><p>Below are basic instructions on how to install the project and use it, whether that be from the command line, a Python
 IDE, or a Docker container. As you can see, I put alot of work into making this easy for future me and anyone else.
 "It runs on my laptop," amirite?</p></div>
@@ -846,7 +858,8 @@ whatever field you need as I told my program to yell at you if you don&#8217;t.<
 </div>
 <div class="sect2">
 <h3 id="_running_as_a_docker_container_from_the_pulled_docker_image">Running as a Docker Container from the pulled Docker image</h3>
-<div class="paragraph"><p>If you have docker installed, you are able to run the program as a container without installing anything.</p></div>
+<div class="paragraph"><p>If you have docker installed, you are able to run the program as a container without installing anything. However, to
+see the output yourself on your local storage, you will have to do a few extra things.</p></div>
 <div class="sect3">
 <h4 id="_basic_run">Basic run</h4>
 <div class="paragraph"><p>First, there is running the docker container "naked" without any additional options passed to the run command.</p></div>
@@ -858,25 +871,37 @@ environment. This way, you are able to see the example of what it would look lik
 <div class="sect3">
 <h4 id="_mounted_run_output_only">Mounted run (output only)</h4>
 <div class="paragraph"><p>Next, there is mounting a folder as a volume to the docker. This way, you can save the CSV log file locally and access
-it. To do this, you will just have to connect a folder to the <code>/usr/local/app/</code> directory that the container operates
-in.</p></div>
-<div class="paragraph"><p>Command Structure: docker run -v <em>(local_output_folder_path)</em>:/usr/local/app/:ro laoluade/pypkipractice:<em>(tag)</em></p></div>
-<div class="paragraph"><p>Let&#8217;s say for example, that you had an output folder called <em>"output"</em> you would want to receive the output. Use the
-following command:</p></div>
-<div class="paragraph"><p>Command Example: <code>docker run -v output:/usr/local/app/:ro laoluade/pypkipractice:latest</code></p></div>
+it.</p></div>
+<div class="paragraph"><p>By default, the docker container is configured to create an <code>output</code> folder on build. This way, the simplest way to
+save information is to first connect a volume to the <code>/usr/local/app/output</code> directory that the container operates in.</p></div>
+<div class="paragraph"><p>Command Structure: docker run -v <em>(docker_volume)</em>:/usr/local/app/ laoluade/pypkipractice:<em>(tag)</em></p></div>
+<div class="paragraph"><p>Let&#8217;s say for example, that you want to create a persistent volume called <em>"output"</em> you would want to save the output.
+Use the following command:</p></div>
+<div class="paragraph"><p>Command Example: <code>docker run -v output:/usr/local/app/output laoluade/pypkipractice:latest</code></p></div>
+<div class="paragraph"><p>Afterward, you can then get the name of the container that was created to run the pypkipractice image and use that to
+copy the results to your local computer.</p></div>
+<div class="paragraph"><p>First, get the list of containers you have:</p></div>
+<div class="paragraph"><p>Command Example: <code>docker ps -a</code></p></div>
+<div class="paragraph"><p>Then, Use the name of your desired container below:</p></div>
+<div class="paragraph"><p>Command Example: <code>docker cp container_name:/usr/local/app/output/saved_network_logs.csv .</code></p></div>
+<div class="paragraph"><p>If you get an error saying that the volume is inaccessible due to it not being used, you can run a container like
+busybox to list its data, or start it up again with the <code>docker start</code> command which should keep the volume alive a bit
+longer, so you can try the cp command again. A better tutorial is available by
+<a href="https://www.geeksforgeeks.org/copying-files-to-and-from-docker-containers/">GeeksForGeeks</a>.</p></div>
 </div>
 <div class="sect3">
 <h4 id="_mounted_run_full">Mounted run (full)</h4>
 <div class="paragraph"><p>Lastly, there is mounting a local folder that <em>also</em> contains configuration files for the program that you want to send
 into the container. The strategy is the same, but for safety, made the container folder a subdirectory of the <code>app</code>
 directory. You can even write the log filepath in a way where the log saves in the subdirectory, making it accessible
-to you on your hard drive.</p></div>
-<div class="paragraph"><p>Command Structure: docker run -v <em>(local_config_folder_path)</em>:/usr/local/app/<em>(container_config_folder_path)</em>:ro
+to you on your hard drive. To access it, your best bet would be binding to a volume that exists on build, like app or
+output</p></div>
+<div class="paragraph"><p>Command Structure: docker run -v <em>(local_config_folder_path)</em>:/usr/local/app/<em>(container_config_folder_path)</em>
 laoluade/pypkipractice:<em>(tag) (arguments)</em></p></div>
 <div class="paragraph"><p>Let&#8217;s say that you had a folder called config_files, which had a file called <strong>config_auto.json</strong> and
-<strong>config_manual.json.</strong> You wished to expose this information to the docker container, so you can run your own custom
+<strong>config_manual.json</strong>. You wished to expose this information to the docker container, so you can run your own custom
 configuration.</p></div>
-<div class="paragraph"><p>Command Example: <code>docker run -v config_files:/usr/local/app/config_files:ro laoluade/pypkipractice:latest
+<div class="paragraph"><p>Command Example: <code>docker run -v config_files:/usr/local/app/config_files laoluade/pypkipractice:latest
 config_files/config_auto.json config_files/config_manual.json</code></p></div>
 <div class="ulist"><ul>
 <li>
@@ -905,11 +930,6 @@ The container is run in /usr/local/app, so be cognisant of that when deciding wh
 </p>
 </li>
 </ul></div>
-</li>
-<li>
-<p>
-The <strong>"-ro"</strong> flag is used to make the files you mount read only.
-</p>
 </li>
 <li>
 <p>
@@ -947,7 +967,7 @@ The last part of the command is the arguments you passed to the command line aft
 </div>
 <div class="sect2">
 <h3 id="_table_comparing_options">Table comparing options</h3>
-<div class="paragraph"><p>Here is a table comparing how each strategy compares. These are my best guess of how easy it would be for someone to
+<div class="paragraph"><p>Here is a table comparing how each strategy compares. These are my opinions of how easy it would be for someone to
 use an option if they didn&#8217;t have any experience. I hope this table helps you decide which one to try.</p></div>
 <div class="tableblock">
 <table rules="all"
@@ -961,10 +981,10 @@ cellspacing="0" cellpadding="4">
 <col width="25%" />
 <tbody>
 <tr>
-<td align="center" valign="top"><p class="table">Metric</p></td>
-<td align="center" valign="top"><p class="table">Python Interpreter</p></td>
-<td align="center" valign="top"><p class="table">Installed CLI</p></td>
-<td align="center" valign="top"><p class="table">Docker Container</p></td>
+<td align="center" valign="top"><p class="table"><strong>Metric</strong></p></td>
+<td align="center" valign="top"><p class="table"><strong>Python Interpreter</strong></p></td>
+<td align="center" valign="top"><p class="table"><strong>Installed CLI</strong></p></td>
+<td align="center" valign="top"><p class="table"><strong>Docker Container</strong></p></td>
 </tr>
 <tr>
 <td align="center" valign="top"><p class="table">GUI App Usage</p></td>
@@ -1019,7 +1039,7 @@ cellspacing="0" cellpadding="4">
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2025-01-14 21:37:54 UTC
+ 2025-01-16 16:07:26 UTC
 </div>
 </div>
 </body>
