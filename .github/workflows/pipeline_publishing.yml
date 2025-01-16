@@ -18,28 +18,13 @@ jobs:
     if: github.event_name == 'push' && github.ref_type == 'tag'
     needs: test-project-nox
     uses: laoluadewoye/PKI_Practice_Python/.github/workflows/pypi_build.yml@main
-  htmlinputs:
-    needs: test-project-nox
-    runs-on: ubuntu-latest
-    environment: Test Deployment
-    outputs:
-      user_email: ${{ steps.pass_inputs.outputs.email }}
-      user_gpg_key: ${{ steps.pass_inputs.outputs.key }}
-    steps:
-      - name: Pass Inputs
-        id: pass_inputs
-        run: |
-          echo "email=${{ vars.EMAIL }}" >> "$GITHUB_OUTPUT"
-          echo "key=${{ secrets.LAOLU_BOT_GPG_PRIVATE_KEY }}" >> "$GITHUB_OUTPUT"
   create-html:
     if: github.event.head_commit.author.name != 'Laolu Bot' && github.ref_type == 'branch'
-    needs: htmlinputs
+    needs: test-project-nox
     permissions:
       contents: write
     uses: laoluadewoye/PKI_Practice_Python/.github/workflows/site_update.yml@main
-    with:
-      email: ${{ needs.htmlinputs.outputs.user_email }}
-      gpg_key: ${{ needs.htmlinputs.outputs.user_gpg_key }}
+    secrets: inherit
   publish-to-pypi:
     needs: build-project
     runs-on: ubuntu-latest
@@ -72,6 +57,4 @@ jobs:
   update-docker:
     needs: dockerinputs
     uses: laoluadewoye/PKI_Practice_Python/.github/workflows/docker_update.yml@main
-    with:
-      user: ${{ needs.dockerinputs.outputs.docker_user }}
-      pass: ${{ needs.dockerinputs.outputs.docker_pass }}
+    secrets: inherit

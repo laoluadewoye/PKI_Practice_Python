@@ -1,13 +1,6 @@
 name: Repo Website Update
 on:
   workflow_call:
-    inputs:
-      email:
-        required: true
-        type: string
-      gpg_key:
-        required: true
-        type: string
 jobs:
   create-html:
     runs-on: ubuntu-latest
@@ -22,11 +15,11 @@ jobs:
       - name: Setup Git User
         run: |
           git config --global user.name "Laolu Bot"
-          git config --global user.email "${{ inputs.email }}"
+          git config --global user.email "${{ vars.EMAIL }}"
       - name: Setup GPG Key
         uses: crazy-max/ghaction-import-gpg@cb9bde2e2525e640591a934b1fd28eef1dcaf5e5
         with:
-          gpg_private_key: ${{ inputs.gpg_key }}
+          gpg_private_key: ${{ secrets.LAOLU_BOT_GPG_PRIVATE_KEY }}
           git_user_signingkey: true
           git_commit_gpgsign: true
       - name: Setup Python
