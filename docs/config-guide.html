@@ -1,0 +1,788 @@
+<h1 id="configuration-creation-guide">Configuration Creation Guide</h1>
+<p>Welcome to the Configuration Creation Guide for PyPkiPractice! This
+document is intended to guide you through the process of creating
+autoconfiguration and manual configuration files for running the
+program.</p>
+<p>The program is intended to be built in a way where the user’s only
+interaction with the functionality is the initial runtime of the file,
+with any other interactions being the viewing of the runtime processes
+and exploring the state of each holder.</p>
+<p>Because this, the environment that is passed in is the most important
+part of the process. There are two different types of files that can be
+passed, called autoconfiguration and manual configuration. An
+autoconfiguration is recognized as any file that has the word “auto” in
+it, while a manual configuration is any file that has the word “manual”
+in it.</p>
+<h1 id="autoconfiguration">Autoconfiguration</h1>
+<p>Autoconfiguration files only set up the environment itself. The
+actual details of the holders in the network are randomly generated, but
+top-level details are specified. You can use the Default_Configs folder
+to find examples to guide this reading.</p>
+<ol type="1">
+<li>The first detail is the amount of levels in the ensuring PKI
+hierarchy. PKI architecture consists of a number of levels of
+Certificate Authorities (CAs), with the highest level of CAs being the
+root CAs. The higher the level, the more authority they carry when
+signing the certificates of lower CAs. The lowest CAs will be the ones
+that directly sign the certificates of regular devices, called “End
+Certificates”. For this reason, I will sometimes refer to those regular
+devices as “end devices”. This detail is specified using the
+<code>level_count</code> parameter.</li>
+<li>The second detail is the amount of holders that will be in each of
+the <strong>n</strong> levels you specified in <code>level_count</code>.
+This detail will be usually be entered in as a list of numbers in the
+syntax of <code>[x, y, z]</code>, where each number corresponds to a
+level going from the top-down. For example, given that
+<code>level_count</code> is equal to 3, the amount <code>x</code> is the
+number of root CAs, the number <code>y</code> is the number of
+second-level intermediate CAs, and the number <code>z</code> is the
+number of end devices. This detail is specified using the
+<code>count_by_level</code> parameter and must be written in a way where
+every next number has to be larger than the last. There is never more
+top-level CAs than bottom-level CAs. In addition, there must be as many
+settings in the list as there are levels.</li>
+<li>The third and fourth details are the hashing algorithms used to
+create the holder’s personal hash and sign certificates respectively.
+Both algorithms will enter a string value of one of the hashing
+algorithms supported by the program. The details are specified using the
+<code>uid_hash</code> and <code>sig_hash</code> parameters respectively.
+<ol type="1">
+<li>The supported algorithms are: SHA224, SHA256, SHA384, SHA512,
+SHA3_224, SHA3_256, SHA3_384, SHA3_512, BLAKE2b, and BLAKE2s. Please
+type your chosen algorithm in all lowercase.</li>
+</ol></li>
+<li>The fifth detail is the encryption algorithm used to encrypt
+messages and signatures. How this choice is described varies
+considerably from file format to file format, but commonly an algorithm
+and parameters are passed together. The supported algorithms are RSA and
+ECC algorithms, each with its own parameters. Use the example files to
+see how to set the detail. This detail is specified using the
+<code>encrypt_alg</code> parameter.</li>
+<li>The next five details are level-by-level settings that are described
+in the same way as <code>count_by_level</code>.
+<ol type="1">
+<li><code>revoc_probs</code> is the detail that sets the probability
+that a holder in a specific level will revoke a lower certificate or
+their own certificate. This setting must be a decimal value
+<em>inclusively</em> between 0 and 1. Inclusively means that it can also
+be 0 and 1, but it cannot be outside the range any more than that.</li>
+<li><code>cert_valid_durs</code> is the detail that states how long the
+certificate’s validity would last for. It can either be a time in the
+<strong>HH:MM:SS</strong> time format, or the word “none” in all
+lowercase.</li>
+<li><code>cache_durs</code> is the detail that states how long a
+validated certificate would reside in the local holder’s certificate
+cache. It can either be a time in the <strong>MM:SS</strong> time
+format, or the word “none” in all lowercase.</li>
+<li><code>cooldown_durs</code> is the detail that states how long a
+holder would wait before trying to send another message after a
+rejection or unexpected response. It can either be a number in seconds,
+or the word “none” in all lowercase.</li>
+<li><code>timeout_durs</code> is the detail that states how long a
+holder would wait before timing out a sent message. It can either be a
+number in seconds, or the word “none” in all lowercase.</li>
+</ol></li>
+<li>The last detail is where the information generated during the
+program should be saved. A log of every network action is kept during
+runtime, and at the end or throughout the program, those logs can be
+saved as a CSV file. The filepath that is passed must be at least eight
+characters long and can either be a relative or absolute filepath. This
+detail is specified by the <code>log_save_filepath</code>
+parameter.</li>
+</ol>
+<p>These eleven details are the only settings needed to run a PKI
+network simulation. However, if you wish for more detail, you can also
+create a manual configuration file.</p>
+<h1 id="manual-configuration">Manual Configuration</h1>
+<p>Manual configuration files do not replace autoconfiguration files. A
+manual configuration file is more of an add-on to an autoconfiguration
+file. It can be used to set the details of specific holders in the
+hierarchy. The specific format will vary from file format to file
+format, but it will generally be organized by the name of the holder,
+followed by details about its place in the environment and other
+details. You can use the Default_Configs folder to find examples to
+guide this reading.</p>
+<p>The following information describes everything that can be set for a
+specific holder.</p>
+<h2 id="holder-name">Holder name</h2>
+<p>As stated earlier, the name of the holder is the “key” in the
+key-value organization of the manual configuration file. This name is a
+useful way to identify a specific holder in the environment to the
+user.</p>
+<h2 id="holder-location">Holder location</h2>
+<p>The holder location is the first major detail specified in the
+“values” of the holder. It is specified using the <code>location</code>
+parameter and specifies where the holder being set is in the
+environment. The <code>level</code> states the level in the hierarchy
+from top to bottom. This is used to identify where in the environment
+hierarchy the holder will be. If this detail is not specified, the
+entire key will be ignored.</p>
+<h2 id="holder-environment-overrides">Holder environment overrides</h2>
+<p>The holder environment overrides is the second major detail specified
+in the “values” of the holder. It is specified using the
+<code>env_overrides</code> parameter and is used if the default
+configuration in the autoconfiguration file is not desired for a
+specific holder. This detail is optional, meaning if it is not there,
+the holder will use the autoconfiguration settings. Much of the
+parameter names set in here are the same names as the ones in the
+autoconfiguration file except for the last five where the ‘s’ is
+removed. <code>level_count</code> and <code>count_by_level</code> are
+not recognized in <code>env_overrides</code> since we only care about
+where now.</p>
+<h2 id="holder-type-info">Holder type info</h2>
+<p>The hardware, software, and account type of the holder is the third
+major detail specified in the “values” of the holder. It is specified
+using the <code>holder_type_info</code> parameter and describes the
+underlying details of the device holding the certificate. This detail is
+optional, meaning if it is not there, the holder will auto generate the
+information. If it is there, and you wish to use the default parameters,
+be sure to spell everything correctly, else the program will either
+back-fill an unrecognized value or overwrite it.</p>
+<p>You can use the all default parameters section in this file to aid
+you with creating a manual configuration. This section will start with a
+list of rules that govern the random generation. This will be the logic
+the program uses to autofill whatever you don’t enter in. Afterward, the
+list of default values will begin.</p>
+<h3 id="hardware">Hardware</h3>
+<ul>
+<li><code>hardware_type</code> specifies what type of device it is in
+general, and is categorized as one of the following:
+<ul>
+<li>‘endpoint’ for an endpoint device</li>
+<li>‘network’ for a networking device</li>
+<li>‘appliance’ for a network appliance</li>
+<li>‘peripheral’ for a miscellaneous peripheral</li>
+</ul></li>
+<li><code>hardware_subtype</code> specifies what type of device it is
+specifically, and has its own categories based on the
+<code>hardware_type</code>:
+<ul>
+<li>‘endpoint’ has the following subtypes:
+<ul>
+<li>‘desktop’ for a desktop computer</li>
+<li>‘laptop’ for a laptop</li>
+<li>‘server’ for a server</li>
+<li>‘phone’ for a phone</li>
+<li>‘iot’ for an IoT device</li>
+</ul></li>
+<li>‘network’ has the following subtypes:
+<ul>
+<li>‘switch’ for a switch</li>
+<li>‘router’ for a router</li>
+<li>‘access_point’ for an access point</li>
+</ul></li>
+<li>‘appliance’ has the following subtypes:
+<ul>
+<li>‘firewall’ for a firewall</li>
+<li>‘utm’ for a unified threat management device</li>
+</ul></li>
+<li>‘peripheral’ has the following subtypes:
+<ul>
+<li>‘usb_key’ for a USB key</li>
+<li>‘smart_card’ for a smart card</li>
+<li>‘external_storage’ for an external storage device</li>
+</ul></li>
+</ul></li>
+<li><code>hardware_brand</code> specifies the brand of the device. Each
+device can be made by a number of companies, and each subtype has its
+own list of default companies. They won’t be listed here for brevity,
+but you can check the default parameters section at the end of this file
+to find the information.</li>
+</ul>
+<h3 id="software">Software</h3>
+<ul>
+<li><code>os_category</code> specifies what category of operating system
+it is in general, and is categorized as one of the following:
+<ul>
+<li>‘microsoft’ for a Microsoft operating system</li>
+<li>‘unix’ for a Unix operating system</li>
+<li>‘mobile’ for a mobile operating system</li>
+<li>‘routing’ for a networking operating system</li>
+</ul></li>
+<li><code>os_subcategory</code> specifies what type of operating system
+it is specifically, and has its own categories based on
+<code>os_category</code>:
+<ul>
+<li>‘microsoft’ has the following subtypes:
+<ul>
+<li>‘windows’ for a Windows operating system</li>
+<li>‘windows_server’ for a Windows Server operating system</li>
+</ul></li>
+<li>‘unix’ has the following subtypes:
+<ul>
+<li>‘linux’ for a Linux operating system</li>
+<li>‘bsd’ for a BSD operating system</li>
+<li>‘solaris’ for a Solaris operating system</li>
+<li>‘mac_os_x’ for a Mac OS X operating system</li>
+</ul></li>
+<li>‘mobile’ has the following subtypes:
+<ul>
+<li>‘android’ for an Android operating system</li>
+<li>‘ios’ for an iOS operating system</li>
+</ul></li>
+<li>‘routing’ has the following subtypes:
+<ul>
+<li>‘onie’ for an ONIE operating system</li>
+<li>‘onl’ for an ONL operating system</li>
+<li>‘opx’ for an OPX operating system</li>
+<li>‘dnos’ for a DNOS operating system</li>
+<li>‘junos’ for a JunOS operating system</li>
+<li>‘fboss’ for a FBOSS operating system</li>
+<li>‘sonic’ for a SONiC operating system</li>
+<li>‘aruba’ for an ArubaOS operating system</li>
+<li>‘cisco’ for a Cisco IOS operating system</li>
+<li>‘nxos’ for a Nexus NOS operating system</li>
+<li>‘openwrt’ for an OpenWrt operating system</li>
+</ul></li>
+</ul></li>
+<li><code>os_dist</code> specifies the distribution of the operating
+system and is based off of <code>os_subcategory</code>. As there are a
+lot of distributions, we won’t list them here, but you can check the
+default parameters section to find the information.</li>
+<li><code>os_subdist</code> specifies the sub-distribution or edition of
+the operating system and is based off of <code>os_dist</code>. As there
+are a lot of these as well, we won’t list them here, but you can check
+the default parameters section to find the information.</li>
+</ul>
+<p>Some rules to note that will be expressed in random generation:</p>
+<ul>
+<li>Appliances and peripherals don’t really have operating systems, so
+if they are chosen, they will just be treated as hardware devices
+without a major software.</li>
+<li>Networking devices can only use routing operating systems and Unix
+operating systems that are not MAC OS X.</li>
+<li>IoT devices can only use Unix operating systems that are not MAC OS
+X.</li>
+<li>Phones can only use mobile operating systems.</li>
+<li>Servers can only use Windows Server operating systems and Unix
+operating systems that are not MAC OS X.</li>
+<li>Laptops and Desktops can use anything but mobile operating
+systems.</li>
+</ul>
+<h3 id="account">Account</h3>
+<ul>
+<li><code>account_type</code> specifies what type of account it is in
+general, and is categorized as one of the following:
+<ul>
+<li>‘user’ for a user account</li>
+<li>‘admin’ for an admin account</li>
+<li>‘system’ for a system account</li>
+</ul></li>
+<li><code>account_subtype</code> specifies what type of account it is
+specifically, and has its own categories based on
+<code>account_type</code>:
+<ul>
+<li>‘user’ has the following subtypes:
+<ul>
+<li>‘guest’ for a guest account</li>
+<li>‘personal’ for a personal account</li>
+<li>‘enterprise’ for an enterprise account</li>
+</ul></li>
+<li>‘admin’ has the following subtypes:
+<ul>
+<li>‘domain_admin’ for a domain admin account</li>
+<li>‘schema_admin’ for a schema admin account</li>
+<li>‘server_admin’ for a server admin account</li>
+<li>‘network_admin’ for a network admin account</li>
+<li>‘cloud_admin’ for a cloud admin account</li>
+<li>‘database_admin’ for a database admin account</li>
+<li>‘auditor’ for an auditor account</li>
+</ul></li>
+</ul></li>
+<li><code>ca_status</code> specifies the status of the certificate
+authority and is categorized as one of the following:
+<ul>
+<li>‘not_auth’ for a certificate authority that is not an authority</li>
+<li>‘inter_auth’ for a certificate authority that is an intermediate
+authority</li>
+<li>‘root_auth’ for a certificate authority that is a root
+authority</li>
+</ul></li>
+</ul>
+<p>Some rules to note that will be expressed in random generation:</p>
+<ul>
+<li>Holders that have no operating system type will be treated as a
+system account.</li>
+<li>Holders that use routing operating system will be treated as a
+system account.</li>
+<li>Holders that use Windows Server operating system will be treated as
+either a system or admin account.</li>
+<li>Holders that use Ubuntu Server operating system will be treated as
+either a system or admin account.</li>
+</ul>
+<h2 id="holder-information">Holder information</h2>
+<p>The details about the holder’s organization itself is the fourth and
+last major detail specified in the “values” of the holder. It is
+specified using the <code>holder_info</code> parameter. This detail is
+optional, meaning if it is not there, the holder will auto generate the
+information. In addition, if subkeys that are not found within the
+parameter will be interpreted as missing and the program will
+autogenerate.</p>
+<ul>
+<li><code>common_name</code> specifies the common name of the
+certificate authority or device.</li>
+<li><code>country</code> specifies the country of the certificate
+authority or device.</li>
+<li><code>state</code> specifies the state or region of the certificate
+authority or device.</li>
+<li><code>locality</code> specifies the city, town, or locality of the
+certificate authority or device.</li>
+<li><code>org</code> specifies the organization of the certificate
+authority or device.</li>
+<li><code>org_unit</code> specifies the organizational unit of the
+certificate authority or device.</li>
+<li><code>email</code> specifies the email address of the certificate
+authority or device.</li>
+<li><code>url</code> specifies the URL of the certificate authority or
+device.</li>
+</ul>
+<h2 id="closing-notes-about-manual-generation">Closing notes about
+manual generation</h2>
+<p>The above parameters are everything that can be manually set for a
+specific holder. Each default manual configuration example (except for
+the JSON one) also has comments that explain everything in depth. Please
+refer to them for guidance on how to set up manual configuration.</p>
+<p>In addition, it must be emphasized that the manual configuration file
+is <strong>OPTIONAL</strong>. This means that you can also decide to not
+specify some parameters, or only specify the ones you WANT to change.
+You will see this if looking the examples, as while some are fully
+specified, others leave many details up to the random generation and
+environment parameters.</p>
+<h1 id="all-default-type-parameters">All default type parameters</h1>
+<h2 id="rules-governing-type-autogeneration">Rules governing type
+autogeneration</h2>
+<h3 id="basic-rules">Basic rules</h3>
+<ul>
+<li>Brands of hardware cannot be a subtype</li>
+<li>Hardware subtypes must be of their parent type</li>
+</ul>
+<h3 id="hardware-to-software">Hardware to Software</h3>
+<ul>
+<li>IoT Endpoint Devices can only use Unix OSes not Mac OS X</li>
+<li>Phone Endpoint Devices can only use Mobile Operating Systems</li>
+<li>Server Endpoint Devices can only use Windows Server and Unix OSes
+not Mac OS X</li>
+<li>Laptop and Desktop Endpoint Devices can not use a Mobile OS</li>
+<li>Networking Devices can only use Routing OSes and Unix OSes not Mac
+OS X</li>
+<li>Peripheral and Appliances are assumed to carry their own logic and
+do not use a default OS option</li>
+</ul>
+<h3 id="hardware-to-accounts">Hardware to Accounts</h3>
+<ul>
+<li>Phones cannot use Admin accounts</li>
+<li>Servers cannot use User accounts</li>
+<li>Networking devices cannot use User accounts</li>
+<li>Appliances and Peripherals can only have system accounts</li>
+</ul>
+<h3 id="software-to-hardware">Software to Hardware</h3>
+<ul>
+<li>Mobile OSs can only use endpoint phones</li>
+<li>Mac OS X can only be on endpoint desktops and laptops</li>
+<li>Windows can only be on endpoint desktops and laptops</li>
+</ul>
+<h3 id="software-to-account">Software to Account</h3>
+<ul>
+<li>Windows Server and Ubuntu Server OS can only use system or admin
+accounts</li>
+<li>Routing OSes cannot have user accounts</li>
+<li>Mobile OSes cannot have admin accounts</li>
+</ul>
+<h3 id="account-to-hardware">Account to Hardware</h3>
+<ul>
+<li>User accounts can only use desktops, laptops, and phones</li>
+<li>Admin accounts cannot use peripherals</li>
+</ul>
+<h3 id="account-to-software">Account to Software</h3>
+<ul>
+<li>User accounts cannot exist on routing OSes or Ubuntu Server</li>
+</ul>
+<h3 id="ca-rules">CA Rules</h3>
+<ul>
+<li>Anything that isn’t a server cannot be a certificate authority</li>
+</ul>
+<h2 id="accounts">1) Accounts</h2>
+<p>Account parameters indented as follows-</p>
+<ul>
+<li>account_type
+<ul>
+<li>account_subtype</li>
+</ul></li>
+</ul>
+<ol type="1">
+<li>user
+<ol type="1">
+<li>guest</li>
+<li>personal</li>
+<li>enterprise</li>
+</ol></li>
+<li>admin
+<ol type="1">
+<li>domain_admin</li>
+<li>schema_admin</li>
+<li>server_admin</li>
+<li>network_admin</li>
+<li>cloud_admin</li>
+<li>database_admin</li>
+<li>auditor</li>
+</ol></li>
+<li>system</li>
+</ol>
+<h2 id="operating-systems">2) Operating Systems</h2>
+<p>OS parameters indented as follows-</p>
+<ul>
+<li>os_category
+<ul>
+<li>os_subcategory
+<ul>
+<li>os_dist
+<ul>
+<li>os_subdist</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+<ol type="1">
+<li>microsoft
+<ol type="1">
+<li>windows
+<ol type="1">
+<li>windows_2000
+<ol type="1">
+<li>professional</li>
+<li>server</li>
+<li>advanced_server</li>
+<li>datacenter_server</li>
+</ol></li>
+<li>windows_xp
+<ol type="1">
+<li>home</li>
+<li>professional</li>
+</ol></li>
+<li>windows_vista
+<ol type="1">
+<li>starter</li>
+<li>home_basic</li>
+<li>home_premium</li>
+<li>business</li>
+<li>enterprise</li>
+<li>ultimate</li>
+</ol></li>
+<li>windows_7
+<ol type="1">
+<li>starter</li>
+<li>home_basic</li>
+<li>home_premium</li>
+<li>business</li>
+<li>enterprise</li>
+<li>ultimate</li>
+</ol></li>
+<li>windows_8
+<ol type="1">
+<li>home</li>
+<li>pro</li>
+<li>enterprise</li>
+</ol></li>
+<li>windows_10
+<ol type="1">
+<li>home</li>
+<li>pro</li>
+<li>educational</li>
+<li>enterprise</li>
+</ol></li>
+<li>windows_11
+<ol type="1">
+<li>home</li>
+<li>pro</li>
+<li>educational</li>
+<li>enterprise</li>
+</ol></li>
+</ol></li>
+<li>windows_server
+<ol type="1">
+<li>windows_server_2003
+<ol type="1">
+<li>web</li>
+<li>standard</li>
+<li>enterprise</li>
+<li>datacenter</li>
+</ol></li>
+<li>windows_server_2008
+<ol type="1">
+<li>web</li>
+<li>standard</li>
+<li>enterprise</li>
+<li>datacenter</li>
+<li>itanium</li>
+<li>foundation</li>
+<li>hpc</li>
+</ol></li>
+<li>windows_server_2012
+<ol type="1">
+<li>foundation</li>
+<li>essentials</li>
+<li>standard</li>
+<li>datacenter</li>
+</ol></li>
+<li>windows_server_2016
+<ol type="1">
+<li>standard</li>
+<li>datacenter</li>
+</ol></li>
+<li>windows_server_2019
+<ol type="1">
+<li>standard</li>
+<li>datacenter</li>
+</ol></li>
+<li>windows_server_2022
+<ol type="1">
+<li>standard</li>
+<li>datacenter</li>
+<li>datacenter_azure</li>
+</ol></li>
+</ol></li>
+</ol></li>
+<li>unix
+<ol type="1">
+<li>linux
+<ol type="1">
+<li>debian
+<ol type="1">
+<li>ubuntu</li>
+<li>linux_mint</li>
+<li>kali_linux</li>
+<li>raspberry_pi</li>
+<li>mx_linux</li>
+<li>debian</li>
+</ol></li>
+<li>red_hat
+<ol type="1">
+<li>red_hat</li>
+<li>fedora</li>
+<li>cent_os</li>
+</ol></li>
+<li>arch_linux</li>
+<li>gentoo</li>
+<li>suse
+<ol type="1">
+<li>open_suse</li>
+<li>suse_linux_enterprise</li>
+</ol></li>
+<li>alpine</li>
+<li>nix_os</li>
+<li>qubes_os</li>
+<li>ubuntu_server</li>
+</ol></li>
+<li>bsd
+<ol type="1">
+<li>free_bsd</li>
+<li>open_bsd</li>
+<li>net_bsd</li>
+</ol></li>
+<li>solaris</li>
+<li>mac_os_x
+<ol type="1">
+<li>leopard</li>
+<li>snow_leopard</li>
+<li>lion</li>
+<li>mountain_lion</li>
+<li>mavericks</li>
+<li>yosemite</li>
+<li>el_capitan</li>
+<li>sierra</li>
+<li>high_sierra</li>
+<li>mojave</li>
+<li>catalina</li>
+<li>big_sur</li>
+<li>monterey</li>
+<li>ventura</li>
+<li>sonoma</li>
+<li>sequoia</li>
+</ol></li>
+</ol></li>
+<li>mobile
+<ol type="1">
+<li>ios</li>
+<li>android
+<ol type="1">
+<li>android_nougat</li>
+<li>android_oreo</li>
+<li>android_pie</li>
+<li>android_10</li>
+<li>android_11</li>
+<li>android_12</li>
+<li>android_13</li>
+<li>android_14</li>
+<li>android_15</li>
+<li>android_16</li>
+</ol></li>
+</ol></li>
+<li>routing
+<ol type="1">
+<li>onie</li>
+<li>onl</li>
+<li>opx</li>
+<li>dnos</li>
+<li>junos</li>
+<li>fboss</li>
+<li>sonic</li>
+<li>aruba_os</li>
+<li>cisco_ios</li>
+<li>nexus_nos</li>
+<li>openwrt</li>
+</ol></li>
+</ol>
+<h2 id="hardware-1">3) Hardware</h2>
+<p>Hardware parameters indented as follows-</p>
+<ul>
+<li>hardware_type
+<ul>
+<li>hardware_subtype
+<ul>
+<li>hardware_brand</li>
+</ul></li>
+</ul></li>
+</ul>
+<ol type="1">
+<li>endpoint
+<ol type="1">
+<li>desktop
+<ol type="1">
+<li>hewlett_packard</li>
+<li>acer</li>
+<li>dell</li>
+<li>lenovo</li>
+<li>toshiba</li>
+<li>ibm</li>
+<li>fujitsu</li>
+<li>nec</li>
+<li>apple</li>
+</ol></li>
+<li>laptop
+<ol type="1">
+<li>samsung</li>
+<li>razer</li>
+<li>microsoft</li>
+<li>msi</li>
+<li>asus</li>
+<li>acer</li>
+<li>dell</li>
+<li>lenovo</li>
+<li>hewlett_packard</li>
+<li>apple</li>
+</ol></li>
+<li>phone
+<ol type="1">
+<li>samsung</li>
+<li>apple</li>
+<li>huawei</li>
+<li>sony</li>
+<li>google</li>
+<li>microsoft</li>
+<li>toshiba</li>
+<li>dell</li>
+</ol></li>
+<li>server
+<ol type="1">
+<li>dell</li>
+<li>hewlett_packard</li>
+<li>supermicro</li>
+<li>inspur</li>
+<li>lenovo</li>
+<li>huawei</li>
+<li>ibm</li>
+<li>fukitsu</li>
+<li>cisco</li>
+</ol></li>
+<li>iot
+<ol type="1">
+<li>advantech</li>
+<li>raspberry_pi</li>
+<li>arduino</li>
+<li>nvidia</li>
+<li>beagleboard</li>
+<li>udoo</li>
+<li>onlogic</li>
+<li>kontron</li>
+<li>arbor</li>
+<li>axiomtek</li>
+</ol></li>
+</ol></li>
+<li>network
+<ol type="1">
+<li>router
+<ol type="1">
+<li>cisco</li>
+<li>peplink</li>
+<li>advantech</li>
+<li>netgear</li>
+<li>tp_link</li>
+</ol></li>
+<li>switch
+<ol type="1">
+<li>anchor</li>
+<li>honeywell</li>
+<li>philips</li>
+<li>siemens</li>
+<li>cisco</li>
+<li>hpl</li>
+</ol></li>
+<li>access_point
+<ol type="1">
+<li>cisco</li>
+<li>fortinet</li>
+<li>netgear</li>
+<li>zyxel</li>
+<li>tp_link</li>
+<li>engenius</li>
+</ol></li>
+</ol></li>
+<li>appliance
+<ol type="1">
+<li>firewall
+<ol type="1">
+<li>bitdefender</li>
+<li>cisco</li>
+<li>fortinet</li>
+<li>palo_alto</li>
+<li>netgate</li>
+<li>watchguard</li>
+<li>sonicwall</li>
+</ol></li>
+<li>utm
+<ol type="1">
+<li>sonicwall</li>
+<li>fortigate</li>
+<li>barracuda</li>
+<li>juniper</li>
+<li>trellix</li>
+<li>palo_alto</li>
+</ol></li>
+</ol></li>
+<li>peripheral
+<ol type="1">
+<li>usb_key
+<ol type="1">
+<li>samsung</li>
+<li>sandisk</li>
+<li>corsiar</li>
+<li>kingston</li>
+<li>pny</li>
+</ol></li>
+<li>smart_card
+<ol type="1">
+<li>thales</li>
+<li>nxp_semiconductors</li>
+<li>cardlogix</li>
+<li>infineon</li>
+</ol></li>
+<li>external_storage
+<ol type="1">
+<li>seagate</li>
+<li>western_digital</li>
+<li>sandisk</li>
+<li>transcend</li>
+<li>lacie</li>
+</ol></li>
+</ol></li>
+</ol>
