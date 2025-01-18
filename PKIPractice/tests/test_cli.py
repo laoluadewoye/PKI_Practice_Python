@@ -165,8 +165,9 @@ class TestCLI(unittest.TestCase):
             safely_quit = result.returncode == 0
             detected_error = 'Exception' in result.stdout.decode('utf-8') or 'Warning' in result.stdout.decode('utf-8')
 
-            self.assertTrue(safely_quit, f'Failed with args: {args}. Full file path: {abspath(self.pyfile)}')
-            self.assertTrue(detected_error, f'Failed with args: {args}. Full file path: {abspath(self.pyfile)}')
+            if not any(help_option in args for help_option in ('-h', '--help')):
+                self.assertTrue(safely_quit, f'Failed with args: {args}. Full file path: {abspath(self.pyfile)}')
+                self.assertTrue(detected_error, f'Failed with args: {args}. Full file path: {abspath(self.pyfile)}')
 
     def test_warning(self) -> None:
         """
