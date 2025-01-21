@@ -10,6 +10,7 @@ COPY . .
 EXPOSE 5000
 
 # Alpine Dependencies
+RUN apk update && apk upgrade
 RUN apk add --no-cache gcc musl-dev libffi-dev
 
 # Install PyPi Package
