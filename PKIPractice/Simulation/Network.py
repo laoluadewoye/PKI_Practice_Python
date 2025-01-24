@@ -149,7 +149,7 @@ class PKINetwork:
         for i in range(self.network_level_count):
             self.network[i+1] = []
 
-        self.network_log: List[str] = ['ID, Timestamp, Category, Subject, Act, Output, Origin, Message\n']
+        self.network_log: List[str] = ['ID, Timestamp, Category, Success, Subject, Act, Output, Origin, Message\n']
 
         # Log events that have already happened
         self.log_event(

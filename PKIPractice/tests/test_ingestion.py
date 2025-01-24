@@ -58,19 +58,19 @@ class TestIngestion(unittest.TestCase):
         count_xml: int = total_keys(config_xml)
         count_toml: int = total_keys(config_toml)
 
-        self.assertNotEqual(count_json, 0)
-        self.assertNotEqual(count_xml, 0)
-        self.assertNotEqual(count_toml, 0)
+        self.assertNotEqual(count_json, 0, 'No keys found when parsing auto JSON.')
+        self.assertNotEqual(count_xml, 0, 'No keys found when parsing auto XML.')
+        self.assertNotEqual(count_toml, 0, 'No keys found when parsing auto TOML.')
 
-        self.assertEqual(count_json, count_xml)
-        self.assertEqual(count_json, count_toml)
+        self.assertEqual(count_json, count_xml, 'auto JSON and auto XML key count are not equal.')
+        self.assertEqual(count_json, count_toml, 'auto JSON and auto TOML key count are not equal.')
 
         # Accommodating for earlier versions before Python 3.10
         if sys.version_info[1] > 9:
             config_yaml: dict = parse_config_auto(f'{self.dc_dir}Default_Configs/default_auto.yaml')
             count_yaml: int = total_keys(config_yaml)
-            self.assertNotEqual(count_yaml, 0)
-            self.assertEqual(count_json, count_yaml)
+            self.assertNotEqual(count_yaml, 0, 'No keys found when parsing auto YAML.')
+            self.assertEqual(count_json, count_yaml, 'auto JSON and auto YAML key count are not equal.')
 
     def test_key_count_manual(self) -> None:
         """
@@ -91,19 +91,19 @@ class TestIngestion(unittest.TestCase):
         count_xml: int = total_keys(config_xml)
         count_toml: int = total_keys(config_toml)
 
-        self.assertNotEqual(count_json, 0)
-        self.assertNotEqual(count_xml, 0)
-        self.assertNotEqual(count_toml, 0)
+        self.assertNotEqual(count_json, 0, 'No keys found when parsing manual JSON.')
+        self.assertNotEqual(count_xml, 0, 'No keys found when parsing manual XML.')
+        self.assertNotEqual(count_toml, 0, 'No keys found when parsing manual TOML.')
 
-        self.assertEqual(count_json, count_xml)
-        self.assertEqual(count_json, count_toml)
+        self.assertEqual(count_json, count_xml, 'manual JSON and manual XML key count are not equal.')
+        self.assertEqual(count_json, count_toml, 'manual JSON and manual TOML key count are not equal.')
 
         # Accommodating for earlier versions before Python 3.10
         if sys.version_info[1] > 9:
             config_yaml: dict = parse_config_manual(f'{self.dc_dir}Default_Configs/default_manual.yaml')
             count_yaml: int = total_keys(config_yaml)
-            self.assertNotEqual(count_yaml, 0)
-            self.assertEqual(count_json, count_yaml)
+            self.assertNotEqual(count_yaml, 0, 'No keys found when parsing manual YAML.')
+            self.assertEqual(count_json, count_yaml, 'manual JSON and manual YAML key count are not equal.')
 
     def test_key_types_auto(self) -> None:
         """
@@ -117,15 +117,15 @@ class TestIngestion(unittest.TestCase):
         del config_xml['log_save_filepath']
         del config_toml['log_save_filepath']
 
-        self.assertEqual(config_json, config_xml)
-        self.assertEqual(config_json, config_toml)
+        self.assertEqual(config_json, config_xml, 'auto JSON and auto XML are not equal.')
+        self.assertEqual(config_json, config_toml, 'auto JSON and auto TOML are not equal.')
 
         # Accommodating for earlier versions before Python 3.10
         if sys.version_info[1] > 9:
             config_yaml: dict = parse_config_auto(f'{self.dc_dir}Default_Configs/default_auto.yaml')
 
             del config_yaml['log_save_filepath']
-            self.assertEqual(config_json, config_yaml)
+            self.assertEqual(config_json, config_yaml, 'auto JSON and auto YAML are not equal.')
 
     def test_key_types_manual(self) -> None:
         """
@@ -135,13 +135,13 @@ class TestIngestion(unittest.TestCase):
         config_xml: dict = parse_config_manual(f'{self.dc_dir}Default_Configs/default_manual.xml')
         config_toml: dict = parse_config_manual(f'{self.dc_dir}Default_Configs/default_manual.toml')
 
-        self.assertEqual(config_json, config_xml)
-        self.assertEqual(config_json, config_toml)
+        self.assertEqual(config_json, config_xml, 'manual JSON and manual XML are not equal.')
+        self.assertEqual(config_json, config_toml, 'manual JSON and manual TOML are not equal.')
 
         # Accommodating for earlier versions before Python 3.10
         if sys.version_info[1] > 9:
             config_yaml: dict = parse_config_manual(f'{self.dc_dir}Default_Configs/default_manual.yaml')
-            self.assertEqual(config_json, config_yaml)
+            self.assertEqual(config_json, config_yaml, 'manual JSON and manual YAML are not equal.')
 
 
 if __name__ == '__main__':

@@ -38,8 +38,11 @@ class TestEnums(unittest.TestCase):
 
         enums = get_classes_from_module(EnumUtils)
         for enum in enums:
-            self.assertIsNotNone(EnumUtils.get_all_items(enum))
-            self.assertIsNotNone(EnumUtils.get_all_items(enum, True))
+            self.assertIsNotNone(EnumUtils.get_all_items(enum), f'Was not able to get items for {enum}')
+            self.assertIsNotNone(
+                EnumUtils.get_all_items(enum, True),
+                f'Was not able to get verbose items for {enum}'
+            )
 
     def test_enum_default_values(self) -> None:
         """
@@ -56,7 +59,11 @@ class TestEnums(unittest.TestCase):
         for enum in enums:
             info = EnumUtils.get_all_items(enum, True)
             for enum_name, enum_value in info.items():
-                self.assertEqual(enum_value, enum[enum_name].value)
+                self.assertEqual(
+                    enum_value,
+                    enum[enum_name].value,
+                    f'Missmatch with items for {enum_name} and {enum_value}'
+                )
 
     def test_enum_value_type(self) -> None:
         """
@@ -74,7 +81,7 @@ class TestEnums(unittest.TestCase):
             info = EnumUtils.get_all_items(enum, True)
             for enum_name, enum_value in info.items():
                 is_tuple_or_string = isinstance(enum_value, tuple) or isinstance(enum_value, str)
-                self.assertTrue(is_tuple_or_string)
+                self.assertTrue(is_tuple_or_string, f'{enum_name} was not a string or tuple')
 
                 if isinstance(enum_value, tuple):
                     for v in enum_value:

@@ -48,26 +48,26 @@ class TestCLI(unittest.TestCase):
         result = subprocess.run(['python', self.pyfile, '-t', '-h'], capture_output=True)
         print(result)
 
-        self.assertEqual(0, result.returncode)
-        self.assertEqual(b'', result.stderr)
+        self.assertEqual(0, result.returncode, 'Test Help returned an invalid return code.')
+        self.assertEqual(b'', result.stderr, 'Test Help returned an error message.')
 
         result = subprocess.run(['python', self.pyfile, '-t', '--help'], capture_output=True)
         print(result)
 
-        self.assertEqual(0, result.returncode)
-        self.assertEqual(b'', result.stderr)
+        self.assertEqual(0, result.returncode, 'Test Help returned an invalid return code.')
+        self.assertEqual(b'', result.stderr, 'Test Help returned an error message.')
 
         result = subprocess.run(['python', self.pyfile, '-h'], capture_output=True)
         print(result)
 
-        self.assertEqual(0, result.returncode)
-        self.assertEqual(b'', result.stderr)
+        self.assertEqual(0, result.returncode, 'Help returned an invalid return code.')
+        self.assertEqual(b'', result.stderr, 'Help returned an error message.')
 
         result = subprocess.run(['python', self.pyfile, '-h', '--help'], capture_output=True)
         print(result)
 
-        self.assertEqual(0, result.returncode)
-        self.assertEqual(b'', result.stderr)
+        self.assertEqual(0, result.returncode, 'Double Help returned an invalid return code.')
+        self.assertEqual(b'', result.stderr, 'Double Help returned an error message.')
 
     def test_default(self) -> None:
         """
@@ -76,20 +76,20 @@ class TestCLI(unittest.TestCase):
         result = subprocess.run(['python', self.pyfile, '-t', '-d'], capture_output=True)
         print(result)
 
-        self.assertEqual(0, result.returncode)
-        self.assertEqual(b'', result.stderr)
+        self.assertEqual(0, result.returncode, 'Test Default returned an invalid return code.')
+        self.assertEqual(b'', result.stderr, 'Test Default returned an error message.')
 
         result = subprocess.run(['python', self.pyfile, '-t', '--default'], capture_output=True)
         print(result)
 
-        self.assertEqual(0, result.returncode)
-        self.assertEqual(b'', result.stderr)
+        self.assertEqual(0, result.returncode, 'Test Default returned an invalid return code.')
+        self.assertEqual(b'', result.stderr, 'Test Default returned an error message.')
 
         result = subprocess.run(['python', self.pyfile, '-t', '-d', '--default'], capture_output=True)
         print(result)
 
-        self.assertEqual(0, result.returncode)
-        self.assertEqual(b'', result.stderr)
+        self.assertEqual(0, result.returncode, 'Test Double Default returned an invalid return code.')
+        self.assertEqual(b'', result.stderr, 'Test Double Default returned an error message.')
 
     def test_args(self) -> None:
         """

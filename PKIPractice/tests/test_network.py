@@ -40,10 +40,10 @@ class TestNetwork(unittest.TestCase):
         """
 
         pki_network: PKINetwork = PKINetwork('Test_Net', self.env_auto_settings)
-        self.assertIsNotNone(pki_network)
+        self.assertIsNotNone(pki_network, 'Something went wrong when generating autoconfiguration.')
 
         pki_network: PKINetwork = PKINetwork('Test_Net', self.env_auto_settings, self.env_manual_settings)
-        self.assertIsNotNone(pki_network)
+        self.assertIsNotNone(pki_network, 'Something went wrong when generating auto and manual configuration.')
 
     def test_holders(self) -> None:
         """
@@ -57,25 +57,46 @@ class TestNetwork(unittest.TestCase):
             all_holders: List[PKIHolder] = pki_network.get_network()
 
             # Assert that all holders were created
-            self.assertEqual(sum(pki_network.network_count_by_level), len(all_holders))
-            self.assertEqual(len(all_holders), pki_network.network_total_count)
+            self.assertEqual(
+                sum(pki_network.network_count_by_level),
+                len(all_holders),
+                'All required holders were not created (by level count).'
+            )
+            self.assertEqual(
+                len(all_holders),
+                pki_network.network_total_count,
+                'All required holders were not created (by total count).'
+            )
 
             # Assert the right amount of holders were created per level
             for i in range(pki_network.network_level_count):
-                self.assertEqual(pki_network.network_count_by_level[i], len(pki_network.network[i+1]))
+                self.assertEqual(
+                    pki_network.network_count_by_level[i],
+                    len(pki_network.network[i+1]),
+                    f'All required holders for level {i+1} were not created.'
+                )
 
             # Assert the top level of holders are all root CAs
             for holder in pki_network.network[1]:
-                self.assertTrue(holder.holder_type_info.ca_status == 'root_auth')
+                self.assertTrue(
+                    holder.holder_type_info.ca_status == 'root_auth',
+                    'All first level holders are not root CAs.'
+                )
 
             # Assert all levels but the first and last are intermediate CAs
             for i in range(1, pki_network.network_level_count - 1):
                 for holder in pki_network.network[i+1]:
-                    self.assertTrue(holder.holder_type_info.ca_status == 'inter_auth')
+                    self.assertTrue(
+                        holder.holder_type_info.ca_status == 'inter_auth',
+                        f'All level {i+1} holders are not intermediary CAs.'
+                    )
 
             # Assert the bottom level of holders are not CAs
             for holder in pki_network.network[pki_network.network_level_count]:
-                self.assertTrue(holder.holder_type_info.ca_status == 'not_auth')
+                self.assertTrue(
+                    holder.holder_type_info.ca_status == 'not_auth',
+                    'All last level holders are not regular holders.'
+                )
 
     def test_log_output(self) -> None:
         """
@@ -92,20 +113,27 @@ class TestNetwork(unittest.TestCase):
             pki_network.save_logs()
 
             # Run tests on temporary file
-            self.assertTrue(exists(new_fp))
+            self.assertTrue(exists(new_fp), 'The test file was not created properly.')
 
             with open(new_fp, 'r') as f:
                 output: List[str] = f.readlines()
 
                 # Compact tests
                 # Header row
-                self.assertEqual(output[0], 'ID, Timestamp, Category, Subject, Act, Output, Origin, Message\n')
+                self.assertEqual(
+                    output[0],
+                    'ID, Timestamp, Category, Success, Subject, Act, Output, Origin, Message\n',
+                    'The expected header row was not found.'
+                )
 
                 # New lines
-                self.assertTrue(all(line[-1:] == '\n' for line in output))
+                self.assertTrue(all(line[-1:] == '\n' for line in output), 'All lines do not end with a new line.')
 
                 # Right amount of commas
-                self.assertTrue(all(line.count(',') == 8 for line in output))
+                self.assertTrue(
+                    all(line.count(',') == 8 for line in output),
+                    'All lines do not have the right amonut of commas.'
+                )
 
                 # Detailed tests
                 for line in output:
@@ -117,18 +145,28 @@ class TestNetwork(unittest.TestCase):
                     test_successful: bool = True
                     try:
                         # Convertable ID
-                        self.assertIsInstance(int(row[0]), int)
+                        self.assertIsInstance(
+                            int(row[0]), int,
+                            f'The first value in row {row} could not be read as an integer.'
+                        )
 
                         # Proper timestamp
-                        self.assertIsInstance(datetime.strptime(row[1], ' %Y-%m-%d %H:%M:%S.%f'), datetime)
+                        self.assertIsInstance(
+                            datetime.strptime(row[1], ' %Y-%m-%d %H:%M:%S.%f'),
+                            datetime,
+                            f'The timestamp in row {row} could not be read as a proper datetime object.'
+                        )
 
                         # No spaces in one-word items
-                        self.assertTrue(all(" " not in item.strip() for item in row[2:6]))
+                        self.assertTrue(
+                            all(" " not in item.strip() for item in row[2:6]),
+                            f'There were spaces found in one-word columns for row {row}'
+                        )
                     except (TypeError, ValueError):
                         test_successful = False
 
                     # Everything passed without an exception
-                    self.assertTrue(test_successful)
+                    self.assertTrue(test_successful, f'Item-wise row tests did not pass safely for row {row}')
 
 
 if __name__ == "__main__":
