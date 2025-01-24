@@ -32,7 +32,7 @@ class PKIHub:
         send_store (dict): Where to send information for each holder, split into sending "up" or "down" the PKI
             hierarchy.
     """
-    def __init__(self, network, network_store: Dict[int, List[PKIHolder]]):
+    def __init__(self, network, network_store: Dict[int, List[PKIHolder]]) -> None:
         self.outer_network = network
 
         # Create a mirror of network and location store
@@ -76,8 +76,17 @@ class PKIHub:
                 if prev_level_index == PREV_LEVEL_MAX:
                     prev_level_index = 0
 
-    def forward_message(self):
-        """Placeholder"""
+    def receive_log(self, holder_cat: str, holder_success: bool, holder_act: str, holder_output: str,
+                    holder_name: str, holder_message: str) -> None:
+        """
+        Receives a log from a holder and saved it to network logs.
+        """
+        self.outer_network.log_event(
+            holder_cat, holder_success, 'Holder', holder_act, holder_output, holder_name, holder_message
+        )
+
+    def forward_message(self) -> None:
+        """Sends a message from one holder to another."""
         ...
 
 
@@ -144,20 +153,20 @@ class PKINetwork:
 
         # Log events that have already happened
         self.log_event(
-            'Operations', 'Network', 'Initialization', 'Network', self.network_name,
-            f'Network {self.network_name} created.'
+            'Operations', True, 'Network', 'Initialization', 'Network',
+            self.network_name, f'Network {self.network_name} created.'
         )
         self.log_event(
-            'Operations', 'Network', 'Initialization', 'Variables', self.network_name,
-            'Environmental variables set.'
+            'Operations', True, 'Network', 'Initialization', 'Variables',
+            self.network_name, 'Environmental variables set.'
         )
         self.log_event(
-            'Operations', 'Network', 'Initialization', 'Hierarchy', self.network_name,
-            'Empty network hierarchy created.'
+            'Operations', True, 'Network', 'Initialization', 'Hierarchy',
+            self.network_name, 'Empty network hierarchy created.'
         )
         self.log_event(
-            'Operations', 'Network', 'Initialization', 'Log', self.network_name,
-            'Network log created and started.'
+            'Operations', True, 'Network', 'Initialization', 'Log',
+            self.network_name, 'Network log created and started.'
         )
 
         # Manual configuration
@@ -166,14 +175,14 @@ class PKINetwork:
                 result: bool = self.add_to_network(holder_name, holder_config, auto_config)
                 if result:
                     self.log_event(
-                        'Operations', 'Network', 'Addition', holder_name, self.network_name,
-                        f'Holder {holder_name} added to network.'
+                        'Operations', True, 'Network', 'Addition', holder_name,
+                        self.network_name, f'Holder {holder_name} added to network.'
                     )
                     self.network_total_count += 1
                 else:
                     self.log_event(
-                        'Operations', 'Network', 'Omission', holder_name, self.network_name,
-                        f'Invalid location configuration. {holder_name} was ignored.'
+                        'Operations', False, 'Network', 'Omission', holder_name,
+                        self.network_name, f'Invalid location configuration. {holder_name} was ignored.'
                     )
 
         # Filling in gaps
@@ -186,7 +195,7 @@ class PKINetwork:
                     auto_config
                 )
                 self.log_event(
-                    'Operations', 'Network', 'Completion',
+                    'Operations', True, 'Network', 'Completion',
                     f'holder_l{i+1}_c{auto_holder_count}', self.network_name,
                     f'Gap found. Filler Holder #{auto_holder_count} at level {i+1} added to network.'
                 )
@@ -196,11 +205,12 @@ class PKINetwork:
         # Network hub
         self.network_hub = PKIHub(self, self.network)
         self.log_event(
-            'Operations', 'Network', 'Initialization', 'Hub', self.network_name,
+            'Operations', True, 'Network', 'Initialization', 'Hub', self.network_name,
             'Network hub and connection information created.'
         )
 
-    def log_event(self, category: str, subject: str, act: str, output: str, origin: str, message: str) -> None:
+    def log_event(self, category: str, is_success: bool, subject: str, act: str, output: str, origin: str,
+                  message: str) -> None:
         """
         Takes a message, prints it, and saves its entry to network log with other elements.
 
@@ -211,6 +221,7 @@ class PKINetwork:
 
         Args:
             category: str - The category of the message. One word.
+            is_success: bool - The success status of the message.
             subject: str - The subject of the message. One word.
             act: str - The noun as an act the subject did. One word.
             output: str - The thing that resulted from the act. One word.
@@ -220,7 +231,7 @@ class PKINetwork:
 
         id_num = len(self.network_log) - 1
         timestamp = datetime.datetime.now()
-        entry = f'{id_num}, {timestamp}, {category}, {subject}, {act}, {output}, {origin}, {message}\n'
+        entry = f'{id_num}, {timestamp}, {category}, {is_success}, {subject}, {act}, {output}, {origin}, {message}\n'
 
         print(message)
         self.network_log.append(entry)
@@ -232,7 +243,7 @@ class PKINetwork:
 
         # Create one last log event
         self.log_event(
-            'Operations', 'Network', 'Retention', 'CSV', self.network_name,
+            'Operations', True, 'Network', 'Retention', 'CSV', self.network_name,
             f'Logs of network saved to {self.log_save_fp}.'
         )
 
@@ -287,3 +298,12 @@ class PKINetwork:
 
         flat_network = [holder for level in self.network.values() for holder in level]
         return flat_network
+
+    def set_root_certificates(self) -> None:
+        """
+        Sets up the root certificates for the top level them passes them all to all holders.
+        """
+
+        # Generate self-signed certificates
+        for root_holder in self.network[1]:
+            root_holder.gen_self_cert()

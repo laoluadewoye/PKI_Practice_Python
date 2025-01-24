@@ -105,7 +105,7 @@ class TestNetwork(unittest.TestCase):
                 self.assertTrue(all(line[-1:] == '\n' for line in output))
 
                 # Right amount of commas
-                self.assertTrue(all(line.count(',') == 7 for line in output))
+                self.assertTrue(all(line.count(',') == 8 for line in output))
 
                 # Detailed tests
                 for line in output:

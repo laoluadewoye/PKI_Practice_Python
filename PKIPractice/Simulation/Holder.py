@@ -301,3 +301,29 @@ class PKIHolder:
         """
 
         self.network_hub = hub
+
+    def send_log(self, category: str, success: bool, act: str, output: str, message: str) -> None:
+        """
+        Sends a log message through the hub.
+        """
+
+        self.network_hub.receive_log(category, success, act, output, self.holder_name, message)
+
+    def gen_self_cert(self) -> None:
+        """
+        Root-CAs can generate their own certificates, then send a message through the hub saying what was done.
+        """
+        generated_cert = False
+
+        if self.holder_type_info.ca_status != 'root_auth':
+            # Send fail message
+            message = self.holder_name + ' is not a root CA and cannot sign their own certificates.'
+            self.send_log('PKI', generated_cert, 'Generation', 'Certificate', message)
+
+        # Generate certificate
+        generated_cert = True
+
+        # Send success message
+        if generated_cert:
+            message = 'The root CA ' + self.holder_name + ' has signed their own certificate.'
+            self.send_log('PKI', generated_cert, 'Generation', 'Certificate', message)
