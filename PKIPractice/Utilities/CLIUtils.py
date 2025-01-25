@@ -503,7 +503,7 @@ def start_program() -> None:
 
             # Build the environment
             pki_network = PKINetwork('Sample_Net', env_auto_settings, env_manual_settings)
-            pki_network.set_root_certificates()
+            pki_network.set_hierarchy()
 
         # Go even further if not just testing the CLI options.
         if not test_flag and not help_flag:

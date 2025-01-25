@@ -92,6 +92,7 @@ class PKICertificate:
         self.encryption_alg: dict = subject_env_info.encrypt_alg
         self.subject_pub_key: Union[rsa.RSAPublicKey, ec.EllipticCurvePublicKey] = subject_pub_key
 
+        # Signature of all information
         self.signature: str = hash_info(self.hash_content, self.signature_alg)
 
     @property

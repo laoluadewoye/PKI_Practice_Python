@@ -37,6 +37,7 @@ class PKIHub:
             Takes a log from a holder and sends it to network logs.
     """
     def __init__(self, network, network_store: Dict[int, List[PKIHolder]]) -> None:
+        #
         self.outer_network = network
 
         # Create a mirror of network and location store
@@ -85,12 +86,15 @@ class PKIHub:
         """
         Receives a log from a holder and saved it to network logs.
         """
+
         self.outer_network.log_event(
             holder_cat, holder_success, 'Holder', holder_act, holder_output, holder_name, holder_message
         )
 
     def forward_message(self) -> None:
-        """Sends a message from one holder to another."""
+        """
+        Sends a message from one holder to another.
+        """
         ...
 
 
@@ -314,4 +318,18 @@ class PKINetwork:
 
         # Generate self-signed certificates
         for root_holder in self.network[1]:
-            root_holder.gen_self_cert()
+            new_cert = root_holder.gen_self_cert()
+
+            if new_cert is not None:
+                # Add root certificate to all root caches
+                all_holders = self.get_network()
+                for holder in all_holders:
+                    holder.add_to_root_cache(root_holder.holder_info.url, new_cert)
+
+    def set_hierarchy(self) -> None:
+        """
+        Sets up all starting certificates in the hierarchy.
+        """
+
+        # Set up the root certificates first
+        self.set_root_certificates()
