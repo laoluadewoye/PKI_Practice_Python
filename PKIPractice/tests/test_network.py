@@ -159,7 +159,7 @@ class TestNetwork(unittest.TestCase):
 
                         # No spaces in one-word items
                         self.assertTrue(
-                            all(" " not in item.strip() for item in row[2:6]),
+                            all(" " not in item.strip() for item in row[2:7]),
                             f'There were spaces found in one-word columns for row {row}'
                         )
                     except (TypeError, ValueError):
