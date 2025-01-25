@@ -9,6 +9,7 @@ from os.path import abspath, dirname, join
 from typing import Union
 from cryptography.hazmat.primitives.asymmetric import rsa, ec
 from .SimUtils import hash_info, get_random_country, get_random_division, create_private_key
+from .Certificate import PKICertificate
 
 script_dir = dirname(abspath(__file__))
 
@@ -60,10 +61,14 @@ class PKIHolder:
         cert_revoc_list (dict): Stores the certificate revocation list.
 
     Methods:
-        get_name() -> str:
-            Returns the name of the name of the holder.
+        get_addr() -> str:
+            Returns the address of the holder.
         set_hub_conn(hub) -> None:
             Sets the hub connection of the holder.
+        send_log(category, success, act, output, message) -> None:
+            Sends log information to the Network hub for hub to publish to network logs.
+        gen_self_cert() -> None:
+            Generates a self-signed certificate if holder is a root CA.
     """
     def __init__(self, holder_name: str, holder_config: dict, auto_config: dict):
         # Name of holder
@@ -220,11 +225,11 @@ class PKIHolder:
             url = holder_config['holder_info']['url']
         else:
             if self.holder_type_info.ca_status == 'inter_auth':
-                url = subdomain + '/intermediate_ca'
+                url = subdomain + '/intermediate_ca/' + common_name
             elif self.holder_type_info.ca_status == 'root_auth':
-                url = subdomain + '/root_ca'
+                url = subdomain + '/root_ca/' + common_name
             else:
-                url = 'www.' + subdomain
+                url = 'www.' + subdomain + '/' + common_name
 
         self.holder_info: HOLDER_INFO = HOLDER_INFO(
             common_name=common_name,
@@ -246,7 +251,7 @@ class PKIHolder:
         self.holder_pub_key: Union[rsa.RSAPublicKey, ec.EllipticCurvePublicKey] = self.holder_priv_key.public_key()
 
         # Creating certificate variables
-        self.holder_cert = None
+        self.holder_cert: Union[PKICertificate, None] = None
         self.root_certs = {}
         self.cached_certs = {}
 
@@ -282,15 +287,15 @@ class PKIHolder:
         self.lower_level_certs: dict = {}
         self.cert_revoc_list: dict = {}
 
-    def get_name(self) -> str:
+    def get_addr(self) -> str:
         """
-        Returns the name of the holder.
+        Returns the url address of the holder.
 
         Returns:
-            str: Name of the holder.
+            str: URL address of the holder.
         """
 
-        return self.holder_name
+        return self.holder_info.url
 
     def set_hub_conn(self, hub) -> None:
         """
@@ -313,6 +318,7 @@ class PKIHolder:
         """
         Root-CAs can generate their own certificates, then send a message through the hub saying what was done.
         """
+
         generated_cert = False
 
         if self.holder_type_info.ca_status != 'root_auth':
@@ -320,8 +326,16 @@ class PKIHolder:
             message = self.holder_name + ' is not a root CA and cannot sign their own certificates.'
             self.send_log('PKI', generated_cert, 'Generation', 'Certificate', message)
 
-        # Generate certificate
-        generated_cert = True
+        # Generate certificate with the name, subject information, issuer information,
+        # environment information, and public keys
+        cert_name = self.holder_name + 'Self Certificate'
+        self.holder_cert = PKICertificate(
+            cert_name, self.holder_info, self.holder_info,
+            self.env_info, self.holder_pub_key
+        )
+
+        if self.holder_cert is not None:
+            generated_cert = True
 
         # Send success message
         if generated_cert:

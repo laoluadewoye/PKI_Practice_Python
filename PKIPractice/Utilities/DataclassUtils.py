@@ -133,3 +133,51 @@ class HOLDER_INFO:
         return f'{self.common_name}' \
                f'{self.country}{self.state}{self.local}' \
                f'{self.org}{self.org_unit}{self.email}{self.url}'
+
+
+@dataclass
+class SUBJECT_INFO:
+    """
+    A class to represent information about a certificate subject.
+
+    Attributes:
+        common_name (str): The common name of the holder (e.g., individual or organization name).
+        country (str): The country of the holder.
+        state (str): The state or region of the holder.
+        local (str): The local or city of the holder.
+        org (str): The organization of the holder.
+        org_unit (str): The organizational unit or department within the organization.
+        email (str): The email address of the holder.
+        url (str): The URL associated with the holder.
+    """
+
+    common_name: str
+    country: str
+    state: str
+    local: str
+    org: str
+    org_unit: str
+    email: str
+    url: str
+
+
+@dataclass
+class ISSUER_INFO:
+    """
+    A class to represent information about a certificate issuer.
+
+    Attributes:
+        common_name (str): The common name of the holder (e.g., individual or organization name).
+        country (str): The country of the holder.
+        state (str): The state or region of the holder.
+        local (str): The local or city of the holder.
+        org (str): The organization of the holder.
+        url (str): The URL associated with the holder.
+    """
+
+    common_name: str
+    country: str
+    state: str
+    local: str
+    org: str
+    url: str
