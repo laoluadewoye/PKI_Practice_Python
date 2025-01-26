@@ -52,12 +52,14 @@ guide this reading.
       lowercase.
    5) `timeout_durs` is the detail that states how long a holder would wait before timing out a sent message. It can 
       either be a number in seconds, or the word "none" in all lowercase.
-6) The last detail is where the information generated during the program should be saved. A log of every network action
+6) The 11th detail is where the information generated during the program should be saved. A log of every network action
    is kept during runtime, and at the end or throughout the program, those logs can be saved as a CSV file. The
    filepath that is passed must be at least eight characters long and can either be a relative or absolute filepath.
    This detail is specified by the `log_save_filepath` parameter.
+7) The last detail is how long the program should run. This detail is specified using the `runtime` parameter and must
+   be specified in the **HH:MM:SS** time format, or the word "none" in all lowercase.
 
-These eleven details are the only settings needed to run a PKI network simulation. However, if you wish for more 
+These twelve details are the only settings needed to run a PKI network simulation. However, if you wish for more 
 detail, you can also create a manual configuration file.
 
 # Manual Configuration
