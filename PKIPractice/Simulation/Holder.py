@@ -69,6 +69,8 @@ class PKIHolder:
             Sends log information to the Network hub for hub to publish to network logs.
         gen_self_cert() -> None:
             Generates a self-signed certificate if holder is a root CA.
+        add_to_root_cache(root_url, root_cert) -> None:
+            Adds passed root information and certificate to root cache.
     """
     def __init__(self, holder_name: str, holder_config: dict, auto_config: dict):
         # Name of holder
@@ -307,7 +309,7 @@ class PKIHolder:
 
         self.network_hub = hub
 
-        message = self.holder_name + ' has added a connection to the network hub.'
+        message: str = self.holder_name + ' has added a connection to the network hub.'
         self.send_log('Operations', True, 'Addition', 'Hub', message)
 
     def send_log(self, category: str, success: bool, act: str, output: str, message: str) -> None:
@@ -331,20 +333,20 @@ class PKIHolder:
 
         if self.holder_type_info.ca_status != 'root_auth':
             # Send fail message
-            message = self.holder_name + ' is not a root CA and cannot sign their own certificates.'
+            message: str = self.holder_name + ' is not a root CA and cannot sign their own certificates.'
             self.send_log('PKI', False, 'Generation', 'Certificate', message)
             return None
 
         # Generate certificate with the name, subject information, issuer information,
         # environment information, and public keys
-        cert_name = self.holder_name + 'Self Certificate'
+        cert_name: str = self.holder_name + 'Self Certificate'
         self.holder_cert = PKICertificate(
             cert_name, self.holder_info, self.holder_info,
             self.env_info, self.holder_pub_key
         )
 
         if self.holder_cert is not None:
-            message = 'The root CA ' + self.holder_name + ' has signed their own certificate.'
+            message: str = 'The root CA ' + self.holder_name + ' has signed their own certificate.'
             self.send_log('PKI', True, 'Generation', 'Certificate', message)
             return self.holder_cert
 
@@ -361,5 +363,5 @@ class PKIHolder:
 
         self.root_certs[root_url] = root_cert
 
-        message = self.holder_name + ' has added the certificate of ' + root_url + ' to root cache store.'
+        message: str = self.holder_name + ' has added the certificate of ' + root_url + ' to root cache store.'
         self.send_log('PKI', True, 'Addition', 'Certificate', message)

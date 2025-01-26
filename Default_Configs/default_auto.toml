@@ -74,6 +74,11 @@ cooldown_durs = ["none", "5", "5", "5"]
 # The number of values in the list must match the level_count parameter.
 timeout_durs = ["none", "20", "20", "20"]
 
+# This parameter states how long the program will run for.
+# This parameter starts counting the moment all holders, the hub, and the underlying network start running.
+# All values must either be none (meaning no limit) or a duration in the format HH:MM:SS.
+runtime = "00:30:00"
+
 # This parameter specifies where the logs from the program save.
 # All values must be string filepaths that end in ".csv" as CSV is the only supported output.
 # Please ensure the filepath has a descriptive file name. Relative and Absolute paths are allowed.

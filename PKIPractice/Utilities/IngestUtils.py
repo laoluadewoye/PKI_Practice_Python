@@ -164,6 +164,14 @@ def validate_settings_auto(settings: dict) -> bool:
                   'encrypt_alg.params.curve. Please fix this in the autoconfiguration file.')
             return False
 
+    # Checking if the program duration is in the correct format
+    runtime_match = re.match(r'^[0-9]+:[0-9]{2}:[0-9]{2}$', settings['runtime'])
+    runtime_none = settings['runtime'] == 'none'
+    if not (runtime_match or runtime_none):
+        print('Runtime parameter does not have a valid input for cert_valid_durs. '
+              'Please fix this in the autoconfiguration file.')
+        return False
+
     # Checking if a proper filepath is passed for the program.
     if 'log_save_filepath' not in settings.keys():
         print('The filepath for saving log files is not existent. Please add that to the autoconfiguration file.')

@@ -44,6 +44,7 @@ def get_default_auto() -> dict:
         "cache_durs": ["none", "11:00", "06:00", "01:00"],
         "cooldown_durs": ["none", "5", "5", "5"],
         "timeout_durs": ["none", "20", "20", "20"],
+        "runtime": "00:30:00",
         "log_save_filepath": "output/saved_network_logs_default.csv"
     }
 
@@ -503,11 +504,11 @@ def start_program() -> None:
 
             # Build the environment
             pki_network = PKINetwork('Sample_Net', env_auto_settings, env_manual_settings)
-            pki_network.set_hierarchy()
+            pki_network.set_root_certificates()
 
         # Go even further if not just testing the CLI options.
         if not test_flag and not help_flag:
-            print(pki_network)
+            pki_network.start_network()
             pki_network.save_logs()
 
     # Ultimate error escape
