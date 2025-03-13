@@ -95,6 +95,8 @@ class PKICertificate:
         # Signature of all information
         self.signature: str = hash_info(self.hash_content, self.signature_alg)
 
+        # TODO: Create a chain of certificates stored in here
+
     @property
     def hash_content(self) -> str:
         """

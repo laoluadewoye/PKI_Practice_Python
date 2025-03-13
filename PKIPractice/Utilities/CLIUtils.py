@@ -414,6 +414,7 @@ def start_program() -> None:
     """
     Starts the program. Used by RunConfig.py and command line call to start program.
     """
+    # TODO: Add argparser for better usage
     # Name flags
     help_flag = False
     test_flag = False

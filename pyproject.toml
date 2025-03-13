@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "PyPkiPractice"
-version = "2.2.1"
+version = "2.3.0"
 authors = [
     {name = "Laolu Adewoye", email = "laoluadewoye@gmail.com"}
 ]
@@ -17,9 +17,17 @@ license = {file = "LICENSE"}
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Console",
+    "Environment :: Web Environment",
+    "Framework :: Flask",
+    "Intended Audience :: Education",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Other Audience",
+    "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
     "Operating System :: OS Independent",
+    "Programming Language :: JavaScript",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -28,7 +36,10 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
-    "Topic :: Internet :: WWW/HTTP"
+    "Programming Language :: SQL",
+    "Topic :: Communications",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Scientific/Engineering"
 ]
 keywords = [
     "Digital Certificates",
@@ -43,9 +54,11 @@ keywords = [
 ]
 requires-python = ">=3.8, <=3.14"
 dependencies = [
-    "cryptography==44.0.0",
     "PyYAML==6.0.2",
     "tomli==2.2.1",
+    "cryptography==44.0.1",
+    "Flask==3.1.0",
+    "waitress==3.0.2",
     "asciidoc==10.2.1",
 ]
 

@@ -4,7 +4,9 @@ Module used for defining the network class and it's functionality.
 
 # Relative pathing from project root
 import sys
+import time
 import datetime
+import threading
 from queue import Queue
 from os import makedirs
 from os.path import abspath, dirname, join, exists
@@ -20,6 +22,7 @@ else:
     sys.path.append(abspath(join(script_dir, '../..')))
 
 from PKIPractice.Simulation.Holder import PKIHolder
+from PKIPractice.Simulation.SocketUtils import start_socket_thread
 
 
 class PKIHub:
@@ -290,9 +293,7 @@ class PKINetwork:
             isinstance(holder_config['location'][key], int) for key in holder_config['location'].keys()
         )
         enough_keys: bool = len(holder_config['location'].keys()) == 1
-
         if not proper_keys or not enough_keys:
-            print(f'Invalid location configuration. {holder_name} configuration will be ignored.')
             return False
 
         # Create holder
@@ -333,5 +334,24 @@ class PKINetwork:
     def start_network(self) -> None:
         """
         Starts the network until the user says otherwise.
-        :return:
         """
+
+        # TODO: Create GUI web app thread to start here
+        website_stop_event = threading.Event()
+        website_socket_thread = threading.Thread(target=start_socket_thread, args=(website_stop_event,), daemon=True)
+        website_socket_thread.start()
+
+        # Create a time limit
+        hours, minutes, seconds = map(int, self.env_runtime.split(":"))
+        delta = datetime.timedelta(hours=hours, minutes=minutes, seconds=seconds)
+        end_time = datetime.datetime.now() + delta
+
+        # TODO: Lower the sleep value later
+        time.sleep(60)
+        website_stop_event.set()
+
+        # Create additional threads
+
+        # Start runtime loop
+        # while datetime.datetime.now() < end_time:
+        #     ...
