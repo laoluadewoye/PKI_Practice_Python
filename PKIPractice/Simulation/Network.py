@@ -335,8 +335,15 @@ class PKINetwork:
         """
         Starts the network until the user says otherwise.
         """
-
+        # TODO: Create A SQL database
+        # TODO: Fix error with flask not working with Python 3.8
         # TODO: Create GUI web app thread to start here
+        # TODO: Create tests for the new module
+
+        # Start a database
+
+
+        # Start the website
         website_stop_event = threading.Event()
         website_socket_thread = threading.Thread(target=start_socket_thread, args=(website_stop_event,), daemon=True)
         website_socket_thread.start()
