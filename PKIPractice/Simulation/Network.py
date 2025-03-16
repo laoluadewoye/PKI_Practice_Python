@@ -339,6 +339,7 @@ class PKINetwork:
         # TODO: Create A SQL database
         # TODO: Create GUI web app thread to start here
         # TODO: Create tests for the new module
+
         # Start the website
         website_stop_event = threading.Event()
 
@@ -351,14 +352,16 @@ class PKINetwork:
         # Create a time limit
         hours, minutes, seconds = map(int, self.env_runtime.split(":"))
         delta = datetime.timedelta(hours=hours, minutes=minutes, seconds=seconds)
-        end_time = datetime.datetime.now() + delta
 
-        # TODO: Lower the sleep value later
-        time.sleep(60)
-        website_stop_event.set()
+        # TODO: Replace this later
+        delta = datetime.timedelta(minutes=2)
+
+        end_time = datetime.datetime.now() + delta
 
         # Create additional threads
 
         # Start runtime loop
-        # while datetime.datetime.now() < end_time:
-        #     ...
+        while datetime.datetime.now() < end_time:
+            time.sleep(1)
+
+        website_stop_event.set()

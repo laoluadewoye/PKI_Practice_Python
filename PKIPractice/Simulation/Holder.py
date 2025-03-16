@@ -338,12 +338,17 @@ class PKIHolder:
             return None
 
         # Generate certificate with the name, subject information, issuer information,
-        # environment information, and public keys
+        # environment information, subject public key, issuer private key
         cert_name: str = self.holder_name + 'Self Certificate'
         self.holder_cert = PKICertificate(
             cert_name, self.holder_info, self.holder_info,
-            self.env_info, self.holder_pub_key
+            self.env_info, self.holder_pub_key, self.holder_priv_key
         )
+        if self.holder_cert.error is not None:
+            self.send_log(
+                'PKI', False, 'Generation', 'Certificate',
+                f'Error found when generating x509 certificate: {self.holder_cert.error}.'
+            )
 
         if self.holder_cert is not None:
             message: str = 'The root CA ' + self.holder_name + ' has signed their own certificate.'

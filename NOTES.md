@@ -782,6 +782,21 @@ statuses, and checking certificate statuses for lower levels.
       nearest whole number that is greater than the result.
    3) The RA ratio factor r SHALL be defined in both standards.
 
+# Development of Interactions
+
+Scenario: All root certificates have been generated and assigned to each device. All Intermediate CAs and regular
+devices are going to want to create their own certificates so they can begin to verify communication.
+
+In this interaction, Intermediate CAs should first focus on getting their own certificates before answering lower
+devices.
+
+This should include
+
+1) A check to see if they have their own certificate
+2) The realization they don't
+3) Creation of a CSR
+4) Sending the CSR to a higher certificate authority
+
 # Web App API Design and Database Schema
 
 Strategies:

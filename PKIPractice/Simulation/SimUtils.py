@@ -8,44 +8,80 @@ from cryptography.hazmat.primitives.hashes import *
 from cryptography.hazmat.primitives.asymmetric import rsa, ec
 
 
-def hash_info(information: str, holder_hash: str) -> str:
+def hash_info(information: str, hash_func_string: str) -> str:
     """
     Uses the established hash string to hash whatever information is passed.
     Raises an error if the choice is unsupported.
 
     Args:
         information: str - Any information as long as it is in string format.
-        holder_hash: str - The (assumingly acceptable) hash of choice.
+        hash_func_string: str - The (assumingly acceptable) hash of choice.
 
     Returns:
         str: The hashed information if choice is valid.
     """
 
-    if holder_hash == 'sha224':
+    if hash_func_string == 'sha224':
         digest: Hash = Hash(SHA224())
-    elif holder_hash == 'sha256':
+    elif hash_func_string == 'sha256':
         digest: Hash = Hash(SHA256())
-    elif holder_hash == 'sha384':
+    elif hash_func_string == 'sha384':
         digest: Hash = Hash(SHA384())
-    elif holder_hash == 'sha512':
+    elif hash_func_string == 'sha512':
         digest: Hash = Hash(SHA512())
-    elif holder_hash == 'sha3_224':
+    elif hash_func_string == 'sha3_224':
         digest: Hash = Hash(SHA3_224())
-    elif holder_hash == 'sha3_256':
+    elif hash_func_string == 'sha3_256':
         digest: Hash = Hash(SHA3_256())
-    elif holder_hash == 'sha3_384':
+    elif hash_func_string == 'sha3_384':
         digest: Hash = Hash(SHA3_384())
-    elif holder_hash == 'sha3_512':
+    elif hash_func_string == 'sha3_512':
         digest: Hash = Hash(SHA3_512())
-    elif holder_hash == 'blake2b':
+    elif hash_func_string == 'blake2b':
         digest: Hash = Hash(BLAKE2b(64))
-    elif holder_hash == 'blake2s':
+    elif hash_func_string == 'blake2s':
         digest: Hash = Hash(BLAKE2s(32))
     else:
-        raise ValueError(f"Unsupported hash: {holder_hash}")
+        raise ValueError(f"Unsupported hash: {hash_func_string}")
 
     digest.update(information.encode('utf-8'))
     return digest.finalize().hex()
+
+
+def get_hash_func(hash_func_string: str) -> HashAlgorithm:
+    """
+    Returns a hash algorithm object corresponding to the hash passed in.
+
+    Args:
+        hash_func_string: str - The (assumingly acceptable) hash of choice.
+
+    Returns:
+        HashAlgorithm: The hashing object to use.
+    """
+
+    if hash_func_string == 'sha224':
+        return SHA224()
+    elif hash_func_string == 'sha256':
+        return SHA256()
+    elif hash_func_string == 'sha384':
+        return SHA384()
+    elif hash_func_string == 'sha512':
+        return SHA512()
+    elif hash_func_string == 'sha3_224':
+        return SHA3_224()
+    elif hash_func_string == 'sha3_256':
+        return SHA3_256()
+    elif hash_func_string == 'sha3_384':
+        return SHA3_384()
+    elif hash_func_string == 'sha3_512':
+        return SHA3_512()
+    elif hash_func_string == 'blake2b':
+        return BLAKE2b(64)
+    elif hash_func_string == 'blake2s':
+        return BLAKE2s(32)
+    else:
+        raise ValueError(f"Unsupported hash: {hash_func_string}")
+
 
 
 def get_random_country() -> str:

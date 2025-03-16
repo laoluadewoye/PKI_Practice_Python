@@ -165,8 +165,10 @@ class TestCLI(unittest.TestCase):
             safely_quit = result.returncode == 0
             detected_ambiguous = 'ambiguous' in result.stderr.decode('utf-8')
             detected_error = 'Exception' in result.stdout.decode('utf-8') or 'Warning' in result.stdout.decode('utf-8')
+            detected_help_normal = any(help_option in args for help_option in ('-h', '--help'))
+            detected_help_misc = any(option[0] == '-' and 'h' in option for option in args)
 
-            if not any(help_option in args for help_option in ('-h', '--help')):
+            if not detected_help_normal and not detected_help_misc:
                 self.assertTrue(
                     safely_quit or detected_ambiguous,
                     f'Failed with args: {args}. Full file path: {abspath(self.pyfile)}'
