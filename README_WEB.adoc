@@ -36,9 +36,13 @@ a Public Key Infrastructure. The supported formats are YAML, JSON, TOML, and XML
 a CSV log file saved in a dedicated "output" folder, but during it's run time you should be able to view all the action
 printed out in the terminal (and maybe even a GUI once I finish the program itself).
 
-This program is developed in Python 3.12, but has support for Python 3.8-3.14. Currently, the only drawback is that any
+This program is developed in Python 3.12, but has support for Python 3.9-3.14. Currently, the only drawback is that any
 interpreter that is earlier than Python 3.10 is unable to use YAML files for configuration, and will have to use one of
 the other three supported formats. The code will let you know that.
+
+__Note: Support for Python 3.8 had to be dropped around March 2025 due to the latest version of waitress that Python 3.8
+supported containing numerous critical CVEs. It would not be worth it to open up users to DoS attacks just to have
+fun with this project.__
 
 Use the **NOTES** link at the top to get a deeper idea about what this project is about, and the **CONFIG_GUIDE** link
 at the top to understand how to create the configuration files yourself.
@@ -69,6 +73,17 @@ the following sections show you how to install to either your local environment 
 
 == Usage
 
+=== Core options
+
+This is a completely option-based command line program. You will use the options to specify what files you are passing
+into the program
+
+* `-a` or `--auto`: Pass in an autoconfiguration file.
+* `-m` or `--manual`: Pass in a manual configuration file.
+
+The autoconfiguration file is the main requirement for the program to work, and without it or a default setting
+discussed below, the program will exit itself out.
+
 === Don't have configurations? And additional options
 
 No worries! There are some options you can pass instead of the files I use for examples below.
@@ -89,7 +104,7 @@ Other options you can pass into the program are-
 
 Command Structure: python PKIPractice/RunConfig.py __(arguments)__
 
-Command Example: `python PKIPractice/RunConfig.py config_files/config_auto.json config_files/config_manual.json`
+Command Example: `python PKIPractice/RunConfig.py -a config_files/config_auto.json -m config_files/config_manual.json`
 
 If you're in an IDE, chances are you can just set up a run configuration in your app. Make sure to add arguments in
 whatever field you need as I told my program to yell at you if you don't.
@@ -98,7 +113,7 @@ whatever field you need as I told my program to yell at you if you don't.
 
 Command Structure: run-pki-practice __(arguments)__
 
-Command Example: `run-pki-practice config_files/config_auto.json config_files/config_manual.json`
+Command Example: `run-pki-practice --auto config_files/config_auto.json --manual config_files/config_manual.json`
 
 === Running as a Docker Container from the pulled Docker image
 
@@ -163,7 +178,7 @@ Let's say that you had a folder called config_files, which had a file called **c
 configuration.
 
 Command Example: `docker run -v config_files:/usr/local/app/config_files laoluade/pypkipractice:latest
-config_files/config_auto.json config_files/config_manual.json`
+-a config_files/config_auto.json -m config_files/config_manual.json`
 
 * **"docker run"** is the basic subcommand that will be used to run the chosen image.
 * The **"-v"** flag is used to mount the local config folder as a volume to the container's config folder.
@@ -175,8 +190,8 @@ config_files/config_auto.json config_files/config_manual.json`
 * The last part of the command is the arguments you passed to the command line after stating your image. The container
   will take care of handling the arguments for you. Filepaths must be from the perspective of the container working in
   the app directory.
-** **"config_files/config_auto.json"** is the path to the autoconfiguration file.
-** **"config_files/config_manual.json"** is the path to the manual configuration file.
+** **"-a config_files/config_auto.json"** points the auto option to the path to the autoconfiguration file.
+** **"-m config_files/config_manual.json"** points the manual option to the path to the manual configuration file.
 
 === Table comparing options
 

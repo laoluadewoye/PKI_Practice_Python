@@ -73,9 +73,15 @@ def adjust_types_auto(settings: dict) -> Union[dict, None]:
         settings['revoc_probs'] = list(map(float, settings['revoc_probs']))
     except (KeyError, TypeError, ValueError) as e:
         topic = re.search(r"'(.*?)'", str(e)).group(1)
-        print(f'Either "{topic}" is a missing key word, or "{topic}" is not the correct data type.\nIf the former is '
-              'true, please add it to the configuration file.\nIf the latter is true, look for where it is used in '
-              'the autoconfiguration file, as that is likely the problem.')
+        print(
+            f"""
+Either "{topic}" is a missing key word, or "{topic}" is not the correct data type.
+
+If the former is true, please add it to the configuration file.
+If the latter is true, look for where it is used in the autoconfiguration file, as that is likely the 
+    problem.
+            """
+        )
         return None
 
     return settings
@@ -208,19 +214,23 @@ def parse_config_auto(filepath: str) -> Union[dict, None]:
 
     # Check file type
     assert any(ext in filepath for ext in ['.yaml', '.yml', '.json', '.xml', '.toml']), (
-        'Invalid autoconfiguration configuration file provided.\n'
-        '\t   Please provide a configuration file that is a YAML, JSON, XML, or TOML file.\n'
-        '\t   Look in the Default_Configs folder for examples.\n'
+        """
+Invalid autoconfiguration configuration file provided.
+    Please provide a configuration file that is a YAML, JSON, XML, or TOML file.
+    Look in the Default_Configs folder for examples.
+        """
     )
 
     # File type tree
     try:
         if filepath.endswith('.yaml') or filepath.endswith('.yml'):
             assert sys.version_info[1] > 9, (
-                'Using YAML files for configuration requires Python 3.10 or higher.\n'
-                '\t   Please update your Python version or use a different file format for configuration.\n'
-                '\t   Other supported examples are JSON, XML, or TOML.\n'
-                '\t   Look in the Default_Configs folder for examples.\n'
+                """
+Using YAML files for configuration requires Python 3.10 or higher.
+    Please update your Python version or use a different file format for configuration.
+    Other supported examples are JSON, XML, or TOML.
+    Look in the Default_Configs folder for examples.
+                """
             )
             with open(filepath, 'r') as file:
                 settings = yaml.load(file, Loader=yaml.Loader)
@@ -244,16 +254,20 @@ def parse_config_auto(filepath: str) -> Union[dict, None]:
     # Type adjustment
     settings = adjust_types_auto(settings)
     assert settings is not None, (
-        'Ingested autoconfiguration settings were not able to be adjusted due to incorrect configuration format.\n'
-        '\t   Please ensure your configuration file is correctly created.\n'
-        '\t   Use the default configuration file as a template.\n'
+        """
+Ingested autoconfiguration settings were not able to be adjusted due to incorrect configuration format.
+    Please ensure your configuration file is correctly created.
+    Use the default configuration file as a template.
+        """
     )
 
     # Settings validation
     assert validate_settings_auto(settings) is True, (
-        'Ingested autoconfiguration settings were not found to be valid.\n'
-        '\t   Please ensure your configuration file is correctly created.\n'
-        '\t   Use the default configuration file as a template.\n'
+        """
+Ingested autoconfiguration settings were not found to be valid.
+    Please ensure your configuration file is correctly created.
+    Use the default configuration file as a template.
+        """
     )
 
     return settings
@@ -279,10 +293,13 @@ def search_for_typecast_manual(settings: dict) -> Union[dict, None]:
             elif isinstance(value, dict):
                 settings[key] = search_for_typecast_manual(value)
                 assert settings[key] is not None, (
-                    'Ingested manual configuration settings were not able to be adjusted '
-                    'due to incorrect configuration format.\n'
-                    '\t   Please ensure your configuration file is correctly created.\n'
-                    '\t   Use the default configuration file as a template.\n'
+                    """
+Ingested manual configuration settings were not able to be adjusted due to incorrect 
+    configuration format.
+    
+Please ensure your configuration file is correctly created.
+Use the default configuration file as a template.
+                    """
                 )
         return settings
     except (KeyError, TypeError, ValueError) as e:
@@ -309,19 +326,23 @@ def parse_config_manual(filepath: str) -> Union[dict, None]:
 
     # Check file type
     assert any(ext in filepath for ext in ['.yaml', '.yml', '.json', '.xml', '.toml']), (
-        'Invalid manual configuration file provided.\n'
-        '\t   Please provide a configuration file that is a YAML, JSON, XML, or TOML file.\n'
-        '\t   Look in the Default_Configs folder for examples.\n'
+        """
+Invalid manual configuration file provided.
+    Please provide a configuration file that is a YAML, JSON, XML, or TOML file.
+    Look in the Default_Configs folder for examples.
+        """
     )
 
     # File type tree
     try:
         if filepath.endswith('.yaml') or filepath.endswith('.yml'):
             assert sys.version_info[1] > 9, (
-                'Using YAML files for configuration requires Python 3.10 or higher.\n'
-                '\t   Please update your Python version or use a different file format for configuration.\n'
-                '\t   Other supported examples are JSON, XML, or TOML.\n'
-                '\t   Look in the Default_Configs folder for examples.\n'
+                """
+Using YAML files for configuration requires Python 3.10 or higher.
+    Please update your Python version or use a different file format for configuration.
+    Other supported examples are JSON, XML, or TOML.
+    Look in the Default_Configs folder for examples.
+                """
             )
             with open(filepath, 'r') as file:
                 settings = yaml.load(file, Loader=yaml.Loader)
@@ -345,9 +366,11 @@ def parse_config_manual(filepath: str) -> Union[dict, None]:
     # Type adjustment
     settings = search_for_typecast_manual(settings)
     assert settings is not None, (
-        'Ingested manual configuration settings were not able to be adjusted due to unparsable configuration params.\n'
-        '\t   Please ensure your configuration file is correctly created.\n'
-        '\t   Use the default configuration file as a template.\n'
+        """
+Ingested manual configuration settings were not able to be adjusted due to unparsable configuration params.
+    Please ensure your configuration file is correctly created.
+    Use the default configuration file as a template.
+        """
     )
 
     return settings

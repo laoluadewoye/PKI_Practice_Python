@@ -5,6 +5,7 @@ Module containing all utilities relevant for interacting with a command line int
 # Relative pathing from project root
 import sys
 from typing import Union
+from argparse import ArgumentParser, Namespace
 from os.path import abspath, dirname, join
 
 script_dir = dirname(abspath(__file__))
@@ -319,7 +320,7 @@ def get_default_manual() -> dict:
     return manual_config
 
 
-def ingest_config(args: list, default: bool) -> Union[tuple, None]:
+def ingest_config(args: Namespace) -> Union[tuple, None]:
     """
     Starts the program using the command-line arguments.
 
@@ -330,81 +331,92 @@ def ingest_config(args: list, default: bool) -> Union[tuple, None]:
 
     # Check if a yaml file is passed on an interpreter before Python 3.10
     if sys.version_info[1] < 10:
-        assert all('.yaml' not in arg for arg in args), (
-            'Invalid configuration filepath provided.\n'
-            '\t   Yaml files do not have support for Python versions before 3.10.\n'
-            '\t   Please use a different configuration format (JSON, XML, TOML).\n'
+        assert '.yaml' not in args.auto_config_fp and '.yaml' not in args.manual_config_fp, (
+            """
+Invalid configuration filepath provided.
+    Yaml files do not have support for Python versions before 3.10.
+    Please use a different configuration format (JSON, XML, TOML).  
+            """
         )
 
     # Check if there is a proper argument for the auto generation
-    if not default:
-        assert 'auto' in args[1], (
-            'Invalid configuration filepath provided.\n'
-            '\t   Please provide a proper auto configuration file by '
-            'passing the filepath of your file as an command-line argument.\n'
-            '\t   Example: python Main.py Default_Configs/default_auto.yaml\n'
+    if not args.default_mode_on:
+        assert 'auto' in args.auto_config_fp, (
+            """
+Invalid configuration filepath provided.
+Please provide a proper auto configuration file by passing the filepath of your file as an 
+    command-line argument.
+
+Examples:
+    python RunConfig.py -a Default_Configs/default_auto.yaml
+    run-pki-practice --auto Default_Configs/default_auto.yaml
+            """
         )
 
     # Check if there is a proper argument for the manual settings or if it's just one argument
-    only_auto_or_default: bool = len(args) == 2 or default
+    only_auto_or_default: bool = args.manual_config_fp is not None or args.default_mode_on
     if only_auto_or_default:
         manual_exists: bool = True
     else:
-        manual_exists: bool = 'manual' in args[2]
+        manual_exists: bool = 'manual' in args.manual_config_fp
     assert manual_exists is True, (
-        'Invalid configuration filepath provided.\n'
-        '\t   Please provide a proper manual configuration file by '
-        'passing the filepath of your file as an command-line argument.\n'
-        '\t   Example: python Main.py Default_Configs/default_auto.yaml Default_Configs/default_manual.yaml\n'
+        """
+Invalid configuration filepath provided. Please provide a proper manual configuration file by passing the 
+    filepath of your file as a command-line argument.
+    
+Examples: 
+    python RunConfig.py -a Default_Configs/default_auto.yaml -m Default_Configs/default_manual.yaml
+    run-pki-practice --auto Default_Configs/default_auto.yaml --manual Default_Configs/default_manual.yaml
+        """
     )
 
-    # Warn if there are more than the two arguments that have been checked
-    if len(args) > 3:
-        print('Warning: More than two command-line argument provided.\n'
-              '\t Please provide a configuration file by '
-              'passing the filepath of your file as an command-line argument.\n'
-              '\t   Example: python Main.py Default_Configs/default_auto.yaml '
-              'Default_Configs/default_manual.yaml\n')
-
     # Pass auto argument to ingestion utilities
-    if default:
+    if args.default_mode_on:
         env_auto_settings: Union[dict, None] = get_default_auto()
         assert validate_settings_auto(env_auto_settings) is True, (
-            'Ingested autoconfiguration settings were not found to be valid.\n'
-            '\t   Please ensure your configuration file is correctly created.\n'
-            '\t   Use the default configuration file as a template.\n'
+            """
+Ingested default mode autoconfiguration settings were not found to be valid.
+    This is an issue with the default settings. Please report an issue at 
+    https://github.com/laoluadewoye/PKI_Practice_Python
+            """
         )
     else:
-        env_auto_settings: Union[dict, None] = parse_config_auto(args[1])
+        env_auto_settings: Union[dict, None] = parse_config_auto(args.auto_config_fp)
 
     # Pass manual argument to ingestion utilities
-    if default:
+    if args.default_mode_on:
         env_manual_settings: Union[dict, None] = get_default_manual()
         env_manual_settings = search_for_typecast_manual(env_manual_settings)
         assert env_manual_settings is not None, (
-            'Ingested manual configuration settings were not able to be adjusted due to '
-            'unparsable configuration params.\n'
-            '\t   Please ensure your configuration file is correctly created.\n'
-            '\t   Use the default configuration file as a template.\n'
+            """
+Ingested default mode manual configuration settings were not able to be adjusted due to unparsable 
+    configuration params.
+    This is an issue with the default settings. Please report an issue at 
+    https://github.com/laoluadewoye/PKI_Practice_Python
+            """
         )
     else:
-        if len(args) > 2:
-            env_manual_settings: Union[dict, None] = parse_config_manual(args[2])
+        if args.manual_config_fp is not None:
+            env_manual_settings: Union[dict, None] = parse_config_manual(args.manual_config_fp)
         else:
             env_manual_settings: Union[dict, None] = None
 
     # Check the return values for both
     assert env_auto_settings is not None, (
-        'Unparseable autoconfiguration file provided.\n'
-        '\t   Please ensure that your configuration file exists or are properly created.\n'
-        '\t   Use the default configuration files provided in the Default_Configs folder as a guide.\n'
+        """
+Unparseable autoconfiguration file provided.
+    Please ensure that your configuration file exists or are properly created.
+    Use the default configuration files provided in the Default_Configs folder as a guide.
+        """
     )
 
-    if len(args) > 2:
+    if args.manual_config_fp is not None:
         assert env_manual_settings is not None, (
-            'Unparseable manual configuration file provided.\n'
-            '\t   Please ensure that your configuration file exists or are properly created.\n'
-            '\t   Use the default configuration files provided in the Default_Configs folder as a guide.\n'
+            """
+Unparseable manual configuration file provided.
+    Please ensure that your configuration file exists or are properly created.
+    Use the default configuration files provided in the Default_Configs folder as a guide.
+            """
         )
 
     return env_auto_settings, env_manual_settings
@@ -414,101 +426,101 @@ def start_program() -> None:
     """
     Starts the program. Used by RunConfig.py and command line call to start program.
     """
-    # TODO: Add argparser for better usage
-    # Name flags
-    help_flag = False
-    test_flag = False
-    default_flag = False
+    parser: ArgumentParser = ArgumentParser(
+        prog='run-pki-practice',
+        usage='run-pki-practice [auto_config_file] [Options]',
+        description=('run-pki-practice is the command line interface for the PKI practice program.\n'
+                     'For more information see the README.\n')
+    )
+    parser.add_argument(
+        '-a', '--auto', type=str, required=False, help='The filepath of the auto configuration file.',
+        metavar='-a --auto (Auto Config File)', dest='auto_config_fp'
+    )
+    parser.add_argument(
+        '-m', '--manual', type=str, required=False, help='The filepath of the manual configuration file.',
+        metavar='-m --manual (Manual Config File)', dest='manual_config_fp'
+    )
+    parser.add_argument(
+        '-t', '--test', action='store_true', default=False, required=False,
+        help=('Run the program in test mode. This mode is mainly used by testing modules, but it stops the program '
+              'before the PKI network is started to save time.'), dest='test_mode_on'
+    )
+    parser.add_argument(
+        '-d', '--default', action='store_true', default=False, required=False,
+        help='Run the program in default mode. This mode overrides the need for configuration files.',
+        dest='default_mode_on'
+    )
+    args, unknowns = parser.parse_known_args()
 
     # Start assertion region
     try:
-        pki_network: Union[None, PKINetwork] = None
+        # Check if any unknown values were passed
+        assert len(unknowns) == 0, (
+            """
+Warning: Unknown arguments provided. Please remove them from your command-line call.
 
-        # Check if there are more than one argument
-        assert len(sys.argv) > 1, (
-            'No configuration file provided.\n' 
-            '\t   Please provide a configuration file by '
-            'passing the filepath of your file as an command-line argument.\n'
-            '\t   Example: python Main.py Default_Configs/default_auto.yaml\n'
+Here are the valid options that can be passed.
+
+-h or --help: Get help on how to use the program.
+-a or --auto: The filepath of the auto configuration file.
+-m or --manual: The filepath of the manual configuration file.
+-t or --test: Run the program in test mode.
+-d or --default: Run the program in default mode.
+            """
         )
 
-        # Check if there is a help flag
-        if any(arg in sys.argv for arg in ('-h', '--help')):
+        # Check that either auto config file or default mode is provided
+        assert args.auto_config_fp is not None or args.default_mode_on, (
+            """
+No auto configuration file or default switch is provided.
+
+Please provide a configuration file by passing the filepath of your file as an command-line argument.
+Otherwise, run the program in default mode.
+
+Examples with passed auto config file:
+    python RunConfig.py -a Default_Configs/default_auto.yaml
+    run-pki-practice --auto Default_Configs/default_auto.yaml
+
+Examples with default mode:
+    python RunConfig.py -d
+    run-pki-practice --default
+            """
+        )
+
+        # Check if default mode is provided
+        if args.default_mode_on:
             print(
-                '   Help flag detected.\n'
-                '   Welcome to PKI Practice!\n'
-                '   This is not really meant for much, I just wanted to practice PKI architecture.\n'
-                '   However, that does not mean that it should not be fun to play with.\n'
-                '\n'
-                '   In terms of command-line usage, you need to provide only to files.\n'
-                '   The first is a configuration file for the auto generation of the environment.\n'
-                '   The second is a configuration file for the manual configuration of the environment.\n'
-                '   The second file is optional to run the program, but the first can be run without the second.\n'
-                '\n'
-                '   Structure: python Main.py [options] [<autoconfig filepath>] [<manualconfig filepath>]\n'
-                '   Example without second: python Main.py Default_Configs/default_auto.yaml\n'
-                '   Example with second: python Main.py Default_Configs/default_auto.yaml '
-                'Default_Configs/default_manual.yaml\n'
-                '\n'
-                '   Options:\n'
-                '   -h\n'
-                '   --help\n'
-                "   Prints the help information you see now.\n"
-                '   --------\n'
-                '   -d\n'
-                '   --default\n'
-                "   Tells the program to run it's default configuration\n"
-                '   --------\n'
-                '   -t\n'
-                '   --test\n'
-                "   Tells the program to run in test mode, where it only runs enough of the program to conduct "
-                "assessments.\n"
-                '\n\n'
-                '   For more details, please check out https://laoluadewoye.github.io/PKI_Practice_Python/.\n'
+                """
+Default mode detected.
+Welcome to PKI Practice!
+This is not really meant for much, I just wanted to practice PKI architecture.
+However, that does not mean that it should not be fun to play with.
+
+In terms of command-line usage, you need to provide only two files.
+The first is a config file for the auto generation of the environment using the -a or --auto flag.
+The second is a config file for the manual configuration of the environment.
+The second file is optional to run the program, but the first can be run without the second.
+
+For more details, please run this command with the help option [-h | --help] 
+or check out https://laoluadewoye.github.io/PKI_Practice_Python/.
+
+For now though, here is a default run of the program using the default yaml files.
+                
+                """
             )
-            help_flag = True
-            help_index = next((i for i, arg in enumerate(sys.argv) if arg in ('-h', '--help')), None)
-            sys.argv.pop(help_index)
 
-        # Check if there is a test flag
-        if any(arg in sys.argv for arg in ('-t', '--test')):
-            test_flag = True
-            test_index = next((i for i, arg in enumerate(sys.argv) if arg in ('-t', '--test')), None)
-            sys.argv.pop(test_index)
+        # Read the configuration files or default configurations
+        # TODO: Edit ingest_configs to use new argparser format
+        # TODO: Ensure all example file runs use updated examples with RunConfig and options. Line 374.
+        # TODO: Review all assertions to make sure they are unique
+        env_auto_settings, env_manual_settings = ingest_config(args)
 
-        # Check if there is a default flag
-        if any(arg in sys.argv for arg in ('-d', '--default')):
-            print(
-                '   Default flag detected.\n'
-                '   Welcome to PKI Practice!\n'
-                '   This is not really meant for much, I just wanted to practice PKI architecture.\n'
-                '   However, that does not mean that it should not be fun to play with.\n'
-                '\n'
-                '   In terms of command-line usage, you need to provide only to files.\n'
-                '   The first is a configuration file for the auto generation of the environment.\n'
-                '   The second is a configuration file for the manual configuration of the environment.\n'
-                '   The second file is optional to run the program, but the first can be run without the second.\n'
-                '\n'
-                "   For more details, please run this command with the help option [-h | --help] "
-                "or check out https://laoluadewoye.github.io/PKI_Practice_Python/.\n"
-                '\n'
-                '   For now though, here is a default run of the program using the default yaml files.\n'
-            )
-            default_flag = True
-            default_index = next((i for i, arg in enumerate(sys.argv) if arg in ('-d', '--default')), None)
-            sys.argv.pop(default_index)
-
-        # Start the program if nothing else is needed.
-        if not help_flag:
-            # Read the configuration files or default configurations
-            env_auto_settings, env_manual_settings = ingest_config(sys.argv, default=default_flag)
-
-            # Build the environment
-            pki_network = PKINetwork('Sample_Net', env_auto_settings, env_manual_settings)
-            pki_network.set_root_certificates()
+        # Build the environment
+        pki_network: Union[None, PKINetwork] = PKINetwork('Sample_Net', env_auto_settings, env_manual_settings)
+        pki_network.set_root_certificates()
 
         # Go even further if not just testing the CLI options.
-        if not test_flag and not help_flag:
+        if not args.test_mode_on:
             pki_network.start_network()
             pki_network.save_logs()
 
