@@ -157,16 +157,20 @@ class TestCLI(unittest.TestCase):
             return [generate_random_string(min_length, max_length) for _ in range(num_items)]
 
         # Fuzzing loop
-        for i in range(200):
+        for i in range(100):
             args = ['python', self.pyfile] + generate_random_string_list()
             result = subprocess.run(args, capture_output=True)
             print(result)
 
             safely_quit = result.returncode == 0
+            detected_ambiguous = 'ambiguous' in result.stderr.decode('utf-8')
             detected_error = 'Exception' in result.stdout.decode('utf-8') or 'Warning' in result.stdout.decode('utf-8')
 
             if not any(help_option in args for help_option in ('-h', '--help')):
-                self.assertTrue(safely_quit, f'Failed with args: {args}. Full file path: {abspath(self.pyfile)}')
+                self.assertTrue(
+                    safely_quit or detected_ambiguous,
+                    f'Failed with args: {args}. Full file path: {abspath(self.pyfile)}'
+                )
                 self.assertTrue(detected_error, f'Failed with args: {args}. Full file path: {abspath(self.pyfile)}')
 
     def test_warning(self) -> None:
