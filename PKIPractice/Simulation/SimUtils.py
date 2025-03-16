@@ -193,3 +193,6 @@ def create_private_key(holder_encrypt_alg: dict) -> Union[rsa.RSAPrivateKey, ec.
             f'\t   Message: {e}.\n'
             '\t   Please check automatic or manual configuration files that contain the passed value.'
         )
+
+def encrypt_info(information):
+    ...

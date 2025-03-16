@@ -172,7 +172,7 @@ def get_default_manual() -> dict:
             },
             "holder_info": {
                 "common_name": "CloudCert Inc West Africa CA",
-                "country": "Nigeria",
+                "country": "NG",
                 "state": "Oyo",
                 "locality": "Ibadan",
                 "org": "CloudCert Inc",
