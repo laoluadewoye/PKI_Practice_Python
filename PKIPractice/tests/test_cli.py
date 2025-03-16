@@ -96,33 +96,33 @@ class TestCLI(unittest.TestCase):
         Test the arguments using files from Default_Configs folder.
         """
         arg_combos = [
-            ['python', self.pyfile, '-t', f'{self.dc_dir}Default_Configs/default_auto.yaml'],
-            ['python', self.pyfile, '-t', f'{self.dc_dir}Default_Configs/default_auto.json'],
-            ['python', self.pyfile, '-t', f'{self.dc_dir}Default_Configs/default_auto.toml'],
-            ['python', self.pyfile, '-t', f'{self.dc_dir}Default_Configs/default_auto.xml'],
+            ['python', self.pyfile, '-t', '-a', f'{self.dc_dir}Default_Configs/default_auto.yaml'],
+            ['python', self.pyfile, '-t', '-a', f'{self.dc_dir}Default_Configs/default_auto.json'],
+            ['python', self.pyfile, '-t', '-a', f'{self.dc_dir}Default_Configs/default_auto.toml'],
+            ['python', self.pyfile, '-t', '-a', f'{self.dc_dir}Default_Configs/default_auto.xml'],
             [
                 'python',
                 self.pyfile, '-t',
-                f'{self.dc_dir}Default_Configs/default_auto.yaml',
-                f'{self.dc_dir}Default_Configs/default_manual.yaml'
+                '-a', f'{self.dc_dir}Default_Configs/default_auto.yaml',
+                '-m', f'{self.dc_dir}Default_Configs/default_manual.yaml'
             ],
             [
                 'python',
                 self.pyfile, '-t',
-                f'{self.dc_dir}Default_Configs/default_auto.json',
-                f'{self.dc_dir}Default_Configs/default_manual.json'
+                '-a', f'{self.dc_dir}Default_Configs/default_auto.json',
+                '-m', f'{self.dc_dir}Default_Configs/default_manual.json'
             ],
             [
                 'python',
                 self.pyfile, '-t',
-                f'{self.dc_dir}Default_Configs/default_auto.toml',
-                f'{self.dc_dir}Default_Configs/default_manual.toml'
+                '-a', f'{self.dc_dir}Default_Configs/default_auto.toml',
+                '-m', f'{self.dc_dir}Default_Configs/default_manual.toml'
             ],
             [
                 'python',
                 self.pyfile, '-t',
-                f'{self.dc_dir}Default_Configs/default_auto.xml',
-                f'{self.dc_dir}Default_Configs/default_manual.xml'
+                '-a', f'{self.dc_dir}Default_Configs/default_auto.xml',
+                '-m', f'{self.dc_dir}Default_Configs/default_manual.xml'
             ]
         ]
 
@@ -157,7 +157,7 @@ class TestCLI(unittest.TestCase):
             return [generate_random_string(min_length, max_length) for _ in range(num_items)]
 
         # Fuzzing loop
-        for i in range(100):
+        for i in range(200):
             args = ['python', self.pyfile] + generate_random_string_list()
             result = subprocess.run(args, capture_output=True)
             print(result)
@@ -176,8 +176,8 @@ class TestCLI(unittest.TestCase):
         args = [
             'python',
             self.pyfile, '-t',
-            f'{self.dc_dir}Default_Configs/default_auto.json',
-            f'{self.dc_dir}Default_Configs/default_manual.json',
+            '-a', f'{self.dc_dir}Default_Configs/default_auto.json',
+            '-m', f'{self.dc_dir}Default_Configs/default_manual.json',
             'one too many arguments'
         ]
         result = subprocess.run(args, capture_output=True)

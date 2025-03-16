@@ -330,8 +330,16 @@ def ingest_config(args: Namespace) -> Union[tuple, None]:
     """
 
     # Check if a yaml file is passed on an interpreter before Python 3.10
-    if sys.version_info[1] < 10:
-        assert '.yaml' not in args.auto_config_fp and '.yaml' not in args.manual_config_fp, (
+    if sys.version_info[1] < 10 and args.auto_config_fp is not None:
+        assert '.yaml' not in args.auto_config_fp, (
+            """
+Invalid configuration filepath provided.
+    Yaml files do not have support for Python versions before 3.10.
+    Please use a different configuration format (JSON, XML, TOML).  
+            """
+        )
+    if sys.version_info[1] < 10 and args.manual_config_fp is not None:
+        assert '.yaml' not in args.manual_config_fp, (
             """
 Invalid configuration filepath provided.
     Yaml files do not have support for Python versions before 3.10.
@@ -428,17 +436,17 @@ def start_program() -> None:
     """
     parser: ArgumentParser = ArgumentParser(
         prog='run-pki-practice',
-        usage='run-pki-practice [auto_config_file] [Options]',
+        usage='run-pki-practice [Options]',
         description=('run-pki-practice is the command line interface for the PKI practice program.\n'
                      'For more information see the README.\n')
     )
     parser.add_argument(
         '-a', '--auto', type=str, required=False, help='The filepath of the auto configuration file.',
-        metavar='-a --auto (Auto Config File)', dest='auto_config_fp'
+        dest='auto_config_fp'
     )
     parser.add_argument(
         '-m', '--manual', type=str, required=False, help='The filepath of the manual configuration file.',
-        metavar='-m --manual (Manual Config File)', dest='manual_config_fp'
+        dest='manual_config_fp'
     )
     parser.add_argument(
         '-t', '--test', action='store_true', default=False, required=False,
@@ -504,15 +512,12 @@ The second file is optional to run the program, but the first can be run without
 For more details, please run this command with the help option [-h | --help] 
 or check out https://laoluadewoye.github.io/PKI_Practice_Python/.
 
-For now though, here is a default run of the program using the default yaml files.
+For now though, here is a default run of the program using the example settings.
                 
                 """
             )
 
         # Read the configuration files or default configurations
-        # TODO: Edit ingest_configs to use new argparser format
-        # TODO: Ensure all example file runs use updated examples with RunConfig and options. Line 374.
-        # TODO: Review all assertions to make sure they are unique
         env_auto_settings, env_manual_settings = ingest_config(args)
 
         # Build the environment

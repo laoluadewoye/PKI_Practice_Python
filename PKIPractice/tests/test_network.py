@@ -6,6 +6,7 @@ import unittest
 import tempfile
 from datetime import datetime
 from typing import List
+from argparse import ArgumentParser
 
 # Relative pathing from project root
 import sys
@@ -31,8 +32,32 @@ class TestNetwork(unittest.TestCase):
         """
         Sets up the parameters for testing.
         """
-
-        self.env_auto_settings, self.env_manual_settings = ingest_config(sys.argv, default=True)
+        parser: ArgumentParser = ArgumentParser(
+            prog='run-pki-practice',
+            usage='run-pki-practice [Options]',
+            description=('run-pki-practice is the command line interface for the PKI practice program.\n'
+                         'For more information see the README.\n')
+        )
+        parser.add_argument(
+            '-a', '--auto', type=str, required=False, help='The filepath of the auto configuration file.',
+            dest='auto_config_fp'
+        )
+        parser.add_argument(
+            '-m', '--manual', type=str, required=False, help='The filepath of the manual configuration file.',
+            dest='manual_config_fp'
+        )
+        parser.add_argument(
+            '-t', '--test', action='store_true', default=False, required=False,
+            help=('Run the program in test mode. This mode is mainly used by testing modules, but it stops the program '
+                  'before the PKI network is started to save time.'), dest='test_mode_on'
+        )
+        parser.add_argument(
+            '-d', '--default', action='store_true', default=False, required=False,
+            help='Run the program in default mode. This mode overrides the need for configuration files.',
+            dest='default_mode_on'
+        )
+        args, _ = parser.parse_known_args(['--default'])
+        self.env_auto_settings, self.env_manual_settings = ingest_config(args)
 
     def test_network_creation(self) -> None:
         """
