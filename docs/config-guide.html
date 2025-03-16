@@ -89,14 +89,20 @@ saved as a CSV file. The filepath that is passed must be at least eight
 characters long and can either be a relative or absolute filepath. This
 detail is specified by the <code>log_save_filepath</code>
 parameter.</li>
-<li>The last detail is how long the program should run. This detail is
+<li>The 12th detail is how long the program should run. This detail is
 specified using the <code>runtime</code> parameter and must be specified
 in the <strong>HH:MM:SS</strong> time format, or the word “none” in all
 lowercase.</li>
+<li>The last detail is where the database files from the program should
+be saved. This program uses SQLite databases to manage information
+during the simulation. The filepath that is passed must be at least
+eight characters long and can either be a relative or absolute filepath.
+This detail is specified by the <code>db_folder_path</code>
+parameter.</li>
 </ol>
-<p>These twelve details are the only settings needed to run a PKI
-network simulation. However, if you wish for more detail, you can also
-create a manual configuration file.</p>
+<p>These thirteen details are the settings needed to run a PKI network
+simulation. However, if you wish for more detail, you can also create a
+manual configuration file.</p>
 <h1 id="manual-configuration">Manual Configuration</h1>
 <p>Manual configuration files do not replace autoconfiguration files. A
 manual configuration file is more of an add-on to an autoconfiguration
