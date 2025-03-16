@@ -342,6 +342,7 @@ class PKINetwork:
 
         # Start a database
 
+
         # Start the website
         website_stop_event = threading.Event()
         website_socket_thread = threading.Thread(target=start_socket_thread, args=(website_stop_event,), daemon=True)

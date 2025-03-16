@@ -325,8 +325,7 @@ def ingest_config(args: Namespace) -> Union[tuple, None]:
     Starts the program using the command-line arguments.
 
     Args:
-        args (list): A list of command-line arguments.
-        default (bool, optional): If True, use the default configuration files. Defaults to False.
+        args (Namespace): A parsed collection of command-line arguments.
     """
 
     # Check if a yaml file is passed on an interpreter before Python 3.10

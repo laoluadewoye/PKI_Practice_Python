@@ -781,3 +781,13 @@ statuses, and checking certificate statuses for lower levels.
       of CAs that SHALL share an RA, and ceil is a function that takes the result and raises the result to the
       nearest whole number that is greater than the result.
    3) The RA ratio factor r SHALL be defined in both standards.
+
+# Web App API Design
+
+* / -> Leads nowhere
+  * /api -> Leads to backend API functionality
+  * /web -> Leads to frontend web serving functionality
+
+# Database Schema
+
+Database "Metadata" - A database that will containe
