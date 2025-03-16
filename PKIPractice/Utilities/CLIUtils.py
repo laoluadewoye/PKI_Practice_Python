@@ -362,7 +362,7 @@ Examples:
         )
 
     # Check if there is a proper argument for the manual settings or if it's just one argument
-    only_auto_or_default: bool = args.manual_config_fp is not None or args.default_mode_on
+    only_auto_or_default: bool = args.manual_config_fp is None or args.default_mode_on
     if only_auto_or_default:
         manual_exists: bool = True
     else:
