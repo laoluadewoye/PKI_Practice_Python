@@ -8,7 +8,7 @@ from queue import PriorityQueue
 from os.path import abspath, dirname, join
 from typing import Union
 from cryptography.hazmat.primitives.asymmetric import rsa, ec
-from .SimUtils import hash_info, get_random_country, get_random_division, create_private_key
+from .SimUtils import hash_info, get_random_country_abbrv, get_random_division, create_private_key
 from .Certificate import PKICertificate
 
 script_dir = dirname(abspath(__file__))
@@ -190,7 +190,7 @@ class PKIHolder:
         if has_holder_info and 'country' in holder_config['holder_info'].keys():
             country = holder_config['holder_info']['country']
         else:
-            country = get_random_country()
+            country = get_random_country_abbrv()
 
         if has_holder_info and 'state' in holder_config['holder_info'].keys():
             state = holder_config['holder_info']['state']
