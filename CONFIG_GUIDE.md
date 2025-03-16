@@ -56,10 +56,13 @@ guide this reading.
    is kept during runtime, and at the end or throughout the program, those logs can be saved as a CSV file. The
    filepath that is passed must be at least eight characters long and can either be a relative or absolute filepath.
    This detail is specified by the `log_save_filepath` parameter.
-7) The last detail is how long the program should run. This detail is specified using the `runtime` parameter and must
+7) The 12th detail is how long the program should run. This detail is specified using the `runtime` parameter and must
    be specified in the **HH:MM:SS** time format, or the word "none" in all lowercase.
+8) The last detail is where the database files from the program should be saved. This program uses SQLite databases to
+   manage information during the simulation. The filepath that is passed must be at least eight characters long and can
+   either be a relative or absolute filepath. This detail is specified by the `db_folder_path` parameter.
 
-These twelve details are the only settings needed to run a PKI network simulation. However, if you wish for more 
+These thirteen details are the settings needed to run a PKI network simulation. However, if you wish for more 
 detail, you can also create a manual configuration file.
 
 # Manual Configuration

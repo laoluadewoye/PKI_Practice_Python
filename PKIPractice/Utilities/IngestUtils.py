@@ -196,6 +196,23 @@ def validate_settings_auto(settings: dict) -> bool:
               'Please fix this in the autoconfiguration file.')
         return False
 
+    # Checking if a proper database folder path is passed for the program.
+    if 'db_folder_path' not in settings.keys():
+        print('The filepath for saving database files is not existent. Please add that to the autoconfiguration file.')
+        return False
+
+    if len(settings['db_folder_path']) < 7:
+        print('The filepath for saving database files is too short to be valid. '
+              'File paths need to be at least 7 characters long. '
+              'Please fix that in the autoconfiguration file.')
+        return False
+
+    if not bool(re.match(r'[\w/\\]', settings['db_folder_path'][-1])):
+        print('Ending of database folder path is not valid. '
+              'The end of the provided path must the last letter in the name or a slash to indicate a folder. '
+              'Please fix this in the autoconfiguration file.')
+        return False
+
     return True
 
 
