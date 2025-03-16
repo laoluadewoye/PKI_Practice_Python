@@ -46,7 +46,8 @@ def get_default_auto() -> dict:
         "cooldown_durs": ["none", "5", "5", "5"],
         "timeout_durs": ["none", "20", "20", "20"],
         "runtime": "00:30:00",
-        "log_save_filepath": "output/saved_network_logs_default.csv"
+        "log_save_filepath": "output/saved_network_logs_default.csv",
+        "db_folder_path": "output/database"
     }
 
     return auto_config

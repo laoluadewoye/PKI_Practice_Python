@@ -1,3 +1,11 @@
+"""
+Module used for defining the REST API for the Flask web app.
+
+Global Attributes:
+    APP: The flask application to serve.
+    APP_DATABASE: The PKIDatabase object that will be creating and passed in.
+"""
+
 from waitress import serve
 from flask import Flask, send_from_directory
 from threading import Event, Thread
@@ -30,10 +38,17 @@ def start_socket() -> None:
     serve(APP, listen='0.0.0.0:5000')
 
 
-def start_socket_thread(stop_event: Event, db_object: PKIDatabase) -> None:
+def start_socket_thread(stop_event: Event, db_folder_path: str = 'pki_database') -> None:
+    """
+    Sets the database and starts the web server using a separate thread.
+
+    Args:
+        stop_event: Event - The event to stop the thread on.
+        db_folder_path: str - Where to store the PKIDatabase object contents.
+    """
     # Set the database to be the db_object passed in
     global APP_DATABASE
-    APP_DATABASE = db_object
+    APP_DATABASE = PKIDatabase(db_folder_path)
 
     # Start the serving the WGSI application
     server_thread = Thread(target=start_socket, daemon=True)

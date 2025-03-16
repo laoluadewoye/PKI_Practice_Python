@@ -16,5 +16,6 @@
     "cooldown_durs": ["none", "5", "5", "5"],
     "timeout_durs": ["none", "20", "20", "20"],
     "runtime": "00:30:00",
-    "log_save_filepath": "output/saved_network_logs_json.csv"
+    "log_save_filepath": "output/saved_network_logs_json.csv",
+    "db_folder_path": "output/database"
 }

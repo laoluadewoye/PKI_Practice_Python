@@ -144,8 +144,9 @@ class PKINetwork:
         # Unique identifier
         self.network_name: str = name
 
-        # Log filepath
+        # Runtime saving locations
         self.log_save_fp: str = auto_config['log_save_filepath']
+        self.db_folder_path: str = auto_config['db_folder_path']
 
         # Network counts
         self.network_level_count: int = auto_config['level_count']
@@ -336,16 +337,15 @@ class PKINetwork:
         Starts the network until the user says otherwise.
         """
         # TODO: Create A SQL database
-        # TODO: Fix error with flask not working with Python 3.8
         # TODO: Create GUI web app thread to start here
         # TODO: Create tests for the new module
-
-        # Start a database
-
-
         # Start the website
         website_stop_event = threading.Event()
-        website_socket_thread = threading.Thread(target=start_socket_thread, args=(website_stop_event,), daemon=True)
+
+        # TODO: Add additional configuration setting for database saving
+        website_socket_thread = threading.Thread(
+            target=start_socket_thread, args=(website_stop_event, self.db_folder_path, ), daemon=True
+        )
         website_socket_thread.start()
 
         # Create a time limit

@@ -782,7 +782,20 @@ statuses, and checking certificate statuses for lower levels.
       nearest whole number that is greater than the result.
    3) The RA ratio factor r SHALL be defined in both standards.
 
-# Web App API Design
+# Web App API Design and Database Schema
+
+Strategies:
+
+1) Core Python program and frontend will use REST API to interact with SQLite database.
+2) Core Python program will directly connect to SQLite database and frontend will use REST API to interact with 
+   SQLite database.
+
+Assuming everything will be happening in real time, asyncio would likely have to be used. In addition, option two
+may be the better choice as everything will only have to work through the REST API. Having the Python program also
+have access may create some sort of weird race condition where the Python program updates the database at the same time
+the REST API is trying to access the database. 
+
+
 
 * / -> Leads nowhere
   * /api -> Leads to backend API functionality
@@ -790,4 +803,4 @@ statuses, and checking certificate statuses for lower levels.
 
 # Database Schema
 
-Database "Metadata" - A database that will containe
+Database "Metadata" - A database that will contain

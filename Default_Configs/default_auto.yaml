@@ -87,3 +87,8 @@ runtime: "00:30:00"
 # All values must be string filepaths that end in ".csv" as CSV is the only supported output.
 # Please ensure the filepath has a descriptive file name. Relative and Absolute paths are allowed.
 log_save_filepath: output/saved_network_logs_yaml.csv
+
+# This parameter specifies where the database files from the program save.
+# All values must be string folder paths.
+# Please ensure the folder path has a descriptive name. Relative and Absolute paths are allowed.
+db_folder_path: output/database
