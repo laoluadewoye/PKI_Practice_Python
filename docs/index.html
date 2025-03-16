@@ -782,9 +782,12 @@ Authorities and End-Certificate devices where communication between end devices 
 a Public Key Infrastructure. The supported formats are YAML, JSON, TOML, and XML. The final output of this program is
 a CSV log file saved in a dedicated "output" folder, but during it&#8217;s run time you should be able to view all the action
 printed out in the terminal (and maybe even a GUI once I finish the program itself).</p></div>
-<div class="paragraph"><p>This program is developed in Python 3.12, but has support for Python 3.8-3.14. Currently, the only drawback is that any
+<div class="paragraph"><p>This program is developed in Python 3.12, but has support for Python 3.9-3.14. Currently, the only drawback is that any
 interpreter that is earlier than Python 3.10 is unable to use YAML files for configuration, and will have to use one of
 the other three supported formats. The code will let you know that.</p></div>
+<div class="paragraph"><p><em>Note: Support for Python 3.8 had to be dropped around March 2025 due to the latest version of waitress that Python 3.8
+supported containing numerous critical CVEs. It would not be worth it to open up users to DoS attacks just to have
+fun with this project.</em></p></div>
 <div class="paragraph"><p>Use the <strong>NOTES</strong> link at the top to get a deeper idea about what this project is about, and the <strong>CONFIG_GUIDE</strong> link
 at the top to understand how to create the configuration files yourself.</p></div>
 <div class="paragraph"><p>Below are basic instructions on how to install the project and use it, whether that be from the command line, a Python
@@ -817,6 +820,25 @@ the following sections show you how to install to either your local environment 
 <h2 id="_usage">Usage</h2>
 <div class="sectionbody">
 <div class="sect2">
+<h3 id="_core_options">Core options</h3>
+<div class="paragraph"><p>This is a completely option-based command line program. You will use the options to specify what files you are passing
+into the program</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<code>-a</code> or <code>--auto</code>: Pass in an autoconfiguration file.
+</p>
+</li>
+<li>
+<p>
+<code>-m</code> or <code>--manual</code>: Pass in a manual configuration file.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>The autoconfiguration file is the main requirement for the program to work, and without it or a default setting
+discussed below, the program will exit itself out.</p></div>
+</div>
+<div class="sect2">
 <h3 id="_don_8217_t_have_configurations_and_additional_options">Don&#8217;t have configurations? And additional options</h3>
 <div class="paragraph"><p>No worries! There are some options you can pass instead of the files I use for examples below.</p></div>
 <div class="ulist"><ul>
@@ -847,14 +869,14 @@ as arguments and experiment with them to your heart&#8217;s content.</p></div>
 <div class="sect2">
 <h3 id="_running_in_an_ide_from_project_root">Running in an IDE from project root</h3>
 <div class="paragraph"><p>Command Structure: python PKIPractice/RunConfig.py <em>(arguments)</em></p></div>
-<div class="paragraph"><p>Command Example: <code>python PKIPractice/RunConfig.py config_files/config_auto.json config_files/config_manual.json</code></p></div>
+<div class="paragraph"><p>Command Example: <code>python PKIPractice/RunConfig.py -a config_files/config_auto.json -m config_files/config_manual.json</code></p></div>
 <div class="paragraph"><p>If you&#8217;re in an IDE, chances are you can just set up a run configuration in your app. Make sure to add arguments in
 whatever field you need as I told my program to yell at you if you don&#8217;t.</p></div>
 </div>
 <div class="sect2">
 <h3 id="_running_as_a_command_line_executable_in_cmd_bash_or_powershell">Running as a command line executable in cmd, bash, or powershell</h3>
 <div class="paragraph"><p>Command Structure: run-pki-practice <em>(arguments)</em></p></div>
-<div class="paragraph"><p>Command Example: <code>run-pki-practice config_files/config_auto.json config_files/config_manual.json</code></p></div>
+<div class="paragraph"><p>Command Example: <code>run-pki-practice --auto config_files/config_auto.json --manual config_files/config_manual.json</code></p></div>
 </div>
 <div class="sect2">
 <h3 id="_running_as_a_docker_container_from_the_pulled_docker_image">Running as a Docker Container from the pulled Docker image</h3>
@@ -902,7 +924,7 @@ laoluade/pypkipractice:<em>(tag) (arguments)</em></p></div>
 <strong>config_manual.json</strong>. You wished to expose this information to the docker container, so you can run your own custom
 configuration.</p></div>
 <div class="paragraph"><p>Command Example: <code>docker run -v config_files:/usr/local/app/config_files laoluade/pypkipractice:latest
-config_files/config_auto.json config_files/config_manual.json</code></p></div>
+-a config_files/config_auto.json -m config_files/config_manual.json</code></p></div>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -952,12 +974,12 @@ The last part of the command is the arguments you passed to the command line aft
 <div class="ulist"><ul>
 <li>
 <p>
-<strong>"config_files/config_auto.json"</strong> is the path to the autoconfiguration file.
+<strong>"-a config_files/config_auto.json"</strong> points the auto option to the path to the autoconfiguration file.
 </p>
 </li>
 <li>
 <p>
-<strong>"config_files/config_manual.json"</strong> is the path to the manual configuration file.
+<strong>"-m config_files/config_manual.json"</strong> points the manual option to the path to the manual configuration file.
 </p>
 </li>
 </ul></div>
@@ -1039,7 +1061,7 @@ cellspacing="0" cellpadding="4">
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2025-03-16 02:02:23 UTC
+ 2025-03-16 16:06:34 UTC
 </div>
 </div>
 </body>
