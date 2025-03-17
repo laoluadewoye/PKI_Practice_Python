@@ -120,22 +120,35 @@ def validate_settings_auto(settings: dict) -> bool:
         print('uid_hash, sig_hash, and encrypt_alg.alg are missing from the autoconfiguration file. Please add them.')
         return False
 
+    # TODO: Limit root CA settings to never expire and note that down in CONFIG_GUIDE
     # Checking durations for correct formats
-    for dur in settings['cert_valid_durs']:
-        if not (re.match(r'^[0-9]+:[0-9]{2}:[0-9]{2}$', dur) or dur == 'none'):
-            print(f'"{dur}" is not a valid input for cert_valid_durs. Please fix this in the autoconfiguration file.')
-            return False
+    for i in range(settings['cert_valid_durs']):
+        dur = settings['cert_valid_durs'][i]
+        if i == 0:
+            if dur != 'none':
+                print(f'"{dur}" is not a valid input for root CAs (first number) in '
+                      f'cert_valid_durs. Please fix this in the autoconfiguration file.')
+                return False
+        else:
+            if not (re.match(r'^[0-9]+:[0-9]{2}:[0-9]{2}$', dur) or dur == 'none'):
+                print(
+                    f'"{dur}" is not a valid input for cert_valid_durs. '
+                    f'Please fix this in the autoconfiguration file.')
+                return False
 
+    # TODO: Remove none capability and note that down in CONFIG_GUIDE
     for dur in settings['cache_durs']:
         if not (re.match(r'^[0-9]{2}:[0-9]{2}$', dur) or dur == 'none'):
             print(f'"{dur}" is not a valid input for cache_durs. Please fix this in the autoconfiguration file.')
             return False
 
+    # TODO: Remove none capability and note that down in CONFIG_GUIDE
     for dur in settings['cooldown_durs']:
         if not (re.match(r'^[0-9]+$', dur) or dur == 'none'):
             print(f'"{dur}" is not a valid input for cooldown_durs. Please fix this in the autoconfiguration file.')
             return False
 
+    # TODO: Remove none capability and note that down in CONFIG_GUIDE
     for dur in settings['timeout_durs']:
         if not (re.match(r'^[0-9]+$', dur) or dur == 'none'):
             print(f'"{dur}" is not a valid input for timeout_durs. Please fix this in the autoconfiguration file.')

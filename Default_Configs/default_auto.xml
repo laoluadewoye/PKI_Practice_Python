@@ -62,10 +62,11 @@
     <!--This parameter states the validity durations for each level.-->
     <!--This parameter starts counting for a certificate that has been created. Once time expires, the certificate is
         considered invalid and must be renewed.-->
-    <!--All values must either be none (meaning no limit) or a duration in the format HH:MM:SS.-->
     <!--The left-most value represent the root CA layer and the right-most value represents normal clients
         communicating.-->
-    <!--The number of values in the list must match the level_count parameter.-->
+    <!--The left-most value representing the root CAs must be set to none.-->
+    <!--All other values must either be none (meaning no limit) or a duration in the format HH:MM:SS.-->
+<!--The total number of values in the list must match the level_count parameter.-->
     <cert_valid_durs>none</cert_valid_durs>
     <cert_valid_durs>00:15:00</cert_valid_durs>
     <cert_valid_durs>00:10:00</cert_valid_durs>

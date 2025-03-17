@@ -89,12 +89,7 @@ class PKICertificate:
 
         # Time information
         self.valid_start: datetime = datetime.now()
-        if subject_env_info.cert_valid_dur == 'none':
-            self.valid_end: Union[datetime, None] = None
-        else:
-            hours, minutes, seconds = map(int, subject_env_info.cert_valid_dur.split(":"))
-            delta = timedelta(hours=hours, minutes=minutes, seconds=seconds)
-            self.valid_end: Union[datetime, None] = self.valid_start + delta
+        self.valid_end: datetime = self.valid_start + subject_env_info.cert_valid_dur
 
         # Asymmetric Key information
         self.encryption_alg: dict = subject_env_info.encrypt_alg
@@ -104,7 +99,8 @@ class PKICertificate:
         hashed_content: str = hash_info(self.hash_content, self.signature_alg)
         if isinstance(issuer_priv_key, rsa.RSAPrivateKey):
             self.signature: bytes = issuer_priv_key.sign(
-                hashed_content.encode('utf-8'), PSS(MGF1, PSS.DIGEST_LENGTH), get_hash_func(subject_env_info.sig_hash)
+                hashed_content.encode('utf-8'), PSS(MGF1(get_hash_func(subject_env_info.sig_hash)), PSS.DIGEST_LENGTH),
+                get_hash_func(subject_env_info.sig_hash)
             )
         elif isinstance(issuer_priv_key, ec.EllipticCurvePrivateKey):
             self.signature: bytes = issuer_priv_key.sign(
@@ -142,21 +138,25 @@ class PKICertificate:
         self.crypto_cert = x509.CertificateBuilder()
         self.crypto_cert = self.crypto_cert.subject_name(subject)
         self.crypto_cert = self.crypto_cert.issuer_name(issuer)
-        self.crypto_cert = self.crypto_cert.public_key(subject_pub_key)
+        self.crypto_cert = self.crypto_cert.public_key(self.subject_pub_key)
         self.crypto_cert = self.crypto_cert.serial_number(int(self.serial_number, 16))
         self.crypto_cert = self.crypto_cert.not_valid_before(self.valid_start)
-        if self.valid_end is None:
-            self.crypto_cert = self.crypto_cert.not_valid_after(datetime.max)
-        else:
-            self.crypto_cert = self.crypto_cert.not_valid_after(self.valid_end)
+        self.crypto_cert = self.crypto_cert.not_valid_after(self.valid_end)
         self.crypto_cert = self.crypto_cert.add_extension(
             x509.SubjectAlternativeName([x509.DNSName(subject_info.url)]),
             critical=False
         )
+        self.crypto_cert = self.crypto_cert.add_extension(
+            x509.SubjectKeyIdentifier.from_public_key(self.subject_pub_key),
+            critical=False
+        )
+        if issuer_chain is not None:
+            self.crypto_cert = self.crypto_cert.add_extension(
+                x509.AuthorityKeyIdentifier.from_issuer_public_key(self.issuer_chain[-2].subject_pub_key),
+                critical=False
+            )
 
-        # TODO: Add test to ensure this works
         try:
-            # self.crypto_cert = self.crypto_cert.sign(issuer_priv_key, get_hash_func('blake2b'))
             self.crypto_cert = self.crypto_cert.sign(issuer_priv_key, get_hash_func(subject_env_info.sig_hash))
             self.error = None
         except UnsupportedAlgorithm as e:

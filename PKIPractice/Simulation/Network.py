@@ -6,7 +6,7 @@ Module used for defining the network class and it's functionality.
 import sys
 import time
 import datetime
-import threading
+from threading import Thread, Event
 from queue import Queue
 from os import makedirs
 from os.path import abspath, dirname, join, exists
@@ -341,11 +341,12 @@ class PKINetwork:
         # TODO: Create tests for the new module
 
         # Start the website
-        website_stop_event = threading.Event()
+        website_stop_event = Event()
 
         # TODO: Add additional configuration setting for database saving
-        website_socket_thread = threading.Thread(
-            target=start_socket_thread, args=(website_stop_event, self.db_folder_path, ), daemon=True
+        website_socket_thread = Thread(
+            name='pki_socket', target=start_socket_thread, args=(website_stop_event, self.db_folder_path,),
+            daemon=True
         )
         website_socket_thread.start()
 
@@ -359,9 +360,20 @@ class PKINetwork:
         end_time = datetime.datetime.now() + delta
 
         # Create additional threads
+        main_holder_stop_event = Event()
+        all_holders = self.get_network()
+        all_holder_threads = [
+            Thread(
+                name=f'{holder.holder_name}_thread', target=holder.start_holder, args=(main_holder_stop_event,),
+                daemon=True
+            ) for holder in all_holders
+        ]
+        for thread in all_holder_threads:
+            thread.start()
 
         # Start runtime loop
         while datetime.datetime.now() < end_time:
             time.sleep(1)
 
         website_stop_event.set()
+        main_holder_stop_event.set()

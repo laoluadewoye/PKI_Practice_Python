@@ -44,7 +44,7 @@ guide this reading.
       certificate or their own certificate. This setting must be a decimal value _inclusively_ between 0 and 1.
       Inclusively means that it can also be 0 and 1, but it cannot be outside the range any more than that.
    2) `cert_valid_durs` is the detail that states how long the certificate's validity would last for. It can either
-      be a time in the **HH:MM:SS** time format, or the word "none" in all lowercase.
+      be a time in the **HH:MM:SS** time format, or the word "none" in all lowercase. The first number (setting for root CAs) MUST BE NONE.
    3) `cache_durs` is the detail that states how long a validated certificate would reside in the local holder's
       certificate cache. It can either be a time in the **MM:SS** time format, or the word "none" in all lowercase.
    4) `cooldown_durs` is the detail that states how long a holder would wait before trying to send another message

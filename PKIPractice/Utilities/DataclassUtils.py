@@ -3,6 +3,7 @@ Module used for dataclass logic to store related information in each Holder.
 """
 
 from dataclasses import dataclass
+from datetime import timedelta
 
 
 @dataclass
@@ -16,10 +17,10 @@ class HOLDER_ENV_INFO:
         sig_hash (str): The hashed signature associated with the holder.
         encrypt_alg (dict): A dictionary representing the encryption algorithm(s) used.
         revoc_prob (float): The probability of the certificate being revoked.
-        cert_valid_dur (str): The duration for which the certificate is valid.
-        cache_dur (str): The duration for which data is cached.
-        cooldown_dur (str): The cooldown duration between certain operations.
-        timeout_dur (str): The duration after which an operation times out.
+        cert_valid_dur (timedelta): The duration for which the certificate is valid.
+        cache_dur (timedelta): The duration for which data is cached.
+        cooldown_dur (timedelta): The cooldown duration between certain operations.
+        timeout_dur (timedelta): The duration after which an operation times out.
     """
 
     level: int
@@ -27,10 +28,10 @@ class HOLDER_ENV_INFO:
     sig_hash: str
     encrypt_alg: dict
     revoc_prob: float
-    cert_valid_dur: str
-    cache_dur: str
-    cooldown_dur: str
-    timeout_dur: str
+    cert_valid_dur: timedelta
+    cache_dur: timedelta
+    cooldown_dur: timedelta
+    timeout_dur: timedelta
 
 
 @dataclass

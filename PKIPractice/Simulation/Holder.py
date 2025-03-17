@@ -1,16 +1,19 @@
 """
 Module used for defining the holder class and it's functionality.
 """
-
+import random
 # Relative pathing from project root
-import sys
 from queue import PriorityQueue
-from os.path import abspath, dirname, join
 from typing import Union
+from threading import Event
+from datetime import datetime, timedelta
+from random import uniform, seed
 from cryptography.hazmat.primitives.asymmetric import rsa, ec
 from .SimUtils import hash_info, get_random_country_abbrv, get_random_division, create_private_key
 from .Certificate import PKICertificate
 
+import sys
+from os.path import abspath, dirname, join
 script_dir = dirname(abspath(__file__))
 
 if script_dir in ['PKI_Practice', 'PKI Practice', 'app']:
@@ -104,21 +107,30 @@ class PKIHolder:
             cert_valid_dur = holder_config['env_overrides']['cert_valid_dur']
         else:
             cert_valid_dur = auto_config['cert_valid_durs'][level-1]
+        if cert_valid_dur == 'none':
+            cert_valid_dur = timedelta.max
+        else:
+            hours, minutes, seconds = map(int, cert_valid_dur.split(":"))
+            cert_valid_dur = timedelta(hours=hours, minutes=minutes, seconds=seconds)
 
         if has_env_overrides and 'cache_dur' in holder_config['env_overrides'].keys():
             cache_dur = holder_config['env_overrides']['cache_dur']
         else:
             cache_dur = auto_config['cache_durs'][level-1]
+        minutes, seconds = map(int, cache_dur.split(":"))
+        cache_dur = timedelta(minutes=minutes, seconds=seconds)
 
         if has_env_overrides and 'cooldown_dur' in holder_config['env_overrides'].keys():
             cooldown_dur = holder_config['env_overrides']['cooldown_dur']
         else:
             cooldown_dur = auto_config['cooldown_durs'][level-1]
+        cooldown_dur = timedelta(seconds=int(cooldown_dur))
 
         if has_env_overrides and 'timeout_dur' in holder_config['env_overrides'].keys():
             timeout_dur = holder_config['env_overrides']['timeout_dur']
         else:
             timeout_dur = auto_config['timeout_durs'][level-1]
+        timeout_dur = timedelta(seconds=int(timeout_dur))
 
         self.env_info: HOLDER_ENV_INFO = HOLDER_ENV_INFO(
             level=level, uid_hash=uid_hash, sig_hash=sig_hash, encrypt_alg=encrypt_alg, revoc_prob=revoc_prob,
@@ -254,17 +266,17 @@ class PKIHolder:
 
         # Creating certificate variables
         self.holder_cert: Union[PKICertificate, None] = None
-        self.root_certs: dict = {}
-        self.cached_certs: dict = {}
+        self.root_certs: dict[str, PKICertificate] = {}
+        self.cached_certs: dict[str, tuple[datetime, PKICertificate]] = {}
 
         # Create ports for receiving information
         self.csr_message_port: PriorityQueue = PriorityQueue()
         self.reg_message_port: PriorityQueue = PriorityQueue()
         self.ocsp_message_port: PriorityQueue = PriorityQueue()
 
-        # Create flags
-        self.has_root_cert_cache: bool = False
+        # Create flags and other information
         self.has_self_cert: bool = False
+        self.fresh_self_cert: bool = False
         self.need_new_cert: bool = False
         self.cached_certs_empty: bool = False
 
@@ -276,6 +288,7 @@ class PKIHolder:
 
         self.waiting_for_ocsp_response: bool = False
         self.waiting_to_send_oscp: bool = False
+        self.last_oscp_validation: int = 0
 
         # Create hub connection
         self.network_hub = None
@@ -353,6 +366,7 @@ class PKIHolder:
         if self.holder_cert is not None:
             message: str = 'The root CA ' + self.holder_name + ' has signed their own certificate.'
             self.send_log('PKI', True, 'Generation', 'Certificate', message)
+            self.has_self_cert = True
             return self.holder_cert
 
         return None
@@ -370,3 +384,42 @@ class PKIHolder:
 
         message: str = self.holder_name + ' has added the certificate of ' + root_url + ' to root cache store.'
         self.send_log('PKI', True, 'Addition', 'Certificate', message)
+
+    def start_holder(self, main_stop_event: Event) -> None:
+        while not main_stop_event.is_set():
+            # Seed the RNG for this turn
+            seed(datetime.now().timestamp())
+
+            # Check if self certificate exist
+            if not self.has_self_cert:
+                ...
+                # If not, create a CSR and send it to the hub
+
+                # When getting the response, validate the certificate signature and use chain of trust to validate more
+                # When using chain of trust, do a signature check and an OCSP check. Save other certificates that pass
+
+                # If it is not, skip the rest of this turn and try again
+
+                # If it is, save the certificate as own
+                # Turn on a temporary fresh cert flag
+                self.fresh_self_cert = True
+
+            # Check if self certificate is still valid with time comparison and RNG
+            random_revoc = uniform(0, 1) < self.env_info.revoc_prob
+            expired_cert = datetime.now() > self.holder_cert.valid_end
+            if not self.fresh_self_cert and (random_revoc or expired_cert):
+                # Revoke/Get renewed certificate and communicate that
+                ...
+
+            # Turn off flag as it is not needed for the next turn
+            self.fresh_self_cert = False
+
+            # Check if there have been any messages in the OSCP port (Validity request answers)
+
+            # Check if there have been any messages in the CSR port (Certificate signing requests comms)
+
+            # Check if certificates in certificate cache are still valid
+            # Send out OCSP requests but only after a specific amount of time
+            for cert_name, cert_contents in self.cached_certs.items():
+                if datetime.now() > cert_contents[0] + self.env_info.cache_dur:
+                    ...

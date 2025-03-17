@@ -51,7 +51,7 @@ def start_socket_thread(stop_event: Event, db_folder_path: str = 'pki_database')
     APP_DATABASE = PKIDatabase(db_folder_path)
 
     # Start the serving the WGSI application
-    server_thread = Thread(target=start_socket, daemon=True)
+    server_thread = Thread(name='witness_server', target=start_socket, daemon=True)
     server_thread.start()
 
     while not stop_event.is_set():
