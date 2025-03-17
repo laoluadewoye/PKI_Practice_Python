@@ -135,7 +135,6 @@ def validate_settings_auto(settings: dict) -> bool:
                     f'Please fix this in the autoconfiguration file.')
                 return False
 
-    # TODO: Enforce none for root and amounts for others and note that down in CONFIG_GUIDE
     for i in range(len(settings['cache_durs'])):
         dur = settings['cache_durs'][i]
         if i == 0:
@@ -144,21 +143,19 @@ def validate_settings_auto(settings: dict) -> bool:
                       f'cert_valid_durs. Please fix this in the autoconfiguration file.')
                 return False
         else:
-            if not re.match(r'^[0-9]+:[0-9]{2}:[0-9]{2}$', dur):
+            if not re.match(r'^[0-9]{2}:[0-9]{2}$', dur):
                 print(
                     f'"{dur}" is not a valid input for cert_valid_durs. '
                     f'Please fix this in the autoconfiguration file.')
                 return False
 
-    # TODO: Remove none capability and note that down in CONFIG_GUIDE
     for dur in settings['cooldown_durs']:
-        if not (re.match(r'^[0-9]+$', dur) or dur == 'none'):
+        if not re.match(r'^[0-9]+$', dur):
             print(f'"{dur}" is not a valid input for cooldown_durs. Please fix this in the autoconfiguration file.')
             return False
 
-    # TODO: Remove none capability and note that down in CONFIG_GUIDE
     for dur in settings['timeout_durs']:
-        if not (re.match(r'^[0-9]+$', dur) or dur == 'none'):
+        if not re.match(r'^[0-9]+$', dur):
             print(f'"{dur}" is not a valid input for timeout_durs. Please fix this in the autoconfiguration file.')
             return False
 

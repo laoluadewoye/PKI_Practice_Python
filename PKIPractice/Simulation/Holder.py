@@ -117,8 +117,11 @@ class PKIHolder:
             cache_dur = holder_config['env_overrides']['cache_dur']
         else:
             cache_dur = auto_config['cache_durs'][level-1]
-        minutes, seconds = map(int, cache_dur.split(":"))
-        cache_dur = timedelta(minutes=minutes, seconds=seconds)
+        if cert_valid_dur == 'none':
+            cache_dur = timedelta(seconds=0)
+        else:
+            minutes, seconds = map(int, cache_dur.split(":"))
+            cache_dur = timedelta(minutes=minutes, seconds=seconds)
 
         if has_env_overrides and 'cooldown_dur' in holder_config['env_overrides'].keys():
             cooldown_dur = holder_config['env_overrides']['cooldown_dur']

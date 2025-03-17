@@ -63,18 +63,18 @@ cache_durs = ["none", "11:00", "06:00", "01:00"]
 # This parameter states the message cooldown durations for each level.
 # This parameter starts counting after a rejection or unexpected response. Once time expires, a new message may be
 #     tried again.
-# All values must either be none (meaning no limit) or a number in seconds.
+# All values must be a number in seconds.
 # The left-most value represent the root CA layer and the right-most value represents normal clients communicating.
 # The number of values in the list must match the level_count parameter.
-cooldown_durs = ["none", "5", "5", "5"]
+cooldown_durs = ["5", "5", "5", "5"]
 
 # This parameter states the timeout durations for each level.
 # This parameter starts counting once a message of any kind is sent and the holder is waiting for a response. Once time
 #     expires, the message is considered lost and failed.
-# All values must either be none (meaning no limit) or a number in seconds.
+# All values must be a number in seconds.
 # The left-most value represent the root CA layer and the right-most value represents normal clients communicating.
 # The number of values in the list must match the level_count parameter.
-timeout_durs = ["none", "20", "20", "20"]
+timeout_durs = ["20", "20", "20", "20"]
 
 # This parameter states how long the program will run for.
 # This parameter starts counting the moment all holders, the hub, and the underlying network start running.

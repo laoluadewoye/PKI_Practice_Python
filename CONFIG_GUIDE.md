@@ -50,10 +50,9 @@ guide this reading.
       certificate cache. The first number (setting for root CAs) MUST BE NONE. All other numbers must be a time in the 
       **MM:SS** time format.
    4) `cooldown_durs` is the detail that states how long a holder would wait before trying to send another message
-      after a rejection or unexpected response. It can either be a number in seconds, or the word "none" in all
-      lowercase.
-   5) `timeout_durs` is the detail that states how long a holder would wait before timing out a sent message. It can 
-      either be a number in seconds, or the word "none" in all lowercase.
+      after a rejection or unexpected response. It must be a number in seconds.
+   5) `timeout_durs` is the detail that states how long a holder would wait before timing out a sent message. It must 
+      be a number in seconds.
 6) The 11th detail is where the information generated during the program should be saved. A log of every network action
    is kept during runtime, and at the end or throughout the program, those logs can be saved as a CSV file. The
    filepath that is passed must be at least eight characters long and can either be a relative or absolute filepath.
