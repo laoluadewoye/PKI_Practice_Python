@@ -286,6 +286,7 @@ class PKIHolder:
         self.waiting_for_reg_response: bool = False
         self.waiting_to_send_reg: bool = False
 
+        # TODO: Update docuscripts with validation var
         self.waiting_for_ocsp_response: bool = False
         self.waiting_to_send_oscp: bool = False
         self.last_oscp_validation: int = 0

@@ -58,9 +58,10 @@ cert_valid_durs: ["none", "00:15:00", "00:10:00", "00:05:00"]
 # This parameter states the regular cache durations for each level.
 # This parameter starts counting for a certificate that has been added to the cache. Once time expires, the certificate
 #     information is considered old and must be reexamined for validity.
-# All values must either be none (meaning no limit) or a duration in the format MM:SS.
 # The left-most value represent the root CA layer and the right-most value represents normal clients communicating.
-# The number of values in the list must match the level_count parameter.
+# The left-most value representing the root CAs must be set to none.
+# All other values must either be a duration in the format MM:SS.
+# The total number of values in the list must match the level_count parameter.
 cache_durs: ["none", "11:00", "06:00", "01:00"]
 
 # This parameter states the message cooldown durations for each level.
