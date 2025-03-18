@@ -69,18 +69,17 @@ be 0 and 1, but it cannot be outside the range any more than that.</li>
 <li><code>cert_valid_durs</code> is the detail that states how long the
 certificate’s validity would last for. It can either be a time in the
 <strong>HH:MM:SS</strong> time format, or the word “none” in all
-lowercase.</li>
+lowercase. The first number (setting for root CAs) MUST BE NONE.</li>
 <li><code>cache_durs</code> is the detail that states how long a
 validated certificate would reside in the local holder’s certificate
-cache. It can either be a time in the <strong>MM:SS</strong> time
-format, or the word “none” in all lowercase.</li>
+cache. The first number (setting for root CAs) MUST BE NONE. All other
+numbers must be a time in the <strong>MM:SS</strong> time format.</li>
 <li><code>cooldown_durs</code> is the detail that states how long a
 holder would wait before trying to send another message after a
-rejection or unexpected response. It can either be a number in seconds,
-or the word “none” in all lowercase.</li>
+rejection or unexpected response. It must be a number in seconds.</li>
 <li><code>timeout_durs</code> is the detail that states how long a
-holder would wait before timing out a sent message. It can either be a
-number in seconds, or the word “none” in all lowercase.</li>
+holder would wait before timing out a sent message. It must be a number
+in seconds.</li>
 </ol></li>
 <li>The 11th detail is where the information generated during the
 program should be saved. A log of every network action is kept during
