@@ -15,8 +15,8 @@
             "revoc_prob": 0.0,
             "cert_valid_dur": "none",
             "cache_dur": "none",
-            "cooldown_dur": "none",
-            "timeout_dur": "none"
+            "cooldown_dur": "10",
+            "timeout_dur": "40"
         },
         "holder_type_info": {
             "hardware_type": "endpoint",

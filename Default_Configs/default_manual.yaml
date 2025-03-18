@@ -32,8 +32,8 @@ default_root_ca: {
         revoc_prob: 0.0,
         cert_valid_dur: "none",
         cache_dur: "none",
-        cooldown_dur: "none",
-        timeout_dur: "none"
+        cooldown_dur: "10",
+        timeout_dur: "40"
     },
 
     # This sets the hardware, software, and account information for the holder. Without this, the information will be

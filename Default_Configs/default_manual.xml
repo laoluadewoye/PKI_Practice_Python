@@ -33,8 +33,8 @@
 			<revoc_prob>0.0</revoc_prob>
 			<cert_valid_dur>none</cert_valid_dur>
 			<cache_dur>none</cache_dur>
-			<cooldown_dur>none</cooldown_dur>
-			<timeout_dur>none</timeout_dur>
+			<cooldown_dur>10</cooldown_dur>
+			<timeout_dur>40</timeout_dur>
 		</env_overrides>
 
 		<!--This sets the hardware, software, and account information for the holder. Without this, the information

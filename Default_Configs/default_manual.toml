@@ -24,8 +24,8 @@ sig_hash = "sha3_512"
 revoc_prob = 0.0
 cert_valid_dur = "none"
 cache_dur = "none"
-cooldown_dur = "none"
-timeout_dur = "none"
+cooldown_dur = "10"
+timeout_dur = "40"
 
 [default_root_ca.env_overrides.encrypt_alg]
 alg = "ecc"

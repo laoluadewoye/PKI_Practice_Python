@@ -118,7 +118,7 @@ class PKIHolder:
             cache_dur = holder_config['env_overrides']['cache_dur']
         else:
             cache_dur = auto_config['cache_durs'][level-1]
-        if cert_valid_dur == 'none':
+        if cache_dur == 'none':
             cache_dur = timedelta(seconds=0)
         else:
             minutes, seconds = map(int, cache_dur.split(":"))
