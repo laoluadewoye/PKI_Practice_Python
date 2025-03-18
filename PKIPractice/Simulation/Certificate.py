@@ -2,13 +2,11 @@
 Module used for defining the certificate class and it's functionality.
 """
 
-import sys
 import random
 import string
 from copy import deepcopy
 from datetime import datetime, timedelta
 from typing import Union
-from os.path import abspath, dirname, join
 from cryptography.hazmat.primitives.asymmetric import rsa, ec
 from cryptography.hazmat.primitives.asymmetric.padding import PSS, MGF1
 from cryptography.hazmat.primitives import serialization
@@ -16,8 +14,9 @@ from cryptography import x509
 from cryptography.exceptions import UnsupportedAlgorithm
 from .SimUtils import hash_info, get_hash_func
 
+import sys
+from os.path import abspath, dirname, join
 script_dir = dirname(abspath(__file__))
-
 if script_dir in ['PKI_Practice', 'PKI Practice', 'app']:
     sys.path.append(abspath(script_dir))
 elif script_dir == 'PKIPractice':

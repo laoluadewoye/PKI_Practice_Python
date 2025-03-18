@@ -4,12 +4,9 @@ Module for testing configuration ingestion utilities.
 
 import unittest
 
-# Relative pathing from project root
 import sys
 from os.path import curdir, abspath, basename, dirname, join
-
 script_dir = dirname(abspath(__file__))
-
 if script_dir in ['PKI_Practice', 'PKI Practice', 'app']:
     sys.path.append(abspath(script_dir))
 elif script_dir == 'PKIPractice':
@@ -17,7 +14,6 @@ elif script_dir == 'PKIPractice':
 else:
     sys.path.append(abspath(join(script_dir, '../..')))
 
-# Personal Modules must be imported after the system path is modified.
 from PKIPractice.Utilities.IngestUtils import parse_config_auto, parse_config_manual
 from PKIPractice.Utilities.CLIUtils import get_default_auto, get_default_manual
 

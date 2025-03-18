@@ -1,8 +1,7 @@
 """
 Module used for defining the holder class and it's functionality.
 """
-import random
-# Relative pathing from project root
+
 from queue import PriorityQueue
 from typing import Union
 from time import sleep
@@ -16,7 +15,6 @@ from .Certificate import PKICertificate
 import sys
 from os.path import abspath, dirname, join
 script_dir = dirname(abspath(__file__))
-
 if script_dir in ['PKI_Practice', 'PKI Practice', 'app']:
     sys.path.append(abspath(script_dir))
 elif script_dir == 'PKIPractice':

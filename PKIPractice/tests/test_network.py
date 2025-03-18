@@ -5,17 +5,14 @@ Module for testing the network class.
 import unittest
 import time
 import tempfile
-from threading import active_count, enumerate
+from threading import enumerate
 from datetime import datetime
 from typing import List
 from argparse import ArgumentParser
 
-# Relative pathing from project root
 import sys
 from os.path import abspath, dirname, join, exists
-
 script_dir = dirname(abspath(__file__))
-
 if script_dir in ['PKI_Practice', 'PKI Practice', 'app']:
     sys.path.append(abspath(script_dir))
 elif script_dir == 'PKIPractice':
@@ -23,7 +20,6 @@ elif script_dir == 'PKIPractice':
 else:
     sys.path.append(abspath(join(script_dir, '../..')))
 
-# Personal Modules must be imported after the system path is modified.
 from PKIPractice.Utilities.CLIUtils import ingest_config
 from PKIPractice.Simulation.Network import PKINetwork
 from PKIPractice.Simulation.Holder import PKIHolder

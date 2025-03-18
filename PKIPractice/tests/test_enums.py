@@ -7,12 +7,9 @@ import inspect
 import random
 import string
 
-# Relative pathing from project root
 import sys
 from os.path import abspath, dirname, join
-
 script_dir = dirname(abspath(__file__))
-
 if script_dir in ['PKI_Practice', 'PKI Practice', 'app']:
     sys.path.append(abspath(script_dir))
 elif script_dir == 'PKIPractice':
@@ -20,7 +17,6 @@ elif script_dir == 'PKIPractice':
 else:
     sys.path.append(abspath(join(script_dir, '../..')))
 
-# Personal Modules must be imported after the system path is modified.
 from PKIPractice.Utilities import EnumUtils
 
 

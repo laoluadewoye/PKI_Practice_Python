@@ -8,12 +8,9 @@ import random
 import string
 from typing import List
 
-# Relative pathing from project root
 import sys
 from os.path import abspath, dirname, join, basename, curdir
-
 script_dir = dirname(abspath(__file__))
-
 if script_dir in ['PKI_Practice', 'PKI Practice', 'app']:
     sys.path.append(abspath(script_dir))
 elif script_dir == 'PKIPractice':
