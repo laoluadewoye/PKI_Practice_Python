@@ -5,7 +5,8 @@ import random
 # Relative pathing from project root
 from queue import PriorityQueue
 from typing import Union
-from threading import Event
+from time import sleep
+from threading import Thread, Event
 from datetime import datetime, timedelta
 from random import uniform, seed
 from cryptography.hazmat.primitives.asymmetric import rsa, ec
@@ -289,10 +290,8 @@ class PKIHolder:
         self.waiting_for_reg_response: bool = False
         self.waiting_to_send_reg: bool = False
 
-        # TODO: Update docuscripts with validation var
         self.waiting_for_ocsp_response: bool = False
         self.waiting_to_send_oscp: bool = False
-        self.last_oscp_validation: int = 0
 
         # Create hub connection
         self.network_hub = None
@@ -389,7 +388,53 @@ class PKIHolder:
         message: str = self.holder_name + ' has added the certificate of ' + root_url + ' to root cache store.'
         self.send_log('PKI', True, 'Addition', 'Certificate', message)
 
+    def certificate_service(self, main_stop_event: Event) -> None:
+        ...
+
+    def messaging_service(self, main_stop_event: Event) -> None:
+        ...
+
+    def ca_registry_service(self, main_stop_event: Event) -> None:
+        ...
+
+    def ca_response_service(self, main_stop_event: Event) -> None:
+        ...
+
     def start_holder(self, main_stop_event: Event) -> None:
+        ...
+        # Start Certificate Thread
+        cert_thread = Thread(
+            name=f'{self.holder_name}_cert_thread', target=self.certificate_service, args=(main_stop_event,),
+            daemon=True
+        )
+        cert_thread.start()
+
+        # Start Regular Messaging Thread
+        msg_thread = Thread(
+            name=f'{self.holder_name}_msg_thread', target=self.messaging_service, args=(main_stop_event,),
+            daemon=True
+        )
+        msg_thread.start()
+
+        # Start CA Registry Thread
+        ca_reg_thread = Thread(
+            name=f'{self.holder_name}_ca_reg_thread', target=self.ca_registry_service, args=(main_stop_event,),
+            daemon=True
+        )
+        ca_reg_thread.start()
+
+        # Start CA Response Thread
+        ca_rsp_thread = Thread(
+            name=f'{self.holder_name}_ca_rsp_thread', target=self.ca_response_service, args=(main_stop_event,),
+            daemon=True
+        )
+        ca_rsp_thread.start()
+
+        while not main_stop_event.is_set():
+            sleep(1)
+
+    def old_start_holder(self, main_stop_event: Event) -> None:
+        # Start CA Threads here
         while not main_stop_event.is_set():
             # Seed the RNG for this turn
             seed(datetime.now().timestamp())
@@ -425,5 +470,7 @@ class PKIHolder:
             # Check if certificates in certificate cache are still valid
             # Send out OCSP requests but only after a specific amount of time
             for cert_name, cert_contents in self.cached_certs.items():
-                if datetime.now() > cert_contents[0] + self.env_info.cache_dur:
+                if datetime.now() - cert_contents[0] > self.env_info.cache_dur:
                     ...
+
+            # Check if there have been any messages in the regular message port

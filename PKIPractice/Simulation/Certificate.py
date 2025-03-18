@@ -6,7 +6,7 @@ import sys
 import random
 import string
 from copy import deepcopy
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Union
 from os.path import abspath, dirname, join
 from cryptography.hazmat.primitives.asymmetric import rsa, ec

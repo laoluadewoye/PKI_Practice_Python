@@ -797,6 +797,34 @@ This should include
 3) Creation of a CSR
 4) Sending the CSR to a higher certificate authority
 
+######################
+
+Holder sub-threads:
+
+* Certificate thread - Handles manging self-certificate and certificate cache checks.
+  * Sends to
+    * CSR-Request Port
+    * OCSP-Request Port
+  * Receives from
+    * CSR-Answer Port
+    * OCSP-Answer Port
+* Regular message thread - For just doing normal communications supported by PKI.
+  * Sends to
+    * Message Port
+  * Receives from
+    * Message Port
+* CA Registry thread - Manages certificate registry and revocation registry.
+  * Sends to
+    * CSR-Answer Port
+    * OCSP-Answer Port
+* CA Response thread - Handles answering CSR requests and OCSP requests
+  * Sends to
+    * CSR-Answer Port
+    * OCSP-Answer Port
+  * Receives from
+    * CSR-Request Port
+    * OCSP-Request Port
+
 # Web App API Design and Database Schema
 
 Strategies:

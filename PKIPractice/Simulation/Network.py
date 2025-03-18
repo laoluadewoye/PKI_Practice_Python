@@ -2,27 +2,15 @@
 Module used for defining the network class and it's functionality.
 """
 
-# Relative pathing from project root
-import sys
 import time
 import datetime
 from threading import Thread, Event
 from queue import Queue
 from os import makedirs
-from os.path import abspath, dirname, join, exists
+from os.path import dirname, exists
 from typing import Union, List, Dict
-
-script_dir = dirname(abspath(__file__))
-
-if script_dir in ['PKI_Practice', 'PKI Practice', 'app']:
-    sys.path.append(abspath(script_dir))
-elif script_dir == 'PKIPractice':
-    sys.path.append(abspath(join(script_dir, '..')))
-else:
-    sys.path.append(abspath(join(script_dir, '../..')))
-
-from PKIPractice.Simulation.Holder import PKIHolder
-from PKIPractice.Simulation.SocketUtils import start_socket_thread
+from .Holder import PKIHolder
+from .SocketUtils import start_socket_thread
 
 
 class PKIHub:

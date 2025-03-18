@@ -10,18 +10,7 @@ from waitress import serve
 from flask import Flask, send_from_directory
 from threading import Event, Thread
 from time import sleep
-
-import sys
-from os.path import abspath, dirname, join
-script_dir = dirname(abspath(__file__))
-if script_dir in ['PKI_Practice', 'PKI Practice', 'app']:
-    sys.path.append(abspath(script_dir))
-elif script_dir == 'PKIPractice':
-    sys.path.append(abspath(join(script_dir, '..')))
-else:
-    sys.path.append(abspath(join(script_dir, '../..')))
-
-from PKIPractice.Simulation.DBUtils import PKIDatabase
+from .DBUtils import PKIDatabase
 
 
 APP = Flask(__name__, static_folder="../../pki-front-end/dist")

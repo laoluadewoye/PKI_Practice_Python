@@ -2,14 +2,13 @@
 Module containing all utilities relevant for interacting with a command line interface.
 """
 
-# Relative pathing from project root
-import sys
 from typing import Union
 from argparse import ArgumentParser, Namespace
+from .IngestUtils import *
+
+import sys
 from os.path import abspath, dirname, join
-
 script_dir = dirname(abspath(__file__))
-
 if script_dir in ['PKI_Practice', 'PKI Practice', 'app']:
     sys.path.append(abspath(script_dir))
 elif script_dir == 'PKIPractice':
@@ -17,7 +16,6 @@ elif script_dir == 'PKIPractice':
 else:
     sys.path.append(abspath(join(script_dir, '../..')))
 
-from PKIPractice.Utilities.IngestUtils import *
 from PKIPractice.Simulation.Network import PKINetwork
 
 
