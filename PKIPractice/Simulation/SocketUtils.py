@@ -19,7 +19,7 @@ APP_DATABASE = None
 
 @APP.route('/')
 def index():
-    return send_from_directory(APP.static_folder, "index.html")
+    return "Hello, PKI Python!"
 
 
 def start_socket() -> None:

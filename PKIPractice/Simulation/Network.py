@@ -324,6 +324,8 @@ class PKINetwork:
         """
         Starts the network until the user says otherwise.
         """
+        print('\nNetwork started. To use the front-end environment, head to localhost:5000.\n')
+
         # TODO: Create A SQL database
         # TODO: Create GUI web app thread to start here
         # TODO: Create tests for the new module

@@ -41,7 +41,7 @@ encrypt_alg: {
 # This parameter state the revocation probabilities for each level.
 # This probability is used by holders to determine the chance that they randomly decide to revoke their certificate or
 #     other certificates (simulating unexpected events). Certificates affected by this are unable to be used again.
-# All probabilities must be between 0 and 1 (inclusive).
+# All probabilities must be between 0 and 1 (inclusive). 0 is a 0% chance and 1 is a 100% chance.
 # The left-most value represent the root CA layer and the right-most value represents normal clients communicating.
 # The number of values in the list must match the level_count parameter.
 revoc_probs: [0.0, 0.0001, 0.001, 0.01]

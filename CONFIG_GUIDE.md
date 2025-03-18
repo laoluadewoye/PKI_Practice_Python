@@ -42,7 +42,9 @@ guide this reading.
 5) The next five details are level-by-level settings that are described in the same way as `count_by_level`.
    1) `revoc_probs` is the detail that sets the probability that a holder in a specific level will revoke a lower
       certificate or their own certificate. This setting must be a decimal value _inclusively_ between 0 and 1.
-      Inclusively means that it can also be 0 and 1, but it cannot be outside the range any more than that.
+      Inclusively means that it can also be 0 and 1, but it cannot be outside the range any more than that. A setting
+      of 0 correlates to 0% chance and means that a holder will never revoke a certificate, while a setting of 1 
+      correlates to a 100% chance and means that a holder will revoke a certificate every time.
    2) `cert_valid_durs` is the detail that states how long the certificate's validity would last for. It can either
       be a time in the **HH:MM:SS** time format, or the word "none" in all lowercase. The first number (setting for 
       root CAs) MUST BE NONE.

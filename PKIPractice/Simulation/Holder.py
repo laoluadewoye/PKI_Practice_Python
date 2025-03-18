@@ -44,6 +44,7 @@ class PKIHolder:
         holder_cert (Union[PKICertificate, None]): Placeholder for the holder's certificate.
         root_certs (dict[str, PKICertificate]): Dictionary storing root certificates.
         cached_certs (dict[str, tuple[datetime, PKICertificate]]): Cached certificates for quick access.
+        cached_revocs (dict) : Cached revocations for quick access.
         csr_request_port (PriorityQueue): Queue for registration requests.
         csr_answer_port (PriorityQueue): Queue for registration answers.
         ocsp_request_port (PriorityQueue): Queue for OCSP requests.
@@ -263,15 +264,16 @@ class PKIHolder:
         self.holder_cert: Union[PKICertificate, None] = None
         self.root_certs: dict[str, PKICertificate] = {}
         self.cached_certs: dict[str, tuple[datetime, PKICertificate]] = {}
+        self.cached_revocs: dict = {}
 
         # Create ports
         # TODO: Remove waiting flags if this can just be handled using cooldown and timeout deltas
         #   That goes for other ports.
-        self.csr_request_port: PriorityQueue = PriorityQueue()
-        self.csr_answer_port: PriorityQueue = PriorityQueue()
-        self.ocsp_request_port: PriorityQueue = PriorityQueue()
-        self.ocsp_answer_port: PriorityQueue = PriorityQueue()
-        self.reg_message_port: PriorityQueue = PriorityQueue()
+        self.csr_request_port: PriorityQueue = PriorityQueue(maxsize=50)
+        self.csr_answer_port: PriorityQueue = PriorityQueue(maxsize=50)
+        self.ocsp_request_port: PriorityQueue = PriorityQueue(maxsize=50)
+        self.ocsp_answer_port: PriorityQueue = PriorityQueue(maxsize=50)
+        self.reg_message_port: PriorityQueue = PriorityQueue(maxsize=50)
 
         # Create flags
         self.has_self_cert: bool = False
@@ -373,16 +375,71 @@ class PKIHolder:
         self.send_log('PKI', True, 'Addition', 'Certificate', message)
 
     def certificate_service(self, main_stop_event: Event) -> None:
-        ...
+        while not main_stop_event.is_set():
+            # Seed the RNG for this turn
+            seed(datetime.now().timestamp())
+
+            # Check if self certificate exist
+            if not self.has_self_cert:
+                ...
+                # If not, create a CSR and send it to the hub
+
+                # When getting the response, validate the certificate signature and use chain of trust to validate more
+                # When using chain of trust, do a signature check and an OCSP check. Save other certificates that pass
+
+                # If it is not, skip the rest of this turn and try again
+
+                # If it is, save the certificate as own
+                # Turn on a temporary fresh cert flag
+                self.fresh_self_cert = True
+
+            # Check if self certificate is still valid with time comparison and RNG
+            if not self.fresh_self_cert and self.has_self_cert:
+                random_revoc = uniform(0, 1) < self.env_info.revoc_prob
+                expired_cert = datetime.now() > self.holder_cert.valid_end
+                if random_revoc or expired_cert:
+                    # Revoke/Get renewed certificate and communicate that
+                    ...
+
+            # Turn off flag as it is not needed for the next turn
+            self.fresh_self_cert = False
+
+            # Check if there have been any messages in the CSR-Answer port if a certificate is needed
+            if not self.csr_answer_port.empty() and not self.has_self_cert:
+                # Certificates from CA are expected to be returned here.
+
+                # Pop one message out.
+
+                # Only process certificates if one is needed.
+                # Check if it is valid and signed by all parties in CA chain.
+                # If it's valid, save it as current holder certificate and send an acknowledgement message
+                ...
+
+            # Check if there have been any messages in the OCSP-Answer port
+            if not self.ocsp_answer_port.empty():
+                # OCSP notices from CA are expected to be returned here.
+
+                # Pop one message out.
+
+                # If there is a CRL notice, check if it's valid and signed by all parties in CA chain.
+                # If it's valid, save it to the CRL cache and send an acknowledgement message.
+                # Reset the has_self_cert flag.
+                ...
+
+            # Sleep a random amount of time between 0 and 1 second
+            sleep(uniform(0, 1))
 
     def messaging_service(self, main_stop_event: Event) -> None:
-        ...
+        while not main_stop_event.is_set():
+            ...
 
     def ca_registry_service(self, main_stop_event: Event) -> None:
-        ...
+        while not main_stop_event.is_set():
+            ...
 
     def ca_response_service(self, main_stop_event: Event) -> None:
-        ...
+        while not main_stop_event.is_set():
+            ...
 
     def start_holder(self, main_stop_event: Event) -> None:
         # Start Certificate Thread
@@ -416,45 +473,3 @@ class PKIHolder:
 
         while not main_stop_event.is_set():
             sleep(1)
-
-    def old_start_holder(self, main_stop_event: Event) -> None:
-        # Start CA Threads here
-        while not main_stop_event.is_set():
-            # Seed the RNG for this turn
-            seed(datetime.now().timestamp())
-
-            # Check if self certificate exist
-            if not self.has_self_cert:
-                ...
-                # If not, create a CSR and send it to the hub
-
-                # When getting the response, validate the certificate signature and use chain of trust to validate more
-                # When using chain of trust, do a signature check and an OCSP check. Save other certificates that pass
-
-                # If it is not, skip the rest of this turn and try again
-
-                # If it is, save the certificate as own
-                # Turn on a temporary fresh cert flag
-                self.fresh_self_cert = True
-
-            # Check if self certificate is still valid with time comparison and RNG
-            random_revoc = uniform(0, 1) < self.env_info.revoc_prob
-            expired_cert = datetime.now() > self.holder_cert.valid_end
-            if not self.fresh_self_cert and (random_revoc or expired_cert):
-                # Revoke/Get renewed certificate and communicate that
-                ...
-
-            # Turn off flag as it is not needed for the next turn
-            self.fresh_self_cert = False
-
-            # Check if there have been any messages in the OSCP port (Validity request answers)
-
-            # Check if there have been any messages in the CSR port (Certificate signing requests comms)
-
-            # Check if certificates in certificate cache are still valid
-            # Send out OCSP requests but only after a specific amount of time
-            for cert_name, cert_contents in self.cached_certs.items():
-                if datetime.now() - cert_contents[0] > self.env_info.cache_dur:
-                    ...
-
-            # Check if there have been any messages in the regular message port
