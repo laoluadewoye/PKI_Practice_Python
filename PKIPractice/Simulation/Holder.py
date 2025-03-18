@@ -43,26 +43,19 @@ class PKIHolder:
         holder_info_hash (str): Hash of the holder general information for secure identification.
         holder_priv_key (Union[rsa.RSAPrivateKey, ec.EllipticCurvePrivateKey]): The holder's private key.
         holder_pub_key (Union[rsa.RSAPublicKey, ec.EllipticCurvePublicKey]): The holder's public key.
-        holder_cert: Placeholder for the holder's certificate.
-        root_certs (dict): Dictionary storing root certificates.
-        cached_certs (dict): Cached certificates for quick access.
-        csr_message_port (PriorityQueue): Queue for CSR (Certificate Signing Request) messages.
+        holder_cert (Union[PKICertificate, None]): Placeholder for the holder's certificate.
+        root_certs (dict[str, PKICertificate]): Dictionary storing root certificates.
+        cached_certs (dict[str, tuple[datetime, PKICertificate]]): Cached certificates for quick access.
+        csr_request_port (PriorityQueue): Queue for registration requests.
+        csr_answer_port (PriorityQueue): Queue for registration answers.
+        ocsp_request_port (PriorityQueue): Queue for OCSP requests.
+        ocsp_answer_port (PriorityQueue): Queue for OCSP answers.
         reg_message_port (PriorityQueue): Queue for registration messages.
-        ocsp_message_port (PriorityQueue): Queue for OCSP (Online Certificate Status Protocol) messages.
         has_self_cert (bool): Flag indicating whether the holder has a self-signed certificate.
         fresh_self_cert (bool): Flag indicating whether the holder has a fresh self-signed certificate.
-        need_new_cert (bool): Flag indicating whether the holder requires a new certificate.
-        cached_certs_empty (bool): Flag indicating whether cached certificates are empty.
-        waiting_for_csr_response (bool): Indicates if the holder is awaiting a CSR response.
-        waiting_to_send_csr (bool): Indicates if the holder is waiting to send a CSR.
-        waiting_for_reg_response (bool): Indicates if the holder is awaiting a registration response.
-        waiting_to_send_reg (bool): Indicates if the holder is waiting to send a registration request.
-        waiting_for_ocsp_response (bool): Indicates if the holder is awaiting an OCSP response.
-        waiting_to_send_oscp (bool): Indicates if the holder is waiting to send an OCSP request.
-        network_hub: Connection to the network hub.
         is_ca (bool): Indicates if the holder is a certification authority (CA).
-        lower_level_certs (dict): Stores certificates for lower-level entities.
-        cert_revoc_list (dict): Stores the certificate revocation list.
+        certificate_registry (dict): Stores certificates for lower-level entities.
+        crl_registry (dict): Stores the certificate revocation list.
 
     Methods:
         get_addr() -> str:
@@ -273,28 +266,18 @@ class PKIHolder:
         self.root_certs: dict[str, PKICertificate] = {}
         self.cached_certs: dict[str, tuple[datetime, PKICertificate]] = {}
 
-        # Create ports for receiving information
-        self.csr_message_port: PriorityQueue = PriorityQueue()
+        # Create ports
+        # TODO: Remove waiting flags if this can just be handled using cooldown and timeout deltas
+        #   That goes for other ports.
+        self.csr_request_port: PriorityQueue = PriorityQueue()
+        self.csr_answer_port: PriorityQueue = PriorityQueue()
+        self.ocsp_request_port: PriorityQueue = PriorityQueue()
+        self.ocsp_answer_port: PriorityQueue = PriorityQueue()
         self.reg_message_port: PriorityQueue = PriorityQueue()
-        self.ocsp_message_port: PriorityQueue = PriorityQueue()
 
-        # Create flags and other information
+        # Create flags
         self.has_self_cert: bool = False
         self.fresh_self_cert: bool = False
-        self.need_new_cert: bool = False
-        self.cached_certs_empty: bool = False
-
-        self.waiting_for_csr_response: bool = False
-        self.waiting_to_send_csr: bool = False
-
-        self.waiting_for_reg_response: bool = False
-        self.waiting_to_send_reg: bool = False
-
-        self.waiting_for_ocsp_response: bool = False
-        self.waiting_to_send_oscp: bool = False
-
-        # Create hub connection
-        self.network_hub = None
 
         # Create CA-specific attributes
         if self.holder_type_info.ca_status in ['inter_auth', 'root_auth']:
@@ -302,8 +285,11 @@ class PKIHolder:
         else:
             self.is_ca: bool = False
 
-        self.lower_level_certs: dict = {}
-        self.cert_revoc_list: dict = {}
+        self.certificate_registry: dict = {}
+        self.crl_registry: dict = {}
+
+        # Create hub connection
+        self.network_hub = None
 
     def get_addr(self) -> str:
         """
@@ -415,19 +401,20 @@ class PKIHolder:
         )
         msg_thread.start()
 
-        # Start CA Registry Thread
-        ca_reg_thread = Thread(
-            name=f'{self.holder_name}_ca_reg_thread', target=self.ca_registry_service, args=(main_stop_event,),
-            daemon=True
-        )
-        ca_reg_thread.start()
+        if self.is_ca:
+            # Start CA Registry Thread
+            ca_reg_thread = Thread(
+                name=f'{self.holder_name}_ca_reg_thread', target=self.ca_registry_service, args=(main_stop_event,),
+                daemon=True
+            )
+            ca_reg_thread.start()
 
-        # Start CA Response Thread
-        ca_rsp_thread = Thread(
-            name=f'{self.holder_name}_ca_rsp_thread', target=self.ca_response_service, args=(main_stop_event,),
-            daemon=True
-        )
-        ca_rsp_thread.start()
+            # Start CA Response Thread
+            ca_rsp_thread = Thread(
+                name=f'{self.holder_name}_ca_rsp_thread', target=self.ca_response_service, args=(main_stop_event,),
+                daemon=True
+            )
+            ca_rsp_thread.start()
 
         while not main_stop_event.is_set():
             sleep(1)
