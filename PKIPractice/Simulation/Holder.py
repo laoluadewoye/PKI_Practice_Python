@@ -49,8 +49,8 @@ class PKIHolder:
         csr_message_port (PriorityQueue): Queue for CSR (Certificate Signing Request) messages.
         reg_message_port (PriorityQueue): Queue for registration messages.
         ocsp_message_port (PriorityQueue): Queue for OCSP (Online Certificate Status Protocol) messages.
-        has_root_cert_cache (bool): Flag indicating whether root certificates are cached.
         has_self_cert (bool): Flag indicating whether the holder has a self-signed certificate.
+        fresh_self_cert (bool): Flag indicating whether the holder has a fresh self-signed certificate.
         need_new_cert (bool): Flag indicating whether the holder requires a new certificate.
         cached_certs_empty (bool): Flag indicating whether cached certificates are empty.
         waiting_for_csr_response (bool): Indicates if the holder is awaiting a CSR response.
