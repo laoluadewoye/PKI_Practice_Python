@@ -341,10 +341,7 @@ class PKINetwork:
         # Create a time limit
         hours, minutes, seconds = map(int, self.env_runtime.split(":"))
         delta = datetime.timedelta(hours=hours, minutes=minutes, seconds=seconds)
-
-        # TODO: Replace this later
-        delta = datetime.timedelta(minutes=2)
-
+        # delta = datetime.timedelta(minutes=2)
         end_time = datetime.datetime.now() + delta
 
         # Create additional threads

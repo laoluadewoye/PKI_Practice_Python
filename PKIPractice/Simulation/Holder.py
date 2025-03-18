@@ -401,7 +401,6 @@ class PKIHolder:
         ...
 
     def start_holder(self, main_stop_event: Event) -> None:
-        ...
         # Start Certificate Thread
         cert_thread = Thread(
             name=f'{self.holder_name}_cert_thread', target=self.certificate_service, args=(main_stop_event,),

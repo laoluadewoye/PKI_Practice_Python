@@ -6,7 +6,7 @@ import sys
 import random
 import string
 from copy import deepcopy
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Union
 from os.path import abspath, dirname, join
 from cryptography.hazmat.primitives.asymmetric import rsa, ec
@@ -89,7 +89,11 @@ class PKICertificate:
 
         # Time information
         self.valid_start: datetime = datetime.now()
-        self.valid_end: datetime = self.valid_start + subject_env_info.cert_valid_dur
+
+        if subject_env_info.cert_valid_dur == timedelta.max:
+            self.valid_end = datetime.max
+        else:
+            self.valid_end: datetime = self.valid_start + subject_env_info.cert_valid_dur
 
         # Asymmetric Key information
         self.encryption_alg: dict = subject_env_info.encrypt_alg

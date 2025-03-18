@@ -3,7 +3,9 @@ Module for testing the network class.
 """
 
 import unittest
+import time
 import tempfile
+from threading import active_count, enumerate
 from datetime import datetime
 from typing import List
 from argparse import ArgumentParser
@@ -122,6 +124,28 @@ class TestNetwork(unittest.TestCase):
                     holder.holder_type_info.ca_status == 'not_auth',
                     'All last level holders are not regular holders.'
                 )
+
+    def test_thread_ending(self) -> None:
+        """
+        Tests the ability to end a thread in a short amount of time.
+        """
+        # Adjust runtime length for purpose of test
+        self.env_auto_settings["runtime"] = "00:00:05"
+        auto_network: PKINetwork = PKINetwork('Test_Net', self.env_auto_settings)
+        auto_network.set_root_certificates()
+
+        # Let the network run for a few seconds
+        auto_network.start_network()
+
+        # Get the thread count after giving some time for things to spin down
+        time.sleep(2)
+        thread_names = [thread.name for thread in enumerate()]
+        print(thread_names)
+
+        self.assertTrue(
+            all((f'{holder.holder_name}' not in thread_names for holder in auto_network.get_network())),
+            'The daemon threads did not end once the network signalled a stoppage.'
+        )
 
     def test_log_output(self) -> None:
         """
