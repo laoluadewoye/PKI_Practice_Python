@@ -127,8 +127,10 @@ class PKINetwork:
             Returns a flat list of all holders in network ordered by highest level.
         set_root_certificates() -> None:
             Sets up the certificate of root holders.
+        start_network() -> None:
+            Starts the PKI Simulation.
     """
-    def __init__(self, name: str, auto_config: Union[dict, None], manual_config: Union[dict, None] = None) -> None:
+    def __init__(self, name: str, auto_config: dict, manual_config: Union[dict, None] = None) -> None:
         # Unique identifier
         self.network_name: str = name
 

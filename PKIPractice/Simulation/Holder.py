@@ -67,6 +67,16 @@ class PKIHolder:
             Generates a self-signed certificate if holder is a root CA.
         add_to_root_cache(root_url, root_cert) -> None:
             Adds passed root information and certificate to root cache.
+        certificate_service(main_stop_event) -> None:
+            Runs the local certificate management service for the holder.
+        messaging_service(main_stop_event) -> None:
+            Runs the local messenger service for the holder. Non-CAs only.
+        ca_response_service(main_stop_event) -> None:
+            Runs the local CA response service for the holder. CAs only.
+        ca_revocation_service(main_stop_event) -> None:
+            Runs the local CA revocation monitoring service for the holder. CAs only.
+        start_holder(main_stop_event) -> None:
+            Starts the holder's concurrent processes.
     """
     def __init__(self, holder_name: str, holder_config: dict, auto_config: dict):
         # Name of holder
@@ -267,8 +277,6 @@ class PKIHolder:
         self.cached_revocs: dict = {}
 
         # Create ports
-        # TODO: Remove waiting flags if this can just be handled using cooldown and timeout deltas
-        #   That goes for other ports.
         self.csr_request_port: Queue = Queue(maxsize=50)
         self.csr_answer_port: Queue = Queue(maxsize=50)
         self.ocsp_request_port: Queue = Queue(maxsize=50)

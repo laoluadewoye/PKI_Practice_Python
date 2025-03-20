@@ -83,7 +83,7 @@ def get_hash_func(hash_func_string: str) -> HashAlgorithm:
         raise ValueError(f"Unsupported hash: {hash_func_string}")
 
 
-def get_random_country():
+def get_random_country() -> str:
     """
     Retrieves a random country from a list of countries.
 
