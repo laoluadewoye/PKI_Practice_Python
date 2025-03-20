@@ -2,7 +2,7 @@
 Module used for defining the holder class and it's functionality.
 """
 
-from queue import PriorityQueue
+from queue import Queue
 from typing import Union
 from time import sleep
 from threading import Thread, Event
@@ -45,11 +45,11 @@ class PKIHolder:
         root_certs (dict[str, PKICertificate]): Dictionary storing root certificates.
         cached_certs (dict[str, tuple[datetime, PKICertificate]]): Cached certificates for quick access.
         cached_revocs (dict) : Cached revocations for quick access.
-        csr_request_port (PriorityQueue): Queue for registration requests.
-        csr_answer_port (PriorityQueue): Queue for registration answers.
-        ocsp_request_port (PriorityQueue): Queue for OCSP requests.
-        ocsp_answer_port (PriorityQueue): Queue for OCSP answers.
-        reg_message_port (PriorityQueue): Queue for registration messages.
+        csr_request_port (Queue): Queue for registration requests.
+        csr_answer_port (Queue): Queue for registration answers.
+        ocsp_request_port (Queue): Queue for OCSP requests.
+        ocsp_answer_port (Queue): Queue for OCSP answers.
+        reg_message_port (Queue): Queue for registration messages.
         has_self_cert (bool): Flag indicating whether the holder has a self-signed certificate.
         fresh_self_cert (bool): Flag indicating whether the holder has a fresh self-signed certificate.
         is_ca (bool): Indicates if the holder is a certification authority (CA).
@@ -269,11 +269,11 @@ class PKIHolder:
         # Create ports
         # TODO: Remove waiting flags if this can just be handled using cooldown and timeout deltas
         #   That goes for other ports.
-        self.csr_request_port: PriorityQueue = PriorityQueue(maxsize=50)
-        self.csr_answer_port: PriorityQueue = PriorityQueue(maxsize=50)
-        self.ocsp_request_port: PriorityQueue = PriorityQueue(maxsize=50)
-        self.ocsp_answer_port: PriorityQueue = PriorityQueue(maxsize=50)
-        self.reg_message_port: PriorityQueue = PriorityQueue(maxsize=50)
+        self.csr_request_port: Queue = Queue(maxsize=50)
+        self.csr_answer_port: Queue = Queue(maxsize=50)
+        self.ocsp_request_port: Queue = Queue(maxsize=50)
+        self.ocsp_answer_port: Queue = Queue(maxsize=50)
+        self.reg_message_port: Queue = Queue(maxsize=50)
 
         # Create flags
         self.has_self_cert: bool = False
@@ -383,6 +383,7 @@ class PKIHolder:
             if not self.has_self_cert:
                 ...
                 # If not, create a CSR and send it to the hub
+                # If root CA, just generate a new one
 
                 # When getting the response, validate the certificate signature and use chain of trust to validate more
                 # When using chain of trust, do a signature check and an OCSP check. Save other certificates that pass
@@ -422,6 +423,7 @@ class PKIHolder:
                 # Pop one message out.
 
                 # If there is a CRL notice, check if it's valid and signed by all parties in CA chain.
+                # Also check if the certificate in question is actually in the list
                 # If it's valid, save it to the CRL cache and send an acknowledgement message.
                 # Reset the has_self_cert flag.
                 ...
@@ -431,15 +433,65 @@ class PKIHolder:
 
     def messaging_service(self, main_stop_event: Event) -> None:
         while not main_stop_event.is_set():
-            ...
+            # Seed the RNG for this turn
+            seed(datetime.now().timestamp())
 
-    def ca_registry_service(self, main_stop_event: Event) -> None:
-        while not main_stop_event.is_set():
-            ...
+            # Check if a certificate has not been obtained. If so, wait until the next turn
+            if not self.has_self_cert:
+                sleep(uniform(2, 5))
+                continue
+
+            # Check if there has been any messages in the message port
+            if not self.reg_message_port.empty():
+                # Messages from other non-CA holders are expected to be returned here.
+
+                # Pop one message out.
+
+                # If the message is signed, check that the certificate is valid
+                # If so, process the message and send an acknowledgement
+                ...
+
+            # Send a random message to a random holder within the network layer
+
+            # Sleep a random amount of time between 0 and 1 second
+            sleep(uniform(0, 1))
 
     def ca_response_service(self, main_stop_event: Event) -> None:
         while not main_stop_event.is_set():
-            ...
+            # Seed the RNG for this turn
+            seed(datetime.now().timestamp())
+
+            # Check if there have been any messages in the CSR-Request port
+            if not self.csr_request_port.empty():
+                # CSRs from lower levels are expected to be in here.
+
+                # Pop one message out.
+
+                # Examine the CSR if it's valid and if so, return a certificate in the CSR-Answer port
+                ...
+
+            # Check if there have been any messages in the OCSP-Request port
+            if not self.ocsp_request_port.empty():
+                # OCSP Requests from lower levels are expected to be in here.
+
+                # Pop one message out.
+
+                # Examine the OCSP notice if it's valid and if so, return a OCSP Response in the OCSP-Answer port
+                ...
+
+            # Sleep a random amount of time between 0 and 1 second
+            sleep(uniform(0, 1))
+
+    def ca_revocation_service(self, main_stop_event: Event) -> None:
+        while not main_stop_event.is_set():
+            # Seed the RNG for this turn
+            seed(datetime.now().timestamp())
+
+            # Review certificate registry for possibly expired certificates
+            # If a certificate is expired, add it to the revocation list and send revocation message
+
+            # Sleep a random amount of time between 0 and 1 second
+            sleep(uniform(0, 1))
 
     def start_holder(self, main_stop_event: Event) -> None:
         # Start Certificate Thread
@@ -449,27 +501,28 @@ class PKIHolder:
         )
         cert_thread.start()
 
-        # Start Regular Messaging Thread
-        msg_thread = Thread(
-            name=f'{self.holder_name}_msg_thread', target=self.messaging_service, args=(main_stop_event,),
-            daemon=True
-        )
-        msg_thread.start()
-
-        if self.is_ca:
-            # Start CA Registry Thread
-            ca_reg_thread = Thread(
-                name=f'{self.holder_name}_ca_reg_thread', target=self.ca_registry_service, args=(main_stop_event,),
+        if not self.is_ca:
+            # Start Regular Messaging Thread
+            msg_thread = Thread(
+                name=f'{self.holder_name}_msg_thread', target=self.messaging_service, args=(main_stop_event,),
                 daemon=True
             )
-            ca_reg_thread.start()
+            msg_thread.start()
 
+        if self.is_ca:
             # Start CA Response Thread
             ca_rsp_thread = Thread(
                 name=f'{self.holder_name}_ca_rsp_thread', target=self.ca_response_service, args=(main_stop_event,),
                 daemon=True
             )
             ca_rsp_thread.start()
+
+            # Start CA Registry Thread
+            ca_reg_thread = Thread(
+                name=f'{self.holder_name}_ca_crl_thread', target=self.ca_revocation_service, args=(main_stop_event,),
+                daemon=True
+            )
+            ca_reg_thread.start()
 
         while not main_stop_event.is_set():
             sleep(1)
