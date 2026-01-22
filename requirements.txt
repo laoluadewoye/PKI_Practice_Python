@@ -6,6 +6,6 @@ waitress==3.0.2
 asciidoc==10.2.1
 pytest==8.3.4
 nox==2024.10.9
-wheel==0.45.1
+wheel==0.46.2
 build==1.2.2.post1
 twine==6.0.1
